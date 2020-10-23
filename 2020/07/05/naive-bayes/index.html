@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="朴素贝叶斯法 朴素贝叶斯 (naive Bayes) 法是基于贝叶斯定理于特征条件独立假设的分类方法。对于给定的训练数据集，首先基于特征条件独立假设学习输入输出的联合概率分布，随后再利用此模型，对于给定的输入 \(x\)，利用贝叶斯定理求出后验概率最大的输出 \(y\)。朴素贝叶斯法属于生成模型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="统计学习方法（三）：朴素贝叶斯法">
+<meta property="og:url" content="http://julytreee.cn/2020/07/05/naive-bayes/index.html">
+<meta property="og:site_name" content="追求卓越 成功就会在不经意间追上你">
+<meta property="og:description" content="朴素贝叶斯法 朴素贝叶斯 (naive Bayes) 法是基于贝叶斯定理于特征条件独立假设的分类方法。对于给定的训练数据集，首先基于特征条件独立假设学习输入输出的联合概率分布，随后再利用此模型，对于给定的输入 \(x\)，利用贝叶斯定理求出后验概率最大的输出 \(y\)。朴素贝叶斯法属于生成模型。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-04T22:38:12.000Z">
+<meta property="article:modified_time" content="2020-10-22T14:32:07.055Z">
+<meta property="article:author" content="JulyTreee">
+<meta property="article:tag" content="machine learning">
+<meta property="article:tag" content="naive Bayes">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://julytreee.cn/2020/07/05/naive-bayes/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>统计学习方法（三）：朴素贝叶斯法 | 追求卓越 成功就会在不经意间追上你</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">追求卓越 成功就会在不经意间追上你</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Pursue excellence and success will come chasing you.</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/friends/" rel="section"><i class="fa fa-fw fa-th"></i>友情链接</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://julytreee.cn/2020/07/05/naive-bayes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="JulyTreee">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="追求卓越 成功就会在不经意间追上你">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          统计学习方法（三）：朴素贝叶斯法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-05 06:38:12" itemprop="dateCreated datePublished" datetime="2020-07-05T06:38:12+08:00">2020-07-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-10-22 22:32:07" itemprop="dateModified" datetime="2020-10-22T22:32:07+08:00">2020-10-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" itemprop="url" rel="index">
+                    <span itemprop="name">统计学习方法</span>
+                  </a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="朴素贝叶斯法">朴素贝叶斯法</h1>
+<p>朴素贝叶斯 (naive Bayes) 法是基于贝叶斯定理于特征条件独立假设的分类方法。对于给定的训练数据集，首先基于<strong>特征条件独立假设</strong>学习输入输出的联合概率分布，随后再利用此模型，对于给定的输入 <span class="math inline">\(x\)</span>，利用贝叶斯定理求出后验概率最大的输出 <span class="math inline">\(y\)</span>。朴素贝叶斯法属于<strong>生成模型</strong>。 <a id="more"></a></p>
+<h2 id="贝叶斯公式">贝叶斯公式</h2>
+<p><span class="math display">\[
+P(B|A) = \frac{P(B)P(A|B)}{P(A)}
+\]</span></p>
+<p><span class="math display">\[
+P(B_i|A) = \frac{P(B)P(A|B_i)}{\sum_{j=1}^n{P(B_j)P(A|B_j)}}
+\]</span></p>
+<h2 id="模型">模型</h2>
+<p>朴素贝叶斯法通过训练数据集学习联合概率分布 <span class="math inline">\(P(X, Y)\)</span>。</p>
+<p>首先学习先验概率分布 <span class="math display">\[
+P(Y=c_k), k=1,2,\cdots,K
+\]</span> 其中 <span class="math inline">\(c_k\)</span> 是第 <span class="math inline">\(k\)</span> 个类标记。随后学习条件概率分布 <span class="math display">\[
+P(X=x|Y=c_k)=P(X^{(1)}=x^{(1)},\cdots,X^{(n)}=x^{(n)}|Y=c_k), k=1,2,\cdots,K
+\]</span> 于是便可学到联合概率分布 <span class="math inline">\(P(X,Y)=P(X|Y)P(Y)\)</span>。</p>
+<p>为了解决条件概率分布 <span class="math inline">\(P(X=x|Y=c_k)\)</span> 的参数过多的问题，朴素贝叶斯法假设训练数据由 <span class="math inline">\(P(X,Y)\)</span> 独立同分布产生，由于这是一个较强的假设，朴素贝叶斯法也由此得名。将条件独立性假设写成公式 <span class="math display">\[
+\begin{equation}\nonumber
+\begin{aligned}
+P(X=x|Y=c_k)&amp;=P(X^{(1)}=x^{(1)},\cdots,X^{(n)}=x^{(n)}|Y=c_k) \\
+&amp;=\prod_{j=1}^n{P(X^{(j)}=x^{(j)}|Y=c_k)}
+\end{aligned}
+\end{equation}
+\]</span> 条件独立性假设使模型变简单，但有时会损失一定的分类准确率。</p>
+<p>下面对模型进行推导。由贝叶斯定理有 <span class="math display">\[
+P(Y=c_k|X=x) = \frac{P(X=x|Y=c_k)P(Y=c_k)}{\sum_j{P(X=x|Y=c_j)P(Y=c_j)}}
+\]</span> 将独立性假设引入上式，得 <span class="math display">\[
+P(Y=c_k|X=x) = \frac{\prod_iP(X^{(i)}=x^{(i)}|Y=c_k)P(Y=c_k)}{\sum_j\prod_i{P(X^{(i)}=x^{(i)}|Y=c_j)P(Y=c_j)}}
+\]</span> 这是朴素贝叶斯法分类的基本公式，因此，朴素贝叶斯分类器可表示为 <span class="math display">\[
+y=f(x)=arg\space \underset{c_k}{max}\frac{\prod_iP(X^{(i)}=x^{(i)}|Y=c_k)P(Y=c_k)}{\sum_j\prod_i{P(X^{(i)}=x^{(i)}|Y=c_j)P(Y=c_j)}}
+\]</span> 注意到，对于所有的 <span class="math inline">\(c_k\)</span>，上式的分母都是相同的，于是分类器可进一步被写为 <span class="math display">\[
+y=f(x)=arg\space \underset{c_k}{max}\prod_iP(X^{(i)}=x^{(i)}|Y=c_k)P(Y=c_k)
+\]</span></p>
+<h3 id="对于后验概率最大化的理解">对于后验概率最大化的理解</h3>
+<p>可以证明：朴素贝叶斯法后验概率最大化等价于期望风险最小化。</p>
+<p>假设选择0-1损失函数 <span class="math display">\[
+L(Y,f(X)) = \left\{\begin{matrix}
+1,Y\neq f(X)\\ 
+0, y=f(X)
+\end{matrix}\right.
+\]</span> 其中 <span class="math inline">\(f(X)\)</span> 是分类决策函数。这时，期望风险函数为 <span class="math display">\[
+R_{exp}(f)=E[L(Y,f(X))]
+\]</span> 期望是对联合分布 <span class="math inline">\(P(X,Y)\)</span> 取的。由此取条件期望 <span class="math display">\[
+R_{exp}(f)=E_X\sum_{k=1}^K{[L(c_k, f(X))]P(c_k|X)}
+\]</span> 为了使期望风险最小化，对 <span class="math inline">\(X=x\)</span> 逐个极小化 <span class="math display">\[
+\begin{equation}\nonumber
+\begin{aligned}
+f(x) &amp;= arg \space \underset{y\in \mathcal{Y}}{min}\sum_{k=1}^{K}{L(c_k,y)P(c_k|X=x)} \\
+&amp;= arg \space \underset{y\in \mathcal{Y}}{min}\sum_{k=1}^{K}{P(y\neq c_k|X=x)} \\
+&amp;= arg \space \underset{y\in \mathcal{Y}}{min}\sum_{k=1}^{K}{(1-P(y\neq c_k|X=x))} \\
+&amp;= arg \space \underset{y\in \mathcal{Y}}{max}P(y=c_k|X=x)
+\end{aligned}
+\end{equation}
+\]</span> 由此，就根据期望风险最小化准则得到了后验概率最大化准则，也就是朴素贝叶斯法所采用的原理。</p>
+<h2 id="朴素贝叶斯法的参数估计">朴素贝叶斯法的参数估计</h2>
+<p>在朴素贝叶斯法中，模型的学习就是对 <span class="math inline">\(P(Y=c_k)\)</span> 和 <span class="math inline">\(P(X^{(i)}=x^{(i)}|Y=c_k)\)</span> 进行估计，估计的方法选择极大似然估计法。</p>
+<p>对先验概率 <span class="math inline">\(P(Y=c_k)\)</span> 的极大似然估计为 <span class="math display">\[
+P(Y=c_k)=\frac{\sum_{i=1}^K{I(y_i=c_k)}}{N}
+\]</span> <span class="math inline">\(N\)</span> 为训练样本个数。</p>
+<p>设第 <span class="math inline">\(j\)</span> 个特征 <span class="math inline">\(x^{(j)}\)</span> 可能取值的集合为 <span class="math inline">\(\{a_{j1},a_{j2},\cdots,a_{jS_j}\}\)</span>，条件概率 <span class="math inline">\(P(X^{(i)}=a_{jl}|Y=c_k)\)</span> 的极大似然估计为 <span class="math display">\[
+P(X^{(j)}=a_{jl}|Y=c_k)=\frac{\sum_{i=1}^N{I(x_i^{(j)}=a_{jl}},y_i=c_k)}{\sum_{i=1}^N{I(y_i=c_k)}}
+\]</span> 其中 <span class="math inline">\(S_j = |x^{(j)}|\)</span> 。</p>
+<blockquote>
+<p>这里的联合概率直接利用训练数据中满足条件的进行计算即可。</p>
+</blockquote>
+<h3 id="利用贝叶斯估计改进估计效果">利用贝叶斯估计改进估计效果</h3>
+<p>用极大似然估计可能会出现所要估计的概率值为 <span class="math inline">\(0\)</span> 的情况，影响后验概率的计算结果。为了解决这一问题可以采用贝叶斯估计。</p>
+<p>条件概率的贝叶斯估计为 <span class="math display">\[
+P_\lambda(X^{(j)}=a_{jl}|Y=c_k)=\frac{\sum_{i=1}^N{I(x_i^{(j)}=a_{jl}},y_i=c_k)+\lambda}{\sum_{i=1}^N{I(y_i=c_k)+S_j \lambda}}
+\]</span> 先验概率的贝叶斯估计为 <span class="math display">\[
+P(Y=c_k)=\frac{\sum_{i=1}^K{I(y_i=c_k)+\lambda}}{N+K\lambda}
+\]</span> 其中 <span class="math inline">\(\lambda \geqslant 0\)</span>，当 <span class="math inline">\(\lambda = 0\)</span> 时就是极大似然估计。常取 <span class="math inline">\(\lambda = 1\)</span>，称为拉普拉斯平滑 (Laplacian smoothing)。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>JulyTreee
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://julytreee.cn/2020/07/05/naive-bayes/" title="统计学习方法（三）：朴素贝叶斯法">http://julytreee.cn/2020/07/05/naive-bayes/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/machine-learning/" rel="tag"># machine learning</a>
+              <a href="/tags/naive-Bayes/" rel="tag"># naive Bayes</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/07/04/knn/" rel="next" title="统计学习方法（二）：k 近邻法">
+                  <i class="fa fa-chevron-left"></i> 统计学习方法（二）：k 近邻法
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/07/09/decision-tree/" rel="prev" title="统计学习方法（四）：决策树">
+                  统计学习方法（四）：决策树 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#朴素贝叶斯法"><span class="nav-number">1.</span> <span class="nav-text">朴素贝叶斯法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#贝叶斯公式"><span class="nav-number">1.1.</span> <span class="nav-text">贝叶斯公式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型"><span class="nav-number">1.2.</span> <span class="nav-text">模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对于后验概率最大化的理解"><span class="nav-number">1.2.1.</span> <span class="nav-text">对于后验概率最大化的理解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#朴素贝叶斯法的参数估计"><span class="nav-number">1.3.</span> <span class="nav-text">朴素贝叶斯法的参数估计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#利用贝叶斯估计改进估计效果"><span class="nav-number">1.3.1.</span> <span class="nav-text">利用贝叶斯估计改进估计效果</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="JulyTreee"
+    src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">JulyTreee</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/July541" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;July541" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/sakurasrie" title="Instagram &amp;rarr; https:&#x2F;&#x2F;instagram.com&#x2F;sakurasrie" rel="noopener" target="_blank"><i class="fa fa-fw fa-instagram"></i>Instagram</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JulyTreee</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">24k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">44 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+</body>
+</html>
