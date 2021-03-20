@@ -50,21 +50,20 @@
   };
 </script>
 
-  <meta name="description" content="\(k\) 近邻法 模型 \(k\) 近邻法是一种基本的分类和回归方法。对于分类问题，模型将输入对应于特征空间后输出对应的类别。\(k\) 近邻法假定给定一个训练数据集，其中的实例类别已定。分类时，对于新的实例，根据其 \(k\) 个最近邻的训练实例的类别，通过多数表决等方式进行预测。因此，\(k\) 近邻法不具有显式的学习过程。\(k\) 值的选择、距离度量和分类决策规则是 \(k\) 近邻法的">
+  <meta name="description" content="PatternSynonyms PatternSynonyms 用来处理在进行模式匹配 (pattern matching) 时模式名称过长的问题，通过给模式一个简化的名称来实现降低代码量和增加易理解程度的功能。PatternSynonyms 开启需要显式指明 {-# LANGUAGE PatternSynonyms #-}。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="统计学习方法（二）：k 近邻法">
-<meta property="og:url" content="http://julytreee.cn/2020/07/04/knn/index.html">
+<meta property="og:title" content="Haskell 扩展 -- PatternSynonyms">
+<meta property="og:url" content="http://julytreee.cn/2021/02/23/extension-pattern-synonyms/index.html">
 <meta property="og:site_name" content="追求卓越 成功就会在不经意间追上你">
-<meta property="og:description" content="\(k\) 近邻法 模型 \(k\) 近邻法是一种基本的分类和回归方法。对于分类问题，模型将输入对应于特征空间后输出对应的类别。\(k\) 近邻法假定给定一个训练数据集，其中的实例类别已定。分类时，对于新的实例，根据其 \(k\) 个最近邻的训练实例的类别，通过多数表决等方式进行预测。因此，\(k\) 近邻法不具有显式的学习过程。\(k\) 值的选择、距离度量和分类决策规则是 \(k\) 近邻法的">
+<meta property="og:description" content="PatternSynonyms PatternSynonyms 用来处理在进行模式匹配 (pattern matching) 时模式名称过长的问题，通过给模式一个简化的名称来实现降低代码量和增加易理解程度的功能。PatternSynonyms 开启需要显式指明 {-# LANGUAGE PatternSynonyms #-}。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-07-04T13:47:25.000Z">
-<meta property="article:modified_time" content="2020-10-22T14:32:07.038Z">
+<meta property="article:published_time" content="2021-02-23T14:21:45.000Z">
+<meta property="article:modified_time" content="2021-03-20T14:05:11.740Z">
 <meta property="article:author" content="JulyTreee">
-<meta property="article:tag" content="machine learning">
-<meta property="article:tag" content="knn">
+<meta property="article:tag" content="haskell extensions">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://julytreee.cn/2020/07/04/knn/">
+<link rel="canonical" href="http://julytreee.cn/2021/02/23/extension-pattern-synonyms/">
 
 
 <script id="page-configurations">
@@ -78,7 +77,7 @@
   };
 </script>
 
-  <title>统计学习方法（二）：k 近邻法 | 追求卓越 成功就会在不经意间追上你</title>
+  <title>Haskell 扩展 -- PatternSynonyms | 追求卓越 成功就会在不经意间追上你</title>
   
 
 
@@ -194,7 +193,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://julytreee.cn/2020/07/04/knn/">
+    <link itemprop="mainEntityOfPage" href="http://julytreee.cn/2021/02/23/extension-pattern-synonyms/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -207,7 +206,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          统计学习方法（二）：k 近邻法
+          Haskell 扩展 -- PatternSynonyms
         </h1>
 
         <div class="post-meta">
@@ -217,14 +216,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-07-04 21:47:25" itemprop="dateCreated datePublished" datetime="2020-07-04T21:47:25+08:00">2020-07-04</time>
+              <time title="创建时间：2021-02-23 22:21:45" itemprop="dateCreated datePublished" datetime="2021-02-23T22:21:45+08:00">2021-02-23</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-22 22:32:07" itemprop="dateModified" datetime="2020-10-22T22:32:07+08:00">2020-10-22</time>
+                <time title="修改时间：2021-03-20 22:05:11" itemprop="dateModified" datetime="2021-03-20T22:05:11+08:00">2021-03-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -232,8 +231,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" itemprop="url" rel="index">
-                    <span itemprop="name">统计学习方法</span>
+                  <a href="/categories/Haskell/" itemprop="url" rel="index">
+                    <span itemprop="name">Haskell</span>
                   </a>
                 </span>
             </span>
@@ -244,14 +243,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.8k</span>
+              <span>1.1k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -263,45 +262,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="k-近邻法"><span class="math inline">\(k\)</span> 近邻法</h1>
-<h2 id="模型">模型</h2>
-<p><span class="math inline">\(k\)</span> 近邻法是一种基本的分类和回归方法。对于分类问题，模型将输入对应于特征空间后输出对应的类别。<span class="math inline">\(k\)</span> 近邻法假定给定一个训练数据集，其中的实例类别已定。分类时，对于新的实例，根据其 <span class="math inline">\(k\)</span> 个最近邻的训练实例的类别，通过多数表决等方式进行预测。因此，<span class="math inline">\(k\)</span> 近邻法不具有显式的学习过程。<strong><span class="math inline">\(k\)</span> 值的选择</strong>、<strong>距离度量</strong>和<strong>分类决策规则</strong>是 <span class="math inline">\(k\)</span> 近邻法的三个基本要素。</p>
-<blockquote>
-<p><span class="math inline">\(k=1\)</span> 的特殊情况被称为最近邻算法。</p>
-</blockquote>
+        <h1 id="patternsynonyms">PatternSynonyms</h1>
+<p>PatternSynonyms 用来处理在进行模式匹配 (pattern matching) 时模式名称过长的问题，通过给模式一个简化的名称来实现降低代码量和增加易理解程度的功能。PatternSynonyms 开启需要显式指明 <code>{-# LANGUAGE PatternSynonyms #-}</code>。</p>
 <a id="more"></a>
-<h2 id="距离度量">距离度量</h2>
-<p>要选择 <span class="math inline">\(k\)</span> 近邻就要首先确定度量距离的方法，通常特称空间是 <span class="math inline">\(n\)</span> 维实数向量空间 <span class="math inline">\(\mathbb{R}^n\)</span>。使用的距离是欧式距离或更一般的 <span class="math inline">\(L_p\)</span> 距离，也可以是其他距离。</p>
-<p>设特征空间是 <span class="math inline">\(\chi\)</span> 是 <span class="math inline">\(n\)</span> 维实数向量空间 <span class="math inline">\(\mathbb{R}^n\)</span>，<span class="math inline">\(x_i,x_j\in \chi\)</span>，<span class="math inline">\(x_i = (x_i^{(1)},x_i^{(2)},\cdots,x_i^{(n)})^T\)</span>， <span class="math inline">\(x_j = (x_j^{(1)},x_j^{(2)},\cdots,x_j^{(n)})^T\)</span>，<span class="math inline">\(x_i,x_j\)</span> 的 <span class="math inline">\(L_p\)</span> 距离定义为 <span class="math display">\[
-L_p(x_i,x_j)=(\sum_{l=1}^n{|x_i^{(l)} - x_j^{(l)}|^p})^{\frac{1}{p}}
-\]</span> 其中 <span class="math inline">\(p\geqslant 1\)</span>。</p>
-<p>当 <span class="math inline">\(p=2\)</span> 时，称为欧式距离 (Euclidean distance)，即 <span class="math display">\[
-L_2(x_i,x_j)=(\sum_{l=1}^n{|x_i^{(l)} - x_j^{(l)}|^2})^{\frac{1}{2}}
-\]</span> 当 <span class="math inline">\(p=1\)</span>时，称为曼哈顿距离 (Manhattan distance)，即 <span class="math display">\[
-L_1(x_i,x_j)=\sum_{l=1}^n{|x_i^{(l)} - x_j^{(l)}|}
-\]</span> 当 <span class="math inline">\(p=\infty\)</span> 时，它是各个坐标距离中的最大值，即 <span class="math display">\[
-L_\infty(x_i,x_j)=\underset{l}{max}{|x_i^{(l)} - x_j^{(l)}|}
-\]</span></p>
-<h2 id="k-值的选择"><span class="math inline">\(k\)</span> 值的选择</h2>
-<p><span class="math inline">\(k\)</span> 值的选择会对 <span class="math inline">\(k\)</span> 近邻法的结果产生重大影响。</p>
-<p>如果 <span class="math inline">\(k\)</span> 值较小，就相当于用较小的邻域中的训练实例进行预测，造成的结果就是近似误差减小，估计误差增大，即 <span class="math inline">\(k\)</span> 值的减小意味着模型整体变复杂，容易发生过拟合。</p>
-<p>如果 <span class="math inline">\(k\)</span> 值较大，模型的估计误差减小，近似误差增大，使模型整体变简单。</p>
-<blockquote>
-<p>近似误差 (approximation error) ：度量与最优误差之间的相近程度</p>
-<p>估计误差 (estimate error) ：度量预测结果与最优结果的相近程度</p>
-<p>个人直观理解为近似误差度量了预测值与实际值的差距，而估计误差则度量了当前参数与最优解的参数的距离。对与 <span class="math inline">\(k\)</span> 值的选择，使用较小的 <span class="math inline">\(k\)</span> 值可以有效避免大量无关数据带来的影响，但如果近邻实例恰巧是噪声，预测就会出错，这和过拟合对参数的变化极度敏感的特性是一致的，过拟合时，训练数据的预测效果很好，即近似误差小，但泛化能力极低，模型的参数与实际情况相差较远，即估计误差大。</p>
-</blockquote>
-<p>如果 <span class="math inline">\(k=N\)</span>，则模型直接预测训练数据中最多的类，无使用意义。</p>
-<p>实际使用中，<span class="math inline">\(k\)</span> 通常取一个较小的值。对于 <span class="math inline">\(k\)</span> 的选择，可以使用交叉验证法。</p>
-<h2 id="分类决策规则">分类决策规则</h2>
-<p>通常使用多数表决决定输出的结果，下面证明多数表决规则等价于经验风险最小化。</p>
-<p>如果用0-1​损失函数作为分类的损失函数，对于分类函数 <span class="math display">\[
-f:\mathbb{R}^n = \{c_1, c_2, \cdots, c_K\}
-\]</span> 误分类的概率为 <span class="math display">\[
-P(Y\neq f(X)) = 1 - p(Y = f(X))
-\]</span> 对于给定的实例 <span class="math inline">\(x\in \chi\)</span>，其 <span class="math inline">\(k\)</span> 个最近邻的训练实例点构成 <span class="math inline">\(N_k(x)\)</span>。如果 <span class="math inline">\(N_k(x)\)</span> 对应的是类别 <span class="math inline">\(c_j\)</span>，则误分类率为 <span class="math display">\[
-\frac{1}{k}\sum_{x_i\in N_k(x)}{I(y_i \neq c_j)} = 1 - \frac{1}{k}\sum_{x_i\in N_k(x)}{I(y_i = c_j)}
-\]</span> 由于多数表决的目标是使 <span class="math inline">\(\sum_{x_i\in N_k(x)}{I(y_i = c_j)}\)</span> 最大，即 <span class="math inline">\(\sum_{x_i\in N_k(x)}{I(y_i \neq c_j)}\)</span> 最小，因此其等驾驭经验风险最小化。</p>
+<p>例如有如下实现: <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">newtype</span> <span class="type">Type</span> = <span class="type">T</span> <span class="type">String</span> [<span class="type">Exp</span>]</span></span><br><span class="line"></span><br><span class="line"><span class="title">collectTarget</span> :: <span class="type">Exp</span> -&gt; [<span class="type">Exp</span>]</span><br><span class="line"><span class="title">collectTarget</span> (<span class="type">T</span> <span class="string">"refer"</span> [t1, t2]) = t1 : collectTarget t2</span><br><span class="line"><span class="title">collectTarget</span> _ = []</span><br></pre></td></tr></table></figure></p>
+<p>在匹配我们想要的特殊的模式时，可以开启 PatternSynonyms 扩展来减少匹配中的代码量。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">pattern</span> <span class="type">Refer</span> :: <span class="type">Type</span> -&gt; <span class="type">Type</span> -&gt; <span class="type">Type</span></span><br><span class="line"><span class="title">pattern</span> <span class="type">Refer</span> t1 t2 = <span class="type">T</span> <span class="string">"refer"</span> [t1, t2]</span><br></pre></td></tr></table></figure>
+<p>这里 Refer 是接收两个 Type 的 pattern synonyms，pattern 的签名可以省略。有了 Refer 后上面的 <code>collectTarget</code> 就可以改为</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">collectTarget</span> :: <span class="type">Type</span> -&gt; [<span class="type">Type</span>]</span><br><span class="line"><span class="title">collectTarget</span> (<span class="type">Refer</span> t1 t2) = t1 : collectTarget t2</span><br><span class="line"><span class="title">collectTarget</span> _ = []</span><br></pre></td></tr></table></figure>
+<h2 id="uni-directional-bidirectional">Uni-directional &amp; bidirectional</h2>
+<p>上面的 pattern 还可以写为 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">pattern</span> <span class="type">Refer</span> t1 t2 &lt;- <span class="type">T</span> <span class="string">"refer"</span> [t1, t2]</span><br></pre></td></tr></table></figure></p>
+<p>区别是将 <code>=</code> 替换为了 <code>&lt;-</code>。这两种写法的区别在于 <code>=</code> 是 bidirectional pattern synonyms，而 <code>&lt;-</code> 是 Uni-directional 的。bidirectional 允许将创建的 pattern 作为一个具体的 Constructor 来使用，uni-directional 则不行。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">refers</span> :: [<span class="type">Type</span>] -&gt; <span class="type">Type</span> -&gt; <span class="type">Type</span></span><br><span class="line"><span class="title">refers</span> = flip $ foldr <span class="type">Refer</span></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; refers [<span class="type">App</span> <span class="string">"Int"</span> [], <span class="type">App</span> <span class="string">"Bool"</span> []] (<span class="type">App</span> <span class="string">"Double"</span> [])</span><br><span class="line"><span class="comment">-- App "-&gt;" [App "Int" [],App "-&gt;" [App "Bool" [],App "Double" []]]</span></span><br></pre></td></tr></table></figure>
+<p>在使用 <code>=</code> 后，可以将 Refer 作为表达式的一部分进行使用。</p>
+<h2 id="references">References</h2>
+<ol type="1">
+<li><a href="https://gitlab.haskell.org/ghc/ghc/-/wikis/pattern-synonyms" target="_blank" rel="noopener">pattern synonyms</a></li>
+<li><a href="https://ocharles.org.uk/posts/2014-12-03-pattern-synonyms.html" target="_blank" rel="noopener">24 Days of GHC Extensions: Pattern Synonyms</a></li>
+</ol>
 
     </div>
 
@@ -317,7 +295,7 @@ P(Y\neq f(X)) = 1 - p(Y = f(X))
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://julytreee.cn/2020/07/04/knn/" title="统计学习方法（二）：k 近邻法">http://julytreee.cn/2020/07/04/knn/</a>
+    <a href="http://julytreee.cn/2021/02/23/extension-pattern-synonyms/" title="Haskell 扩展 -- PatternSynonyms">http://julytreee.cn/2021/02/23/extension-pattern-synonyms/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -328,24 +306,23 @@ P(Y\neq f(X)) = 1 - p(Y = f(X))
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/machine-learning/" rel="tag"># machine learning</a>
-              <a href="/tags/knn/" rel="tag"># knn</a>
+              <a href="/tags/haskell-extensions/" rel="tag"># haskell extensions</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2020/07/04/perceptron/" rel="next" title="统计学习方法（一）：感知机">
-                  <i class="fa fa-chevron-left"></i> 统计学习方法（一）：感知机
+                <a href="/2020/11/09/ese680-lecture%204/" rel="next" title="UPenn ESE 680(Graph neural networks) lecture note 4">
+                  <i class="fa fa-chevron-left"></i> UPenn ESE 680(Graph neural networks) lecture note 4
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2020/07/05/naive-bayes/" rel="prev" title="统计学习方法（三）：朴素贝叶斯法">
-                  统计学习方法（三）：朴素贝叶斯法 <i class="fa fa-chevron-right"></i>
+                <a href="/2021/03/20/haskells-kind-system-a-primer/" rel="prev" title="Haskell 的 Kind 系统入门">
+                  Haskell 的 Kind 系统入门 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -385,7 +362,7 @@ P(Y\neq f(X)) = 1 - p(Y = f(X))
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#k-近邻法"><span class="nav-number">1.</span> <span class="nav-text">\(k\) 近邻法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#模型"><span class="nav-number">1.1.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#距离度量"><span class="nav-number">1.2.</span> <span class="nav-text">距离度量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#k-值的选择"><span class="nav-number">1.3.</span> <span class="nav-text">\(k\) 值的选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分类决策规则"><span class="nav-number">1.4.</span> <span class="nav-text">分类决策规则</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#patternsynonyms"><span class="nav-number">1.</span> <span class="nav-text">PatternSynonyms</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#uni-directional-bidirectional"><span class="nav-number">1.1.</span> <span class="nav-text">Uni-directional &amp; bidirectional</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-number">1.2.</span> <span class="nav-text">References</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -527,54 +504,6 @@ P(Y\neq f(X)) = 1 - p(Y = f(X))
   
 
   
-      
-<script type="text/x-mathjax-config">
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
 
   
 
