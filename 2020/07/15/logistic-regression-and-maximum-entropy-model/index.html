@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:300,300italic,400,400italic,700,700italic%7CMa+Shan+Zheng:300,300italic,400,400italic,700,700italic%7CSource+Code+Pro:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"julytreee.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="逻辑斯谛回归与最大熵模型logistic regression 是统计学习中的经典分类方法，其方法可简单理解为在 linear regression 上应用 sigmoid 进行映射, 将其转换为二分类问题。《统计学校方法》 一书通过 logistic distribution 进行推导。将 logistic 翻译成逻辑斯谛这种无意义的单词也太无聊了，后文将全部使用英文表述。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="统计学习方法（五）：逻辑斯谛回归与最大熵模型">
+<meta property="og:url" content="http://julytreee.cn/2020/07/15/logistic-regression-and-maximum-entropy-model/index.html">
+<meta property="og:site_name" content="追求卓越 成功就会在不经意间追上你">
+<meta property="og:description" content="逻辑斯谛回归与最大熵模型logistic regression 是统计学习中的经典分类方法，其方法可简单理解为在 linear regression 上应用 sigmoid 进行映射, 将其转换为二分类问题。《统计学校方法》 一书通过 logistic distribution 进行推导。将 logistic 翻译成逻辑斯谛这种无意义的单词也太无聊了，后文将全部使用英文表述。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-15T22:03:39.000Z">
+<meta property="article:modified_time" content="2023-06-23T13:50:41.802Z">
+<meta property="article:author" content="JulyTreee">
+<meta property="article:tag" content="machine learning">
+<meta property="article:tag" content="logistic regression">
+<meta property="article:tag" content="maximum entropy model">
+<meta property="article:tag" content="entropy">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://julytreee.cn/2020/07/15/logistic-regression-and-maximum-entropy-model/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://julytreee.cn/2020/07/15/logistic-regression-and-maximum-entropy-model/","path":"2020/07/15/logistic-regression-and-maximum-entropy-model/","title":"统计学习方法（五）：逻辑斯谛回归与最大熵模型"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>统计学习方法（五）：逻辑斯谛回归与最大熵模型 | 追求卓越 成功就会在不经意间追上你</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">追求卓越 成功就会在不经意间追上你</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Pursue excellence and success will come chasing you.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-links"><a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E6%96%AF%E8%B0%9B%E5%9B%9E%E5%BD%92%E4%B8%8E%E6%9C%80%E5%A4%A7%E7%86%B5%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">逻辑斯谛回归与最大熵模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#logistic-regression-model"><span class="nav-number">1.1.</span> <span class="nav-text">logistic regression model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E4%BC%B0%E8%AE%A1"><span class="nav-number">1.1.1.</span> <span class="nav-text">模型参数估计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E7%86%B5%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">最大熵模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E7%86%B5%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.1.</span> <span class="nav-text">最大熵原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E7%86%B5%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.2.2.</span> <span class="nav-text">最大熵模型的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E7%86%B5%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.2.3.</span> <span class="nav-text">最大熵模型的学习</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">JulyTreee</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/July541" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;July541" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/JulyTreee" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;JulyTreee" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/sakurasrie" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;sakurasrie" rel="noopener me" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://julytreee.cn/2020/07/15/logistic-regression-and-maximum-entropy-model/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="JulyTreee">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="追求卓越 成功就会在不经意间追上你">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="统计学习方法（五）：逻辑斯谛回归与最大熵模型 | 追求卓越 成功就会在不经意间追上你">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          统计学习方法（五）：逻辑斯谛回归与最大熵模型
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-07-15 22:03:39" itemprop="dateCreated datePublished" datetime="2020-07-15T22:03:39+00:00">2020-07-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-06-23 13:50:41" itemprop="dateModified" datetime="2023-06-23T13:50:41+00:00">2023-06-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">统计学习方法</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="逻辑斯谛回归与最大熵模型"><a href="#逻辑斯谛回归与最大熵模型" class="headerlink" title="逻辑斯谛回归与最大熵模型"></a>逻辑斯谛回归与最大熵模型</h1><p>logistic regression 是统计学习中的经典分类方法，其方法可简单理解为在 linear regression 上应用 sigmoid 进行映射, 将其转换为二分类问题。《统计学校方法》 一书通过 logistic distribution 进行推导。将 logistic 翻译成逻辑斯谛这种无意义的单词也太无聊了，后文将全部使用英文表述。</p>
+<span id="more"></span>
+
+<h2 id="logistic-regression-model"><a href="#logistic-regression-model" class="headerlink" title="logistic regression model"></a>logistic regression model</h2><p>首先介绍 logistic distribution 的定义。</p>
+<p>设 $X$ 是连续随机变量，$X$ 服从 logistic distribution 是指 $X$ 具有下列分布函数和密度函数<br>$$<br>F(x) &#x3D; P(X \leqslant x) &#x3D; \frac{1}{1+e^{-(x-\mu)&#x2F;\gamma}} \<br>f(x) &#x3D; F’(x) &#x3D; \frac{e^{-(x-\mu)&#x2F;\gamma}}{\gamma (1 + e^{-(x-\mu)&#x2F;\gamma})^2}<br>$$</p>
+<p>利用参数化的 logistic distribution 可以得到 logistic model。通常情况 logistic model 用于进行二值分类，也可以扩展到多值分类。对于二值分类，有如下概率分布<br>$$<br>P(Y &#x3D; 1 | X) &#x3D; \frac{e^{(w\cdot x+b)}}{1 + e^{(w \cdot x + b)}} &#x3D; \frac{1}{1 + e^{-(w \cdot x + b)}} \<br>P(Y &#x3D; 0 | X) &#x3D; \frac{1}{1 + e^{(w \cdot x + b)}} &#x3D; \frac{e^{-(w \cdot x + b)}}{1 + e^{-(w \cdot x + b)}}<br>$$<br>现考察 logistic regression model 的特点，一个事件发生的几率 (odds) 是指该事件发生的概率与该事件不发生的概率的比值。如果时间发生的概率是 $p$，则该事件发生的几率是 $\frac{p}{1-p}$，该事件的对数几率 (log odds) 即 logit 函数为<br>$$<br>logit(p) &#x3D; log\frac{p}{1-p}<br>$$<br>对 logistic regression，有<br>$$<br>log \frac{P(Y&#x3D;1|X)}{1-P(Y&#x3D;0|X)}&#x3D;w \cdot x + b<br>$$<br>也就是在 logistic regression model 中，输出 $Y&#x3D;1$ 的对数几率是输入 $x$ 的线性函数，即证明了 linear regression 上应用 sigmoid 的可行性。</p>
+<h3 id="模型参数估计"><a href="#模型参数估计" class="headerlink" title="模型参数估计"></a>模型参数估计</h3><p>模型的参数估计可以用极大似然估计法估计模型参数。令 $h(x) &#x3D; P(Y&#x3D;1|X)$, $P(Y&#x3D;0|X) &#x3D; 1 - h(x)$，有似然函数<br>$$<br>\prod_{i&#x3D;1}^N{[h(x)]^{y_i} [1-h(x)]^{1-y_i}}<br>$$<br>为了简化计算，两边取对数得到对数似然函数<br>$$<br>L(w) &#x3D; \sum_{i&#x3D;1}^N{[y_i\space log\space h(x_i) + (1-y_i) log(1-h(x_i))]}<br>$$<br>为了得到上述函数的极大值，可使用梯度上升求得 $w$。</p>
+<h2 id="最大熵模型"><a href="#最大熵模型" class="headerlink" title="最大熵模型"></a>最大熵模型</h2><h3 id="最大熵原理"><a href="#最大熵原理" class="headerlink" title="最大熵原理"></a>最大熵原理</h3><p>设离散随机变量的概率分布时 $P(X)$，则其熵为<br>$$<br>H(P) &#x3D; -\sum_{x}P(x) \space log \space P(x)<br>$$<br>熵的取值满足如下不等式<br>$$<br>0 \leqslant H(P) \leqslant log \space |X|<br>$$<br>其中，$|X|$ 是 $X$ 的取值个数，当且仅当 $X$ 的分布是均匀分布时右边的等号成立。也就是说，当 $X$ 服从均匀分布时，熵最大。</p>
+<p><strong>举一个🌰</strong></p>
+<p>设随机变量 $X$ 有五个取值 ${A,B,C,D,E}$，要估计取各个值当概率 $P(A)$，$P(B)$，$P(C)$，$P(D)$，$P(E)$。</p>
+<p>首先有<br>$$<br>P(A) + P(B) + P(C) + P(D) + P(E) &#x3D; 1<br>$$<br>在没有其他任何信息的情况下，一个对概率分布合理的估计方法就是假设这个分布中取各个值的概率是相等的，即<br>$$<br>P(A) &#x3D; P(B) &#x3D; P(C) + P(D) + P(E) &#x3D; \frac{1}{5}<br>$$<br>等概率表示了对事实的无知。因为没有更多知识，这种判断是合理的。</p>
+<p>若此时知道<br>$$<br>P(A) + P(B) &#x3D; \frac{3}{10}<br>$$<br>则可认为 $A$ 与 $B$ 是等概率的，$C$，$D$ 与 $E$ 是等概率的，即<br>$$<br>P(A) &#x3D; P(B) &#x3D; \frac{3}{20} \<br>P(C) &#x3D; P(D) &#x3D; P(E) &#x3D; \frac{7}{30}<br>$$<br>这种概率的估计方法正是最大熵原理的应用。</p>
+<h3 id="最大熵模型的定义"><a href="#最大熵模型的定义" class="headerlink" title="最大熵模型的定义"></a>最大熵模型的定义</h3><p>最大熵模型利用最大熵原理进行分类。首先考虑模型应该满足的条件。给定训练数据集，联合分布 $P(X,Y)$ 的经验分布 $\tilde{P}(X,Y)$ 和边缘分布 $P(X)$ 的经验分布 $\tilde{P}(X)$ 分别为<br>$$<br>\tilde{P}(X&#x3D;x,Y&#x3D;y) &#x3D; \frac{\nu(X&#x3D;x,Y&#x3D;y)}{N} \<br>\tilde{P}(X&#x3D;x) &#x3D; \frac{\nu(X&#x3D;x)}{N}<br>$$<br>其中，$\nu(X&#x3D;x,Y&#x3D;y)$ 表示训练数据中样本 $(x,y)$ 出现的频数，$\nu (X&#x3D;x)$ 表示训练数据中输入 $x$ 出现的频数，$N$ 表示训练样本容量。</p>
+<p>用特征函数 (feature function) $f(x,y)$ 描述输入 $x$ 和输出 $y$ 之间的某一个事实 (例如 $P(A) &#x3D; \frac{3}{10}$)，其定义为<br>$$<br>f(x,y) &#x3D; \left{\begin{matrix}<br>\begin{align}<br>&amp; 1 , \space \text{x and y satisfy a certain fact}\<br>&amp; 0 , \space otherwise<br>\end{align}<br>\end{matrix}\right.<br>$$<br>特征函数 $f(x,y)$ 关于经验分布 $\tilde{P}(X,Y)$ 的期望值用 $E_{\tilde{P}}(f)$ 表示，有<br>$$<br>E_{\tilde{P}}(f) &#x3D; \sum_{x,y}\tilde{P}(x,y)f(x,y)<br>$$<br>特征函数 $f(x,y)$ 关于模型 $P(Y|X)$ 与经验分布 $\tilde{P}(X)$ 的期望值用 $E_P(f)$ 表示，有<br>$$<br>E_P(f) &#x3D; \sum_{x,y}\tilde{P}(x)P(y|x)f(x,y)<br>$$<br>在模型能从训练数据中获得足够信息的前提下，可以假设这两个期望值相等 (由$P(A,B) &#x3D; P(A|B)P(B)$)，即<br>$$<br>E_P(f) &#x3D; E_{\tilde{P}}(f)<br>$$<br>以上式为约束条件，有最大熵模型的定义：</p>
+<p>假设满足所有约束条件的模型集合为<br>$$<br>C \equiv {P \in \wp | E_P(f_i)&#x3D;E_\tilde{P}(f), i&#x3D;1,2,\cdots,n}<br>$$<br>定义在条件概率分布 $P(Y|X)$ 上的条件熵为<br>$$<br>H(P)&#x3D;-\sum_{x,y}{\tilde{P}(x)P(y|x)logP(y|x)}<br>$$<br>则模型集合 $C$ 中的条件熵 $H(P)$ 最大的模型称为最大熵模型。式中的对数为自然对数 $e$。</p>
+<h3 id="最大熵模型的学习"><a href="#最大熵模型的学习" class="headerlink" title="最大熵模型的学习"></a>最大熵模型的学习</h3><p>最大熵模型的学习可以形式化为约束最优化问题<br>$$<br>\underset{P \in C}{max} H(P) &#x3D; -\sum_{x,y}{\tilde{P}(x)P(y|x)logP(y|x))} \<br>s.t. \quad E_p(f_i) &#x3D; E_{\tilde{P}}(f_i), \space 1, 2, \cdots, n \<br>\sum_{y}{p(y|x)} &#x3D; 1<br>$$<br>按照最优化问题的习惯，将最大值求解问题改为等价的求最小值问题<br>$$<br>\underset{P \in C}{min} \space-H(P) &#x3D; \sum_{x,y}{\tilde{P}(x)P(y|x)logP(y|x))} \<br>s.t. \quad E_p(f_i) &#x3D; E_{\tilde{P}}(f_i), \space 1, 2, \cdots, n \<br>\sum_{y}{p(y|x)} &#x3D; 1<br>$$<br>求解上述问题得出的解就是最大熵模型的解。</p>
+<p>为了解决这个问题，首先利用拉格朗日乘数法将带约束的优化问题转化为无约束的优化问题，引入拉格朗日乘子 $w_0,w_1,\cdots,w_n$，定义拉格朗日函数 $L(P,w)$<br>$$<br>\begin{equation}\nonumber<br>\begin{aligned}<br>L(P,w) &amp; \equiv -H(P) + w_0\left (1-\sum_{y}{P(y|x)} \right) + \sum_{i&#x3D;1}^n{w_i(E_{\tilde{P}}(f_i) - E_P(f_i))} \<br>&amp;&#x3D; \sum_{x,y}{\tilde{P}(x)P(y|x)logP(y|x)} + w_0\left (1 - \sum_{y}{P(y|x)}\right ) + \<br>&amp; \quad \sum_{i&#x3D;1}^n{w_i\left (\sum_{x,y}{\tilde{P}(x,y)f_i(x,y)} - \sum_{x,y}{\tilde{P}(x)P(y|x)(f_i(x,y)}\right)}<br>\end{aligned}<br>\end{equation}<br>$$<br>有原始优化问题<br>$$<br>\underset{P\in C}{min}\space\underset{w}{max} \space L(P,w)<br>$$<br>则其对偶问题为<br>$$<br>\underset{w}{max} \space \underset{P\in C}{min} \space L(P,w)<br>$$<br>由我现在还是不懂的 KKT 规则可以知道原问题和对偶问题是等价的。先求解 $\underset{P\in C}{min}\space L(P,w)$，对 $P(y|x)$ 求偏导数<br>$$<br>\begin{equation}\nonumber<br>\begin{aligned}<br>\frac{\partial L(P,w)}{\partial P(y|x)} &amp;&#x3D; \sum_{x,y}{\tilde{P}(x)(logP(y|x)+1)} - \sum_y{w_0} - \sum_{x,y}{\left( \tilde{P}(x)\sum_{i&#x3D;1}^n{w_i f_i(x,y)}\right)} \<br>&amp;&#x3D; \sum_{x,y}{\tilde{P}(x)\left( logP(y|x) + 1 - w_0 - \sum_{i&#x3D;1}^n{w_if_i(x,y)}\right)}<br>\end{aligned}<br>\end{equation}<br>$$<br>令偏导数为 $0$，由于 $\tilde{P}(x) &gt; 0$，有<br>$$<br>P(y|x) &#x3D; exp\left( \sum_{i&#x3D;1}^n{w_i f_i(x,y) + w_0 - 1}\right)&#x3D;\frac{exp\left( \sum_{i&#x3D;1}^n{w_i f_i(x,y)}\right)}{exp(1-w_0)}<br>$$<br>又因为 $\sum_y{P(y|x) &#x3D; 1}$，则有<br>$$<br>\sum_y{P(y|x)} &#x3D; \sum_y{\frac{exp\left( \sum_{i&#x3D;1}^n{w_i f_i(x,y)}\right)}{exp(1-w_0)}} &#x3D; \frac{\sum_yexp\left( \sum_{i&#x3D;1}^n{w_i f_i(x,y)}\right)}{exp(1-w_0)} &#x3D; 1<br>$$<br>即<br>$$<br>exp(1-w_0) &#x3D; \sum_yexp\left( \sum_{i&#x3D;1}^n{w_i f_i(x,y)}\right)<br>$$<br>得最优解<br>$$<br>arg \space \underset{P\in C}{min} \space L(P,w) &#x3D; P_w(y|x)&#x3D; \frac{1}{Z_w(x)}exp\left( \sum_{i&#x3D;1}^n{w_i f_i(x,y)}\right)<br>$$<br>其中<br>$$<br>Z_w(x) &#x3D; \sum_yexp\left( \sum_{i&#x3D;1}^n{w_i f_i(x,y)}\right)<br>$$<br>这里 $Z_w(x)$ 被称为规范化因子。</p>
+<p>现在可以对上述最小值进行极大化，求 $\underset{w}{\bf{max}} \space \underset{P\in C}{min} \space L(P,w)$ 对应的 $w$，可直接求解，也可用梯度下降法等迭代法求解。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/machine-learning/" rel="tag"># machine learning</a>
+              <a href="/tags/logistic-regression/" rel="tag"># logistic regression</a>
+              <a href="/tags/maximum-entropy-model/" rel="tag"># maximum entropy model</a>
+              <a href="/tags/entropy/" rel="tag"># entropy</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/07/09/decision-tree/" rel="prev" title="统计学习方法（四）：决策树">
+                  <i class="fa fa-chevron-left"></i> 统计学习方法（四）：决策树
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/10/23/ese680-lecture1&3/" rel="next" title="UPenn ESE 680(Graph neural networks) lecture note 1 and 3">
+                  UPenn ESE 680(Graph neural networks) lecture note 1 and 3 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa-solid fa-wand-sparkles"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JulyTreee</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/July541" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

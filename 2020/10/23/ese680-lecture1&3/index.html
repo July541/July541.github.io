@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:300,300italic,400,400italic,700,700italic%7CMa+Shan+Zheng:300,300italic,400,400italic,700,700italic%7CSource+Code+Pro:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"julytreee.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="UPenn ESE 680(Graph neural networks) lecture note 1 and 3课程目标 理解图神经网络的基础 培养利用 GNN 开发实际应用的能力  应用场景 论文作者识别：给定匿名文章推断其作者 推荐系统：预测不同客户对物品的评分 无线电资源分配 etc.  NN -&gt; CNN -&gt; GNN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UPenn ESE 680(Graph neural networks) lecture note 1 and 3">
+<meta property="og:url" content="http://julytreee.cn/2020/10/23/ese680-lecture1&3/index.html">
+<meta property="og:site_name" content="追求卓越 成功就会在不经意间追上你">
+<meta property="og:description" content="UPenn ESE 680(Graph neural networks) lecture note 1 and 3课程目标 理解图神经网络的基础 培养利用 GNN 开发实际应用的能力  应用场景 论文作者识别：给定匿名文章推断其作者 推荐系统：预测不同客户对物品的评分 无线电资源分配 etc.  NN -&gt; CNN -&gt; GNN">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://julytreee.cn/imgs/image-20201023152434602.png">
+<meta property="og:image" content="http://julytreee.cn/imgs/image-20201023152524467.png">
+<meta property="og:image" content="http://julytreee.cn/imgs/image-20201023152926000.png">
+<meta property="og:image" content="http://julytreee.cn/imgs/image-20201023163245998.png">
+<meta property="og:image" content="http://julytreee.cn/imgs/image-20201023164634883.png">
+<meta property="og:image" content="http://julytreee.cn/imgs/image-20201023174657644.png">
+<meta property="article:published_time" content="2020-10-23T18:09:55.000Z">
+<meta property="article:modified_time" content="2023-06-23T13:50:41.802Z">
+<meta property="article:author" content="JulyTreee">
+<meta property="article:tag" content="GNN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://julytreee.cn/imgs/image-20201023152434602.png">
+
+
+<link rel="canonical" href="http://julytreee.cn/2020/10/23/ese680-lecture1&3/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://julytreee.cn/2020/10/23/ese680-lecture1&3/","path":"2020/10/23/ese680-lecture1&3/","title":"UPenn ESE 680(Graph neural networks) lecture note 1 and 3"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>UPenn ESE 680(Graph neural networks) lecture note 1 and 3 | 追求卓越 成功就会在不经意间追上你</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">追求卓越 成功就会在不经意间追上你</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Pursue excellence and success will come chasing you.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-links"><a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#UPenn-ESE-680-Graph-neural-networks-lecture-note-1-and-3"><span class="nav-number">1.</span> <span class="nav-text">UPenn ESE 680(Graph neural networks) lecture note 1 and 3</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E7%9B%AE%E6%A0%87"><span class="nav-number">1.1.</span> <span class="nav-text">课程目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.2.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NN-gt-CNN-gt-GNN"><span class="nav-number">1.3.</span> <span class="nav-text">NN -&gt; CNN -&gt; GNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E7%9A%84%E5%8D%B7%E7%A7%AF%E3%80%81%E7%A9%BA%E9%97%B4%E7%9A%84%E5%8D%B7%E7%A7%AF%E5%92%8C%E5%9B%BE%E4%B8%8A%E7%9A%84%E5%8D%B7%E7%A7%AF"><span class="nav-number">1.3.1.</span> <span class="nav-text">时间的卷积、空间的卷积和图上的卷积</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A4-x-i-in-mathbb-R-1-times-N-%E4%B8%BA-N-%E7%BB%B4%E8%A1%8C%E5%90%91%E9%87%8F%EF%BC%8C%E5%88%99-Ax-i-%E4%B8%BA%E7%AC%AC-i-%E4%B8%AA%E7%BB%93%E7%82%B9%E7%9A%84%E4%B8%80%E9%98%B6%E9%82%BB%E5%B1%85-begin-bmatrix-0-amp-1-amp-1-amp-1-1-amp-0-amp-0-amp-0-1-amp-0-amp-0-amp-1-1-amp-0-amp-1-amp-0-end-bmatrix-times-begin-bmatrix-x-0-x-1-x-2-x-3-end-bmatrix"><span class="nav-number">2.</span> <span class="nav-text">令 $x_i \in {\mathbb{R}^{1 \times N}} $ 为 $N$ 维行向量，则 $Ax_i$ 为第 $i$ 个结点的一阶邻居$$\begin{bmatrix}0 &amp; 1 &amp; 1 &amp; 1\1 &amp; 0 &amp; 0 &amp; 0\1 &amp; 0 &amp; 0 &amp; 1\1 &amp; 0 &amp; 1 &amp; 0\end{bmatrix}\times\begin{bmatrix}x_0\x_1\x_2\x_3\end{bmatrix}</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8C%E7%90%86%EF%BC%8C%E5%AF%B9%E4%BA%8E%E4%BA%8C%E9%98%B6%E9%82%BB%E5%B1%85%EF%BC%8C%E5%8F%AA%E9%9C%80%E8%A6%81%E5%86%8D%E4%B9%98%E4%B8%80%E6%AC%A1%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-begin-bmatrix-0-amp-1-amp-1-amp-1-1-amp-0-amp-0-amp-0-1-amp-0-amp-0-amp-1-1-amp-0-amp-1-amp-0-end-bmatrix-times-begin-bmatrix-x-1-x-2-x-3-x-0-x-0-x-3-x-0-x-2-end-bmatrix"><span class="nav-number">3.</span> <span class="nav-text">同理，对于二阶邻居，只需要再乘一次邻接矩阵$$\begin{bmatrix}0 &amp; 1 &amp; 1 &amp; 1\1 &amp; 0 &amp; 0 &amp; 0\1 &amp; 0 &amp; 0 &amp; 1\1 &amp; 0 &amp; 1 &amp; 0\end{bmatrix}\times\begin{bmatrix}x_1 + x_2 + x_3 \x_0 \x_0 + x_3 \x_0 + x_2\end{bmatrix}</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CNN-%E5%92%8C-GNN-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.0.1.</span> <span class="nav-text">CNN 和 GNN 的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E4%BD%8D%E7%A7%BB%E7%AE%97%E5%AD%90-Graph-shift-operator"><span class="nav-number">3.1.</span> <span class="nav-text">图位移算子 (Graph shift operator)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%A6%E7%9F%A9%E9%98%B5"><span class="nav-number">3.1.1.</span> <span class="nav-text">度矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E7%9F%A9%E9%98%B5-Laplacian-matrix"><span class="nav-number">3.1.2.</span> <span class="nav-text">拉普拉斯矩阵 (Laplacian matrix)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96-normalized-%E7%9A%84%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5"><span class="nav-number">3.1.3.</span> <span class="nav-text">正则化 (normalized) 的邻接矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96%E7%9A%84%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E7%9F%A9%E9%98%B5"><span class="nav-number">3.1.4.</span> <span class="nav-text">正则化的拉普拉斯矩阵</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E4%BF%A1%E5%8F%B7-Graph-signal"><span class="nav-number">3.2.</span> <span class="nav-text">图信号 (Graph signal)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%8D%B7%E7%A7%AF%E8%BF%87%E6%BB%A4%E5%99%A8-Graph-Convolutional-Filters"><span class="nav-number">3.2.1.</span> <span class="nav-text">图卷积过滤器 (Graph Convolutional Filters)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2-Graph-Fourier-Transform"><span class="nav-number">3.3.</span> <span class="nav-text">图傅里叶变换 (Graph Fourier Transform)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E8%BF%87%E6%BB%A4%E5%99%A8%E5%AF%B9%E9%A2%91%E7%8E%87%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%93%8D%E5%BA%94"><span class="nav-number">3.4.</span> <span class="nav-text">图过滤器对频率信号的响应</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.5.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">JulyTreee</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/July541" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;July541" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/JulyTreee" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;JulyTreee" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/sakurasrie" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;sakurasrie" rel="noopener me" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://julytreee.cn/2020/10/23/ese680-lecture1&3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="JulyTreee">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="追求卓越 成功就会在不经意间追上你">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="UPenn ESE 680(Graph neural networks) lecture note 1 and 3 | 追求卓越 成功就会在不经意间追上你">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          UPenn ESE 680(Graph neural networks) lecture note 1 and 3
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-10-23 18:09:55" itemprop="dateCreated datePublished" datetime="2020-10-23T18:09:55+00:00">2020-10-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-06-23 13:50:41" itemprop="dateModified" datetime="2023-06-23T13:50:41+00:00">2023-06-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/UPenn-ESE-680/" itemprop="url" rel="index"><span itemprop="name">UPenn ESE 680</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="UPenn-ESE-680-Graph-neural-networks-lecture-note-1-and-3"><a href="#UPenn-ESE-680-Graph-neural-networks-lecture-note-1-and-3" class="headerlink" title="UPenn ESE 680(Graph neural networks) lecture note 1 and 3"></a>UPenn ESE 680(Graph neural networks) lecture note 1 and 3</h1><h2 id="课程目标"><a href="#课程目标" class="headerlink" title="课程目标"></a>课程目标</h2><ol>
+<li>理解图神经网络的基础</li>
+<li>培养利用 GNN 开发实际应用的能力</li>
+</ol>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><ol>
+<li>论文作者识别：给定匿名文章推断其作者</li>
+<li>推荐系统：预测不同客户对物品的评分</li>
+<li>无线电资源分配</li>
+<li>etc.</li>
+</ol>
+<h2 id="NN-gt-CNN-gt-GNN"><a href="#NN-gt-CNN-gt-GNN" class="headerlink" title="NN -&gt; CNN -&gt; GNN"></a>NN -&gt; CNN -&gt; GNN</h2><span id="more"></span>
+
+<p>传统的神经网络无法处理多维数据，因此引入卷积操作来增强神经网络的处理能力，卷积神经网络通过堆叠多个卷积层和非线性变换层来处理数据，因此猜测图卷积神经网络也可以通过堆叠多个图卷积层和非线性变换层来达到目标，为什么会有这样的想法呢？</p>
+<h3 id="时间的卷积、空间的卷积和图上的卷积"><a href="#时间的卷积、空间的卷积和图上的卷积" class="headerlink" title="时间的卷积、空间的卷积和图上的卷积"></a>时间的卷积、空间的卷积和图上的卷积</h3><p>我们可以利用图来处理离散的时间和空间的信号<br><img src="/imgs/image-20201023152434602.png" alt="时间信号"><br><img src="/imgs/image-20201023152524467.png" alt="空间信号"></p>
+<p>以下图为例<br><img src="/imgs/image-20201023152926000.png" alt="图1"></p>
+<p>该图的邻接矩阵 $A$ (adjacency matrix) 为<br>$$<br>\begin{bmatrix}<br>0 &amp; 1 &amp; 1 &amp; 1\<br>1 &amp; 0 &amp; 0 &amp; 0\<br>1 &amp; 0 &amp; 0 &amp; 1\<br>1 &amp; 0 &amp; 1 &amp; 0<br>\end{bmatrix}<br>$$</p>
+<p>可以观察到 $A &#x3D; A^T$</p>
+<h1 id="令-x-i-in-mathbb-R-1-times-N-为-N-维行向量，则-Ax-i-为第-i-个结点的一阶邻居-begin-bmatrix-0-amp-1-amp-1-amp-1-1-amp-0-amp-0-amp-0-1-amp-0-amp-0-amp-1-1-amp-0-amp-1-amp-0-end-bmatrix-times-begin-bmatrix-x-0-x-1-x-2-x-3-end-bmatrix"><a href="#令-x-i-in-mathbb-R-1-times-N-为-N-维行向量，则-Ax-i-为第-i-个结点的一阶邻居-begin-bmatrix-0-amp-1-amp-1-amp-1-1-amp-0-amp-0-amp-0-1-amp-0-amp-0-amp-1-1-amp-0-amp-1-amp-0-end-bmatrix-times-begin-bmatrix-x-0-x-1-x-2-x-3-end-bmatrix" class="headerlink" title="令 $x_i \in {\mathbb{R}^{1 \times N}} $ 为 $N$ 维行向量，则 $Ax_i$ 为第 $i$ 个结点的一阶邻居$$\begin{bmatrix}0 &amp; 1 &amp; 1 &amp; 1\1 &amp; 0 &amp; 0 &amp; 0\1 &amp; 0 &amp; 0 &amp; 1\1 &amp; 0 &amp; 1 &amp; 0\end{bmatrix}\times\begin{bmatrix}x_0\x_1\x_2\x_3\end{bmatrix}"></a>令 $x_i \in {\mathbb{R}^{1 \times N}} $ 为 $N$ 维行向量，则 $Ax_i$ 为第 $i$ 个结点的一阶邻居<br>$$<br>\begin{bmatrix}<br>0 &amp; 1 &amp; 1 &amp; 1\<br>1 &amp; 0 &amp; 0 &amp; 0\<br>1 &amp; 0 &amp; 0 &amp; 1\<br>1 &amp; 0 &amp; 1 &amp; 0<br>\end{bmatrix}<br>\times<br>\begin{bmatrix}<br>x_0\<br>x_1\<br>x_2\<br>x_3<br>\end{bmatrix}</h1><p>\begin{bmatrix}<br>x_1 + x_2 + x_3 \<br>x_0 \<br>x_0 + x_3 \<br>x_0 + x_2<br>\end{bmatrix}<br>$$<br>可以看到每个结点都得到了它的一阶邻居的值。</p>
+<h1 id="同理，对于二阶邻居，只需要再乘一次邻接矩阵-begin-bmatrix-0-amp-1-amp-1-amp-1-1-amp-0-amp-0-amp-0-1-amp-0-amp-0-amp-1-1-amp-0-amp-1-amp-0-end-bmatrix-times-begin-bmatrix-x-1-x-2-x-3-x-0-x-0-x-3-x-0-x-2-end-bmatrix"><a href="#同理，对于二阶邻居，只需要再乘一次邻接矩阵-begin-bmatrix-0-amp-1-amp-1-amp-1-1-amp-0-amp-0-amp-0-1-amp-0-amp-0-amp-1-1-amp-0-amp-1-amp-0-end-bmatrix-times-begin-bmatrix-x-1-x-2-x-3-x-0-x-0-x-3-x-0-x-2-end-bmatrix" class="headerlink" title="同理，对于二阶邻居，只需要再乘一次邻接矩阵$$\begin{bmatrix}0 &amp; 1 &amp; 1 &amp; 1\1 &amp; 0 &amp; 0 &amp; 0\1 &amp; 0 &amp; 0 &amp; 1\1 &amp; 0 &amp; 1 &amp; 0\end{bmatrix}\times\begin{bmatrix}x_1 + x_2 + x_3 \x_0 \x_0 + x_3 \x_0 + x_2\end{bmatrix}"></a>同理，对于二阶邻居，只需要再乘一次邻接矩阵<br>$$<br>\begin{bmatrix}<br>0 &amp; 1 &amp; 1 &amp; 1\<br>1 &amp; 0 &amp; 0 &amp; 0\<br>1 &amp; 0 &amp; 0 &amp; 1\<br>1 &amp; 0 &amp; 1 &amp; 0<br>\end{bmatrix}<br>\times<br>\begin{bmatrix}<br>x_1 + x_2 + x_3 \<br>x_0 \<br>x_0 + x_3 \<br>x_0 + x_2<br>\end{bmatrix}</h1><p>\begin{bmatrix}<br>x_0 + x_0 + x_3 + x_0 + x_2 \<br>x_1 + x_2 + x_3 \<br>x_1 + x_2 + x_3 + x_0 + x_2 \<br>x_1 + x_2 + x_3 + x_0 + x_3<br>\end{bmatrix}<br>$$<br>对于每一阶邻居，给它们分别乘以一个相关系数，加起来就得到了某个结点吸收其邻居信息后的信号值<br>$$<br>Output\space z &#x3D; h_0S^0x_i + h_1S^1x_i + h_2S^x_i + \cdots &#x3D; \sum_{k&#x3D;0}^{\infty}h_kS^kx_i<br>$$</p>
+<h3 id="CNN-和-GNN-的区别"><a href="#CNN-和-GNN-的区别" class="headerlink" title="CNN 和 GNN 的区别"></a>CNN 和 GNN 的区别</h3><p>CNN 和 GNN 最大的区别在于 CNN 由于其标准的结构，其卷积层可以直接进行线性变换，而 GNN 则需要邻接矩阵吸收周围信息来进行卷积。</p>
+<h2 id="图位移算子-Graph-shift-operator"><a href="#图位移算子-Graph-shift-operator" class="headerlink" title="图位移算子 (Graph shift operator)"></a>图位移算子 (Graph shift operator)</h2><p>图位移算子就是图的矩阵表示，但是表示一个图的矩阵有很多种，我们把这些矩阵都称为图位移算子。</p>
+<p>对于上一节的图，若图上的边带有权值，则在吸收邻居信息的时候会受权值大小的影响。</p>
+<h3 id="度矩阵"><a href="#度矩阵" class="headerlink" title="度矩阵"></a>度矩阵</h3><p>下面定义结点的度 (degree)，结点的度等于等于其所有边的权值的和，若为不带权的图通常将每条边的权值看作 $1$。对于上图，有图的度矩阵<br>$$<br>D &#x3D;<br>\begin{bmatrix}<br>3 &amp; 0 &amp; 0 &amp; 0 \<br>0 &amp; 1 &amp; 0 &amp; 0 \<br>0 &amp; 0 &amp; 2 &amp; 0 \<br>0 &amp; 0 &amp; 0 &amp; 2<br>\end{bmatrix}<br>$$<br>可以看到度矩阵是一个对角阵且$D&#x3D;Diag(d_i), d_i&#x3D;\sum_j{w_{ij}}$。</p>
+<h3 id="拉普拉斯矩阵-Laplacian-matrix"><a href="#拉普拉斯矩阵-Laplacian-matrix" class="headerlink" title="拉普拉斯矩阵 (Laplacian matrix)"></a>拉普拉斯矩阵 (Laplacian matrix)</h3><p>拉普拉斯矩阵定义为<br>$$<br>L &#x3D; D - A<br>$$<br>其对角线上的值为度的值，非对角线上的值为对应边的权值</p>
+<h3 id="正则化-normalized-的邻接矩阵"><a href="#正则化-normalized-的邻接矩阵" class="headerlink" title="正则化 (normalized) 的邻接矩阵"></a>正则化 (normalized) 的邻接矩阵</h3><p>正则化的邻接矩阵定义为<br>$$<br>\bar{A} &#x3D; D^{-1&#x2F;2}AD^{-1&#x2F;2}<br>$$<br>即<br>$$<br>a_{ij} &#x3D; \frac{w_{ij}}{\sqrt{d_id_j}}<br>$$<br>若 $A&#x3D; A^T$，则 $\bar{A} &#x3D; \bar{A}{^T}$</p>
+<h3 id="正则化的拉普拉斯矩阵"><a href="#正则化的拉普拉斯矩阵" class="headerlink" title="正则化的拉普拉斯矩阵"></a>正则化的拉普拉斯矩阵</h3><p>正则化的拉普拉斯矩阵定义为<br>$$<br>\bar{L}&#x3D;D^{-1&#x2F;2}LD^{-1&#x2F;2}&#x3D;D^{-1&#x2F;2}(D-A)D^{-1&#x2F;2} &#x3D; I - \bar{A}<br>$$<br>即正则化的拉普拉斯和正则化的邻接矩阵是线性关系。</p>
+<p>同样，若 $A &#x3D; A^T$，则 $\bar{L} &#x3D; \bar{L}^{T}$</p>
+<hr>
+<p>图位移算子可以为以上任意一个矩阵</p>
+<ul>
+<li>$S &#x3D; A$</li>
+<li>$S &#x3D; L$</li>
+<li>$S &#x3D; \bar{A}$</li>
+<li>$S &#x3D; \bar{L}$</li>
+</ul>
+<p>对于 $S$ 具体选择哪一个则需要具体问题具体分析，但是在分析 GNN 的时候选择哪一个 $S$ 大多数情况下不会影响我们的结果。</p>
+<h2 id="图信号-Graph-signal"><a href="#图信号-Graph-signal" class="headerlink" title="图信号 (Graph signal)"></a>图信号 (Graph signal)</h2><p>图信号是图上结点所携带的信息，通常为该结点的特征表示。</p>
+<p>图信号的扩散可以定义为<br>$$<br>y &#x3D; Sx<br>$$<br>下图展示了图上信息的扩散过程<br><img src="/imgs/image-20201023163245998.png" alt="图信号的扩散"></p>
+<p>要注意的是，某个结点从其他结点收集信息的过程也是其他结点进行信息扩散的过程。</p>
+<h3 id="图卷积过滤器-Graph-Convolutional-Filters"><a href="#图卷积过滤器-Graph-Convolutional-Filters" class="headerlink" title="图卷积过滤器 (Graph Convolutional Filters)"></a>图卷积过滤器 (Graph Convolutional Filters)</h3><p>图卷积过滤器本质上是进行图信号线性处理的工具，给定图位移算子 $S$ 和系数 $h_k$，图卷积操作可表示为多项式的和<br>$$<br>H(S) &#x3D; \sum_{k&#x3D;0}^{\infty}h_kS^k<br>$$<br>将结果应用于图信号后可以得到<br>$$<br>y &#x3D; H(S)x &#x3D; \sum_{k&#x3D;0}^{\infty}h_kS^kx<br>$$</p>
+<blockquote>
+<p>卷积过滤器 (convolutional filter) 通常定义为 $y &#x3D; h_i \star x$</p>
+</blockquote>
+<p>此处我们说 $y&#x3D;h_{\star S}x$ 是过滤器 $h&#x3D;{h_k}_{k&#x3D;0}^\infty$ 在信号 $x$ 上的图卷积结果，即 $h$ 就是我们定义的过滤器。</p>
+<p>经过图卷积操作，图信号邻居出发逐渐扩展至全图，实现了图信息的获得。</p>
+<p>在课程中，教授将图卷积操作表示为<br>$$<br>Convolution &#x3D; Shift \space . \space Scale \space . \space Sum<br>$$<br><img src="/imgs/image-20201023164634883.png" alt="Convolution"></p>
+<p>如图所示，先对信号乘以图位移算子进行 Shift 操作，随后再乘以系数进行 Scale 操作，最后将结果与上一步的结果累加起来直到结束。</p>
+<h2 id="图傅里叶变换-Graph-Fourier-Transform"><a href="#图傅里叶变换-Graph-Fourier-Transform" class="headerlink" title="图傅里叶变换 (Graph Fourier Transform)"></a>图傅里叶变换 (Graph Fourier Transform)</h2><p>图傅里叶变换可以将图信号从空域 (spatial domain) 转换到频域 (frequency domain)。</p>
+<p>对于图位移算子 $S$， 有 $Sv_i &#x3D; \lambda_i v_i$，其中，$\lambda_i$ 为 $S$ 的一个特征值， $v_i$ 为该特征值对应的特征向量。不是一般性，我们将特征值从小到大排列，即<br>$$<br>\lambda_0 \leq \lambda_1 \leq \dots \leq \lambda_n<br>$$<br>由于图位移算子 $S$ 是实对称矩阵，所以 $S$ 必可以正交对角化，有<br>$$<br>S &#x3D; V\Lambda V^T<br>$$<br>其中，$VV^T&#x3D;I$。</p>
+<p>现在，我们可以对图上的信号 $x$ 定义图傅里叶变换，有<br>$$<br>\tilde{x} &#x3D; V^Tx<br>$$<br>该变换是在图位移算子上特征空间的投影，$\tilde{x}$ 是 $x$ 在图上频率的表示。</p>
+<p>图傅里叶的逆变换定义为<br>$$<br>\tilde{\tilde{x}} &#x3D; V\tilde{x}<br>$$<br>注意到<br>$$<br>\tilde{\tilde{x}} &#x3D; V\tilde{x} &#x3D; V(V^Tx) &#x3D; Ix &#x3D; x<br>$$</p>
+<h2 id="图过滤器对频率信号的响应"><a href="#图过滤器对频率信号的响应" class="headerlink" title="图过滤器对频率信号的响应"></a>图过滤器对频率信号的响应</h2><p>对于变换后的图信号 $\tilde{x} &#x3D; V^Tx$ 和 $\tilde{y} &#x3D; V^Ty$，有<br>$$<br>\tilde{y} &#x3D; V^Ty &#x3D; V^T(\sum_{k&#x3D;0}^{\infty}h_kS^kx) &#x3D; V^T(\sum_{k&#x3D;0}^{\infty}h_k(V\Lambda V^T)x)&#x3D;\sum_{k&#x3D;0}^{\infty}h_k\Lambda^k\tilde{x}<br>$$<br>可以看到，对于变换后的信号，图位移算子从 $S$ 变成了 $S$ 的特征值 $\Lambda$，即对原始图信号在图过滤器上的信息扩散等价于图傅里叶变换后的信号在图过滤器的投影上的信息扩散。<br>$$<br>\tilde{h}(\lambda) &#x3D; \sum_{k&#x3D;0}^{\infty}h_k\Lambda^k<br>$$</p>
+<blockquote>
+<p>要明确扩散的方式与图无关，仅取决于算子前的系数，也就是过滤器的值，图的作用是决定进行扩散的特征值。也是因为此，我们可以在不同的图上运行同一个过滤器的值，GNN 的稳定性和可迁移性也是来源于此。</p>
+</blockquote>
+<p><img src="/imgs/image-20201023174657644.png" alt="同一个过滤器应用不同的特征向量"><br>上图演示了在不同的两个图 (蓝色和红色) 上运行同一个过滤器的过程，可以看到过滤器已经固定了，对于不同的图的不同特征值，其过滤结果已经被确定了，说人话就是 $\lambda$ 是函数 $\tilde{h}$ 的参数，$\tilde{h}$ 是一个具体的函数，函数的表达式被系数确定，函数的参数决定了函数最后输出什么值。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这两节课讲了 GNN 运行的整个流程以及 GNN 运行中需要的参数 。</p>
+<p>GNN 与 CNN 最大的不同就是在于卷积层的实现方式，GNN 的卷积过程被表现为图上的多次位移操作 (Shift . Scale . Sum)。在确认了对图位移算子进行多次相乘可以进行信息传递后，对图信号的转换方式开始探究，将图位移算子改为图的特征值之后，可以通过图傅里叶变换将图信号从空域转到频域，将图上的信号相互关联起来。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/GNN/" rel="tag"># GNN</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/07/15/logistic-regression-and-maximum-entropy-model/" rel="prev" title="统计学习方法（五）：逻辑斯谛回归与最大熵模型">
+                  <i class="fa fa-chevron-left"></i> 统计学习方法（五）：逻辑斯谛回归与最大熵模型
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/11/09/ese680-lecture%204/" rel="next" title="UPenn ESE 680(Graph neural networks) lecture note 4">
+                  UPenn ESE 680(Graph neural networks) lecture note 4 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa-solid fa-wand-sparkles"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JulyTreee</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/July541" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
