@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"-@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.npmmirror.com/-/-/--0.0.1.tgz"
+  integrity sha512-3HfneK3DGAm05fpyj20sT3apkNcvPpCuccOThOPdzz8sY7GgQGe0l93XH9bt+YzibcTIgUAIMoyVJI740RtgyQ==
+
 "@adobe/css-tools@^4.0.1":
   version "4.2.0"
   resolved "https://registry.npmmirror.com/@adobe/css-tools/-/css-tools-4.2.0.tgz"
@@ -687,7 +692,7 @@ hexo-renderer-ejs@^2.0.0:
   dependencies:
     ejs "^3.1.6"
 
-hexo-renderer-marked@^6.0.0:
+hexo-renderer-marked@^6.1.0:
   version "6.1.0"
   resolved "https://registry.npmmirror.com/hexo-renderer-marked/-/hexo-renderer-marked-6.1.0.tgz"
   integrity sha512-KuVuaYFyKfbJj5dtwoWMwTNbe7rk+UuVR/tGzLXbQ05AWO5ob6xpFHbfeSyzSDt4ccYLzaKJBRduDWHd2f6bSQ==
