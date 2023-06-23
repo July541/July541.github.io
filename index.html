@@ -83,7 +83,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-links"><a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-links"><a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a></li><li class="menu-item menu-item-hoh"><a href="/hoh/" rel="section"><i class="fa fa-book fa-fw"></i>Haskell 优化手册</a></li>
   </ul>
 </nav>
 
@@ -207,7 +207,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-23 14:36:11" itemprop="dateModified" datetime="2023-06-23T14:36:11+00:00">2023-06-23</time>
+      <time title="修改时间：2023-06-23 15:38:14" itemprop="dateModified" datetime="2023-06-23T15:38:14+00:00">2023-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -229,10 +229,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="Deriving-详解"><a href="#Deriving-详解" class="headerlink" title="Deriving 详解"></a>Deriving 详解</h1><p>本文介绍 Haskell 中 deriving 的详细用法。</p>
-<h2 id="Deriving-的常规用法"><a href="#Deriving-的常规用法" class="headerlink" title="Deriving 的常规用法"></a>Deriving 的常规用法</h2><p>对于如下代码：</p>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">A</span> = <span class="type">MkA</span> <span class="type">Int</span> <span class="keyword">deriving</span> (<span class="type">Show</span>, <span class="type">Eq</span>)</span></span><br></pre></td></tr></table></figure>
-<p>上面的类型 <code>A</code> 派生为了 <code>Show</code> 和 <code>Eq</code> 的实例，这使得我们可以打印 <code>A</code> 的实例，也可以对两个 <code>A</code> 类型的实例进行相等的比较，即：</p>
+          <h1 id="deriving-详解">Deriving 详解</h1>
+<p>本文介绍 Haskell 中 deriving 的详细用法。</p>
+<h2 id="deriving-的常规用法">Deriving 的常规用法</h2>
+<p>对于如下代码： <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">A</span> = <span class="type">MkA</span> <span class="type">Int</span> <span class="keyword">deriving</span> (<span class="type">Show</span>, <span class="type">Eq</span>)</span></span><br></pre></td></tr></table></figure> 上面的类型 <code>A</code> 派生为了
+<code>Show</code> 和 <code>Eq</code> 的实例，这使得我们可以打印
+<code>A</code> 的实例，也可以对两个 <code>A</code>
+类型的实例进行相等的比较，即：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; MkA 3</span><br><span class="line">MkA 3</span><br><span class="line">λ&gt; MkA 3 == MkA 4</span><br><span class="line">False</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
@@ -303,7 +306,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-23 14:36:11" itemprop="dateModified" datetime="2023-06-23T14:36:11+00:00">2023-06-23</time>
+      <time title="修改时间：2023-06-23 15:38:14" itemprop="dateModified" datetime="2023-06-23T15:38:14+00:00">2023-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -327,10 +330,10 @@
     <div class="post-body" itemprop="articleBody">
           <p>晚上干活一时疏忽把 <code>root</code> 的权限收回了</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">REVOKE ALL PRIVILEGES ON * . * FROM &#x27;root&#x27;@&#x27;localhost&#x27;;</span><br><span class="line">REVOKE GRANT OPTION ON * . * FROM &#x27;root&#x27;@&#x27;localhost&#x27;;</span><br></pre></td></tr></table></figure>
-
-<p>上面命令带来的后果就是所有的操作都被拒绝，执行 <code>show databases</code> 只有 <code>information_schema</code> 显示。</p>
+<p>上面命令带来的后果就是所有的操作都被拒绝，执行
+<code>show databases</code> 只有 <code>information_schema</code>
+显示。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; use mysql;</span><br><span class="line">ERROR 1044 (42000): Access denied for user &#x27;root&#x27;@&#x27;localhost&#x27; to database &#x27;mysql&#x27;</span><br></pre></td></tr></table></figure>
-
 <p>网上找到的解决方法均不适用于当前情况，特此记录。</p>
           <!--noindex-->
             <div class="post-button">
@@ -401,7 +404,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-23 14:36:11" itemprop="dateModified" datetime="2023-06-23T14:36:11+00:00">2023-06-23</time>
+      <time title="修改时间：2023-06-23 15:38:14" itemprop="dateModified" datetime="2023-06-23T15:38:14+00:00">2023-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -423,8 +426,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="函数作为函子实例的理解"><a href="#函数作为函子实例的理解" class="headerlink" title="函数作为函子实例的理解"></a>函数作为函子实例的理解</h1><p><code>((-&gt;) r)</code>，或者说函数，也是函子 (Functor) 的实例，这个概念理解起来通常有一点困难，让我们通过一个例题来体验一下。</p>
-<p>题目是判断一个给定的字符串是否为回文串。思路很简单，对于给定的字符串 <code>str</code>，只需要判断其反转后的结果是否与原串相同即可。</p>
+          <h1 id="函数作为函子实例的理解">函数作为函子实例的理解</h1>
+<p><code>((-&gt;) r)</code>，或者说函数，也是函子 (Functor)
+的实例，这个概念理解起来通常有一点困难，让我们通过一个例题来体验一下。</p>
+<p>题目是判断一个给定的字符串是否为回文串。思路很简单，对于给定的字符串
+<code>str</code>，只需要判断其反转后的结果是否与原串相同即可。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2021/09/13/function-as-functor-instance/#more" rel="contents">
@@ -494,7 +500,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-23 14:36:11" itemprop="dateModified" datetime="2023-06-23T14:36:11+00:00">2023-06-23</time>
+      <time title="修改时间：2023-06-23 15:38:14" itemprop="dateModified" datetime="2023-06-23T15:38:14+00:00">2023-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -516,7 +522,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="Haskell-的-Kind-系统入门"><a href="#Haskell-的-Kind-系统入门" class="headerlink" title="Haskell 的 Kind 系统入门"></a>Haskell 的 Kind 系统入门</h1><p>本文是对<a target="_blank" rel="noopener" href="https://diogocastro.com/blog/2018/10/17/haskells-kind-system-a-primer/">这篇</a>文章的翻译，文章通过与 type 的对比帮助读者入门 kind 理论。</p>
+          <h1 id="haskell-的-kind-系统入门">Haskell 的 Kind 系统入门</h1>
+<p>本文是对<a
+target="_blank" rel="noopener" href="https://diogocastro.com/blog/2018/10/17/haskells-kind-system-a-primer/">这篇</a>文章的翻译，文章通过与
+type 的对比帮助读者入门 kind 理论。</p>
 <blockquote>
 <p>文中所有的代码基于 <code>GHC 8.4.3</code>。</p>
 </blockquote>
@@ -589,7 +598,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-23 14:36:11" itemprop="dateModified" datetime="2023-06-23T14:36:11+00:00">2023-06-23</time>
+      <time title="修改时间：2023-06-23 15:38:14" itemprop="dateModified" datetime="2023-06-23T15:38:14+00:00">2023-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -611,7 +620,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="PatternSynonyms"><a href="#PatternSynonyms" class="headerlink" title="PatternSynonyms"></a>PatternSynonyms</h1><p>PatternSynonyms 用来处理在进行模式匹配 (pattern matching) 时模式名称过长的问题，通过给模式一个简化的名称来实现降低代码量和增加易理解程度的功能。PatternSynonyms 开启需要显式指明 <code>&#123;-# LANGUAGE PatternSynonyms #-&#125;</code>。</p>
+          <h1 id="patternsynonyms">PatternSynonyms</h1>
+<p>PatternSynonyms 用来处理在进行模式匹配 (pattern matching)
+时模式名称过长的问题，通过给模式一个简化的名称来实现降低代码量和增加易理解程度的功能。PatternSynonyms
+开启需要显式指明 <code>&#123;-# LANGUAGE PatternSynonyms #-&#125;</code>。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2021/02/23/extension-pattern-synonyms/#more" rel="contents">
@@ -681,7 +693,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-23 14:36:11" itemprop="dateModified" datetime="2023-06-23T14:36:11+00:00">2023-06-23</time>
+      <time title="修改时间：2023-06-23 15:38:14" itemprop="dateModified" datetime="2023-06-23T15:38:14+00:00">2023-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -703,7 +715,22 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="UPenn-ESE-680-Graph-neural-networks-lecture-note-4"><a href="#UPenn-ESE-680-Graph-neural-networks-lecture-note-4" class="headerlink" title="UPenn ESE 680(Graph neural networks) lecture note 4"></a>UPenn ESE 680(Graph neural networks) lecture note 4</h1><h2 id="图信号的学习"><a href="#图信号的学习" class="headerlink" title="图信号的学习"></a>图信号的学习</h2><p>在图上的学习等价于图上经验风险最小化 (empirical risk minimization)，即学习 $\Phi^\ast$，满足<br>$$<br>\Phi^\ast &#x3D; \underset{\Phi\in C}{argmin} \sum_{(x,y)\in \tau} \ell(y, \Phi (x))<br>$$<br>由上节课知识可以知道上式其实就是学习在过滤器 $S$ 下最小损失的过滤器 $h$<br>$$<br>h^\ast &#x3D; \underset{h}{argmin} \sum_{(x,y)\in \tau} \ell(y, \Phi (x; S, h))<br>$$<br>在训练的最后一层我们需要将图信号转换成需要的数据，这一步叫做 Readout。</p>
+          <h1 id="upenn-ese-680graph-neural-networks-lecture-note-4">UPenn ESE
+680(Graph neural networks) lecture note 4</h1>
+<h2 id="图信号的学习">图信号的学习</h2>
+<p>在图上的学习等价于图上经验风险最小化 (empirical risk
+minimization)，即学习 <span
+class="math inline">\(\Phi^\ast\)</span>，满足 <span
+class="math display">\[
+\Phi^\ast = \underset{\Phi\in C}{argmin} \sum_{(x,y)\in \tau} \ell(y,
+\Phi (x))
+\]</span> 由上节课知识可以知道上式其实就是学习在过滤器 <span
+class="math inline">\(S\)</span> 下最小损失的过滤器 <span
+class="math inline">\(h\)</span> <span class="math display">\[
+h^\ast = \underset{h}{argmin} \sum_{(x,y)\in \tau} \ell(y, \Phi (x; S,
+h))
+\]</span> 在训练的最后一层我们需要将图信号转换成需要的数据，这一步叫做
+Readout。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/11/09/ese680-lecture%204/#more" rel="contents">
@@ -773,7 +800,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-23 14:36:11" itemprop="dateModified" datetime="2023-06-23T14:36:11+00:00">2023-06-23</time>
+      <time title="修改时间：2023-06-23 15:38:14" itemprop="dateModified" datetime="2023-06-23T15:38:14+00:00">2023-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -795,17 +822,21 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="UPenn-ESE-680-Graph-neural-networks-lecture-note-1-and-3"><a href="#UPenn-ESE-680-Graph-neural-networks-lecture-note-1-and-3" class="headerlink" title="UPenn ESE 680(Graph neural networks) lecture note 1 and 3"></a>UPenn ESE 680(Graph neural networks) lecture note 1 and 3</h1><h2 id="课程目标"><a href="#课程目标" class="headerlink" title="课程目标"></a>课程目标</h2><ol>
+          <h1 id="upenn-ese-680graph-neural-networks-lecture-note-1-and-3">UPenn
+ESE 680(Graph neural networks) lecture note 1 and 3</h1>
+<h2 id="课程目标">课程目标</h2>
+<ol type="1">
 <li>理解图神经网络的基础</li>
 <li>培养利用 GNN 开发实际应用的能力</li>
 </ol>
-<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><ol>
+<h2 id="应用场景">应用场景</h2>
+<ol type="1">
 <li>论文作者识别：给定匿名文章推断其作者</li>
 <li>推荐系统：预测不同客户对物品的评分</li>
 <li>无线电资源分配</li>
 <li>etc.</li>
 </ol>
-<h2 id="NN-gt-CNN-gt-GNN"><a href="#NN-gt-CNN-gt-GNN" class="headerlink" title="NN -&gt; CNN -&gt; GNN"></a>NN -&gt; CNN -&gt; GNN</h2>
+<h2 id="nn---cnn---gnn">NN -&gt; CNN -&gt; GNN</h2>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/10/23/ese680-lecture1&3/#more" rel="contents">
@@ -875,7 +906,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-23 14:36:11" itemprop="dateModified" datetime="2023-06-23T14:36:11+00:00">2023-06-23</time>
+      <time title="修改时间：2023-06-23 15:38:14" itemprop="dateModified" datetime="2023-06-23T15:38:14+00:00">2023-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -897,7 +928,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="逻辑斯谛回归与最大熵模型"><a href="#逻辑斯谛回归与最大熵模型" class="headerlink" title="逻辑斯谛回归与最大熵模型"></a>逻辑斯谛回归与最大熵模型</h1><p>logistic regression 是统计学习中的经典分类方法，其方法可简单理解为在 linear regression 上应用 sigmoid 进行映射, 将其转换为二分类问题。《统计学校方法》 一书通过 logistic distribution 进行推导。将 logistic 翻译成逻辑斯谛这种无意义的单词也太无聊了，后文将全部使用英文表述。</p>
+          <h1 id="逻辑斯谛回归与最大熵模型">逻辑斯谛回归与最大熵模型</h1>
+<p>logistic regression 是统计学习中的经典分类方法，其方法可简单理解为在
+linear regression 上应用 sigmoid 进行映射,
+将其转换为二分类问题。《统计学校方法》 一书通过 logistic distribution
+进行推导。将 logistic
+翻译成逻辑斯谛这种无意义的单词也太无聊了，后文将全部使用英文表述。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/07/15/logistic-regression-and-maximum-entropy-model/#more" rel="contents">
@@ -967,7 +1003,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-23 14:36:11" itemprop="dateModified" datetime="2023-06-23T14:36:11+00:00">2023-06-23</time>
+      <time title="修改时间：2023-06-23 15:38:14" itemprop="dateModified" datetime="2023-06-23T15:38:14+00:00">2023-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -989,8 +1025,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h1><p>决策树 (decision tree) 是一种基本的分类与回归方法。本文主要讨论用于分类的决策树。决策树模型呈树形结构，在分类问题中，表示介于特征对实例进行分类的过程。它可以认为是 if-then 规则的集合，也可以认为是定义在特征空间与类空间上的条件概率分布。其主要优点是模型具有<strong>可读性</strong>，<strong>分类速度快</strong>。</p>
-<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><p>决策树是树状模型，由叶子结点和非叶子结点构成，非叶子结点表示一个特征或属性，叶子结点表示一个类。决策树的分类过程很简单，从根结点依次遍历，依据结点的取值选择对应的分支继续遍历直到到达叶子结点，返回对应的类。决策树的各非叶子结点的属性要求互斥且完备。</p>
+          <h1 id="决策树">决策树</h1>
+<p>决策树 (decision tree)
+是一种基本的分类与回归方法。本文主要讨论用于分类的决策树。决策树模型呈树形结构，在分类问题中，表示介于特征对实例进行分类的过程。它可以认为是
+if-then
+规则的集合，也可以认为是定义在特征空间与类空间上的条件概率分布。其主要优点是模型具有<strong>可读性</strong>，<strong>分类速度快</strong>。</p>
+<h2 id="模型">模型</h2>
+<p>决策树是树状模型，由叶子结点和非叶子结点构成，非叶子结点表示一个特征或属性，叶子结点表示一个类。决策树的分类过程很简单，从根结点依次遍历，依据结点的取值选择对应的分支继续遍历直到到达叶子结点，返回对应的类。决策树的各非叶子结点的属性要求互斥且完备。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/07/09/decision-tree/#more" rel="contents">
@@ -1060,7 +1101,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-23 14:36:11" itemprop="dateModified" datetime="2023-06-23T14:36:11+00:00">2023-06-23</time>
+      <time title="修改时间：2023-06-23 15:38:14" itemprop="dateModified" datetime="2023-06-23T15:38:14+00:00">2023-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1082,7 +1123,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="朴素贝叶斯法"><a href="#朴素贝叶斯法" class="headerlink" title="朴素贝叶斯法"></a>朴素贝叶斯法</h1><p>朴素贝叶斯 (naive Bayes) 法是基于贝叶斯定理于特征条件独立假设的分类方法。对于给定的训练数据集，首先基于<strong>特征条件独立假设</strong>学习输入输出的联合概率分布，随后再利用此模型，对于给定的输入 $x$，利用贝叶斯定理求出后验概率最大的输出 $y$。朴素贝叶斯法属于<strong>生成模型</strong>。</p>
+          <h1 id="朴素贝叶斯法">朴素贝叶斯法</h1>
+<p>朴素贝叶斯 (naive Bayes)
+法是基于贝叶斯定理于特征条件独立假设的分类方法。对于给定的训练数据集，首先基于<strong>特征条件独立假设</strong>学习输入输出的联合概率分布，随后再利用此模型，对于给定的输入
+<span
+class="math inline">\(x\)</span>，利用贝叶斯定理求出后验概率最大的输出
+<span
+class="math inline">\(y\)</span>。朴素贝叶斯法属于<strong>生成模型</strong>。
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/07/05/naive-bayes/#more" rel="contents">

@@ -19,15 +19,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"julytreee.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="朴素贝叶斯法朴素贝叶斯 (naive Bayes) 法是基于贝叶斯定理于特征条件独立假设的分类方法。对于给定的训练数据集，首先基于特征条件独立假设学习输入输出的联合概率分布，随后再利用此模型，对于给定的输入 $x$，利用贝叶斯定理求出后验概率最大的输出 $y$。朴素贝叶斯法属于生成模型。">
+    <meta name="description" content="朴素贝叶斯法 朴素贝叶斯 (naive Bayes) 法是基于贝叶斯定理于特征条件独立假设的分类方法。对于给定的训练数据集，首先基于特征条件独立假设学习输入输出的联合概率分布，随后再利用此模型，对于给定的输入 \(x\)，利用贝叶斯定理求出后验概率最大的输出 \(y\)。朴素贝叶斯法属于生成模型。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="统计学习方法（三）：朴素贝叶斯法">
 <meta property="og:url" content="http://julytreee.cn/2020/07/05/naive-bayes/index.html">
 <meta property="og:site_name" content="追求卓越 成功就会在不经意间追上你">
-<meta property="og:description" content="朴素贝叶斯法朴素贝叶斯 (naive Bayes) 法是基于贝叶斯定理于特征条件独立假设的分类方法。对于给定的训练数据集，首先基于特征条件独立假设学习输入输出的联合概率分布，随后再利用此模型，对于给定的输入 $x$，利用贝叶斯定理求出后验概率最大的输出 $y$。朴素贝叶斯法属于生成模型。">
+<meta property="og:description" content="朴素贝叶斯法 朴素贝叶斯 (naive Bayes) 法是基于贝叶斯定理于特征条件独立假设的分类方法。对于给定的训练数据集，首先基于特征条件独立假设学习输入输出的联合概率分布，随后再利用此模型，对于给定的输入 \(x\)，利用贝叶斯定理求出后验概率最大的输出 \(y\)。朴素贝叶斯法属于生成模型。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-07-05T06:38:12.000Z">
-<meta property="article:modified_time" content="2023-06-23T14:36:11.167Z">
+<meta property="article:modified_time" content="2023-06-23T15:38:14.893Z">
 <meta property="article:author" content="JulyTreee">
 <meta property="article:tag" content="machine learning">
 <meta property="article:tag" content="naive Bayes">
@@ -89,7 +89,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-links"><a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-links"><a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a></li><li class="menu-item menu-item-hoh"><a href="/hoh/" rel="section"><i class="fa fa-book fa-fw"></i>Haskell 优化手册</a></li>
   </ul>
 </nav>
 
@@ -215,7 +215,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-23 14:36:11" itemprop="dateModified" datetime="2023-06-23T14:36:11+00:00">2023-06-23</time>
+      <time title="修改时间：2023-06-23 15:38:14" itemprop="dateModified" datetime="2023-06-23T15:38:14+00:00">2023-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -236,25 +236,123 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="朴素贝叶斯法"><a href="#朴素贝叶斯法" class="headerlink" title="朴素贝叶斯法"></a>朴素贝叶斯法</h1><p>朴素贝叶斯 (naive Bayes) 法是基于贝叶斯定理于特征条件独立假设的分类方法。对于给定的训练数据集，首先基于<strong>特征条件独立假设</strong>学习输入输出的联合概率分布，随后再利用此模型，对于给定的输入 $x$，利用贝叶斯定理求出后验概率最大的输出 $y$。朴素贝叶斯法属于<strong>生成模型</strong>。</p>
-<span id="more"></span>
-
-<h2 id="贝叶斯公式"><a href="#贝叶斯公式" class="headerlink" title="贝叶斯公式"></a>贝叶斯公式</h2><p>$$<br>P(B|A) &#x3D; \frac{P(B)P(A|B)}{P(A)}<br>$$</p>
-<p>$$<br>P(B_i|A) &#x3D; \frac{P(B)P(A|B_i)}{\sum_{j&#x3D;1}^n{P(B_j)P(A|B_j)}}<br>$$</p>
-<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><p>朴素贝叶斯法通过训练数据集学习联合概率分布 $P(X, Y)$。</p>
-<p>首先学习先验概率分布<br>$$<br>P(Y&#x3D;c_k), k&#x3D;1,2,\cdots,K<br>$$<br>其中 $c_k$ 是第 $k$ 个类标记。随后学习条件概率分布<br>$$<br>P(X&#x3D;x|Y&#x3D;c_k)&#x3D;P(X^{(1)}&#x3D;x^{(1)},\cdots,X^{(n)}&#x3D;x^{(n)}|Y&#x3D;c_k), k&#x3D;1,2,\cdots,K<br>$$<br>于是便可学到联合概率分布 $P(X,Y)&#x3D;P(X|Y)P(Y)$。</p>
-<p>为了解决条件概率分布 $P(X&#x3D;x|Y&#x3D;c_k)$ 的参数过多的问题，朴素贝叶斯法假设训练数据由 $P(X,Y)$ 独立同分布产生，由于这是一个较强的假设，朴素贝叶斯法也由此得名。将条件独立性假设写成公式<br>$$<br>\begin{equation}\nonumber<br>\begin{aligned}<br>P(X&#x3D;x|Y&#x3D;c_k)&amp;&#x3D;P(X^{(1)}&#x3D;x^{(1)},\cdots,X^{(n)}&#x3D;x^{(n)}|Y&#x3D;c_k) \<br>&amp;&#x3D;\prod_{j&#x3D;1}^n{P(X^{(j)}&#x3D;x^{(j)}|Y&#x3D;c_k)}<br>\end{aligned}<br>\end{equation}<br>$$<br>条件独立性假设使模型变简单，但有时会损失一定的分类准确率。</p>
-<p>下面对模型进行推导。由贝叶斯定理有<br>$$<br>P(Y&#x3D;c_k|X&#x3D;x) &#x3D; \frac{P(X&#x3D;x|Y&#x3D;c_k)P(Y&#x3D;c_k)}{\sum_j{P(X&#x3D;x|Y&#x3D;c_j)P(Y&#x3D;c_j)}}<br>$$<br>将独立性假设引入上式，得<br>$$<br>P(Y&#x3D;c_k|X&#x3D;x) &#x3D; \frac{\prod_iP(X^{(i)}&#x3D;x^{(i)}|Y&#x3D;c_k)P(Y&#x3D;c_k)}{\sum_j\prod_i{P(X^{(i)}&#x3D;x^{(i)}|Y&#x3D;c_j)P(Y&#x3D;c_j)}}<br>$$<br>这是朴素贝叶斯法分类的基本公式，因此，朴素贝叶斯分类器可表示为<br>$$<br>y&#x3D;f(x)&#x3D;arg\space \underset{c_k}{max}\frac{\prod_iP(X^{(i)}&#x3D;x^{(i)}|Y&#x3D;c_k)P(Y&#x3D;c_k)}{\sum_j\prod_i{P(X^{(i)}&#x3D;x^{(i)}|Y&#x3D;c_j)P(Y&#x3D;c_j)}}<br>$$<br>注意到，对于所有的 $c_k$，上式的分母都是相同的，于是分类器可进一步被写为<br>$$<br>y&#x3D;f(x)&#x3D;arg\space \underset{c_k}{max}\prod_iP(X^{(i)}&#x3D;x^{(i)}|Y&#x3D;c_k)P(Y&#x3D;c_k)<br>$$</p>
-<h3 id="对于后验概率最大化的理解"><a href="#对于后验概率最大化的理解" class="headerlink" title="对于后验概率最大化的理解"></a>对于后验概率最大化的理解</h3><p>可以证明：朴素贝叶斯法后验概率最大化等价于期望风险最小化。</p>
-<p>假设选择0-1损失函数<br>$$<br>L(Y,f(X)) &#x3D; \left{\begin{matrix}<br>1,Y\neq f(X)\<br>0, y&#x3D;f(X)<br>\end{matrix}\right.<br>$$<br>其中 $f(X)$ 是分类决策函数。这时，期望风险函数为<br>$$<br>R_{exp}(f)&#x3D;E[L(Y,f(X))]<br>$$<br>期望是对联合分布 $P(X,Y)$ 取的。由此取条件期望<br>$$<br>R_{exp}(f)&#x3D;E_X\sum_{k&#x3D;1}^K{[L(c_k, f(X))]P(c_k|X)}<br>$$<br>为了使期望风险最小化，对 $X&#x3D;x$ 逐个极小化<br>$$<br>\begin{equation}\nonumber<br>\begin{aligned}<br>f(x) &amp;&#x3D; arg \space \underset{y\in \mathcal{Y}}{min}\sum_{k&#x3D;1}^{K}{L(c_k,y)P(c_k|X&#x3D;x)} \<br>&amp;&#x3D; arg \space \underset{y\in \mathcal{Y}}{min}\sum_{k&#x3D;1}^{K}{P(y\neq c_k|X&#x3D;x)} \<br>&amp;&#x3D; arg \space \underset{y\in \mathcal{Y}}{min}\sum_{k&#x3D;1}^{K}{(1-P(y\neq c_k|X&#x3D;x))} \<br>&amp;&#x3D; arg \space \underset{y\in \mathcal{Y}}{max}P(y&#x3D;c_k|X&#x3D;x)<br>\end{aligned}<br>\end{equation}<br>$$<br>由此，就根据期望风险最小化准则得到了后验概率最大化准则，也就是朴素贝叶斯法所采用的原理。</p>
-<h2 id="朴素贝叶斯法的参数估计"><a href="#朴素贝叶斯法的参数估计" class="headerlink" title="朴素贝叶斯法的参数估计"></a>朴素贝叶斯法的参数估计</h2><p>在朴素贝叶斯法中，模型的学习就是对 $P(Y&#x3D;c_k)$ 和 $P(X^{(i)}&#x3D;x^{(i)}|Y&#x3D;c_k)$ 进行估计，估计的方法选择极大似然估计法。</p>
-<p>对先验概率 $P(Y&#x3D;c_k)$ 的极大似然估计为<br>$$<br>P(Y&#x3D;c_k)&#x3D;\frac{\sum_{i&#x3D;1}^K{I(y_i&#x3D;c_k)}}{N}<br>$$<br>$N$ 为训练样本个数。</p>
-<p>设第 $j$ 个特征 $x^{(j)}$ 可能取值的集合为 ${a_{j1},a_{j2},\cdots,a_{jS_j}}$，条件概率 $P(X^{(i)}&#x3D;a_{jl}|Y&#x3D;c_k)$ 的极大似然估计为<br>$$<br>P(X^{(j)}&#x3D;a_{jl}|Y&#x3D;c_k)&#x3D;\frac{\sum_{i&#x3D;1}^N{I(x_i^{(j)}&#x3D;a_{jl}},y_i&#x3D;c_k)}{\sum_{i&#x3D;1}^N{I(y_i&#x3D;c_k)}}<br>$$<br>其中 $S_j &#x3D; |x^{(j)}|$ 。</p>
+    <div class="post-body" itemprop="articleBody"><h1 id="朴素贝叶斯法">朴素贝叶斯法</h1>
+<p>朴素贝叶斯 (naive Bayes)
+法是基于贝叶斯定理于特征条件独立假设的分类方法。对于给定的训练数据集，首先基于<strong>特征条件独立假设</strong>学习输入输出的联合概率分布，随后再利用此模型，对于给定的输入
+<span
+class="math inline">\(x\)</span>，利用贝叶斯定理求出后验概率最大的输出
+<span
+class="math inline">\(y\)</span>。朴素贝叶斯法属于<strong>生成模型</strong>。
+<span id="more"></span></p>
+<h2 id="贝叶斯公式">贝叶斯公式</h2>
+<p><span class="math display">\[
+P(B|A) = \frac{P(B)P(A|B)}{P(A)}
+\]</span></p>
+<p><span class="math display">\[
+P(B_i|A) = \frac{P(B)P(A|B_i)}{\sum_{j=1}^n{P(B_j)P(A|B_j)}}
+\]</span></p>
+<h2 id="模型">模型</h2>
+<p>朴素贝叶斯法通过训练数据集学习联合概率分布 <span
+class="math inline">\(P(X, Y)\)</span>。</p>
+<p>首先学习先验概率分布 <span class="math display">\[
+P(Y=c_k), k=1,2,\cdots,K
+\]</span> 其中 <span class="math inline">\(c_k\)</span> 是第 <span
+class="math inline">\(k\)</span> 个类标记。随后学习条件概率分布 <span
+class="math display">\[
+P(X=x|Y=c_k)=P(X^{(1)}=x^{(1)},\cdots,X^{(n)}=x^{(n)}|Y=c_k),
+k=1,2,\cdots,K
+\]</span> 于是便可学到联合概率分布 <span
+class="math inline">\(P(X,Y)=P(X|Y)P(Y)\)</span>。</p>
+<p>为了解决条件概率分布 <span
+class="math inline">\(P(X=x|Y=c_k)\)</span>
+的参数过多的问题，朴素贝叶斯法假设训练数据由 <span
+class="math inline">\(P(X,Y)\)</span>
+独立同分布产生，由于这是一个较强的假设，朴素贝叶斯法也由此得名。将条件独立性假设写成公式
+<span class="math display">\[
+\begin{equation}\nonumber
+\begin{aligned}
+P(X=x|Y=c_k)&amp;=P(X^{(1)}=x^{(1)},\cdots,X^{(n)}=x^{(n)}|Y=c_k) \\
+&amp;=\prod_{j=1}^n{P(X^{(j)}=x^{(j)}|Y=c_k)}
+\end{aligned}
+\end{equation}
+\]</span> 条件独立性假设使模型变简单，但有时会损失一定的分类准确率。</p>
+<p>下面对模型进行推导。由贝叶斯定理有 <span class="math display">\[
+P(Y=c_k|X=x) = \frac{P(X=x|Y=c_k)P(Y=c_k)}{\sum_j{P(X=x|Y=c_j)P(Y=c_j)}}
+\]</span> 将独立性假设引入上式，得 <span class="math display">\[
+P(Y=c_k|X=x) =
+\frac{\prod_iP(X^{(i)}=x^{(i)}|Y=c_k)P(Y=c_k)}{\sum_j\prod_i{P(X^{(i)}=x^{(i)}|Y=c_j)P(Y=c_j)}}
+\]</span> 这是朴素贝叶斯法分类的基本公式，因此，朴素贝叶斯分类器可表示为
+<span class="math display">\[
+y=f(x)=arg\space
+\underset{c_k}{max}\frac{\prod_iP(X^{(i)}=x^{(i)}|Y=c_k)P(Y=c_k)}{\sum_j\prod_i{P(X^{(i)}=x^{(i)}|Y=c_j)P(Y=c_j)}}
+\]</span> 注意到，对于所有的 <span
+class="math inline">\(c_k\)</span>，上式的分母都是相同的，于是分类器可进一步被写为
+<span class="math display">\[
+y=f(x)=arg\space
+\underset{c_k}{max}\prod_iP(X^{(i)}=x^{(i)}|Y=c_k)P(Y=c_k)
+\]</span></p>
+<h3 id="对于后验概率最大化的理解">对于后验概率最大化的理解</h3>
+<p>可以证明：朴素贝叶斯法后验概率最大化等价于期望风险最小化。</p>
+<p>假设选择0-1损失函数 <span class="math display">\[
+L(Y,f(X)) = \left\{\begin{matrix}
+1,Y\neq f(X)\\
+0, y=f(X)
+\end{matrix}\right.
+\]</span> 其中 <span class="math inline">\(f(X)\)</span>
+是分类决策函数。这时，期望风险函数为 <span class="math display">\[
+R_{exp}(f)=E[L(Y,f(X))]
+\]</span> 期望是对联合分布 <span class="math inline">\(P(X,Y)\)</span>
+取的。由此取条件期望 <span class="math display">\[
+R_{exp}(f)=E_X\sum_{k=1}^K{[L(c_k, f(X))]P(c_k|X)}
+\]</span> 为了使期望风险最小化，对 <span
+class="math inline">\(X=x\)</span> 逐个极小化 <span
+class="math display">\[
+\begin{equation}\nonumber
+\begin{aligned}
+f(x) &amp;= arg \space \underset{y\in
+\mathcal{Y}}{min}\sum_{k=1}^{K}{L(c_k,y)P(c_k|X=x)} \\
+&amp;= arg \space \underset{y\in \mathcal{Y}}{min}\sum_{k=1}^{K}{P(y\neq
+c_k|X=x)} \\
+&amp;= arg \space \underset{y\in
+\mathcal{Y}}{min}\sum_{k=1}^{K}{(1-P(y\neq c_k|X=x))} \\
+&amp;= arg \space \underset{y\in \mathcal{Y}}{max}P(y=c_k|X=x)
+\end{aligned}
+\end{equation}
+\]</span>
+由此，就根据期望风险最小化准则得到了后验概率最大化准则，也就是朴素贝叶斯法所采用的原理。</p>
+<h2 id="朴素贝叶斯法的参数估计">朴素贝叶斯法的参数估计</h2>
+<p>在朴素贝叶斯法中，模型的学习就是对 <span
+class="math inline">\(P(Y=c_k)\)</span> 和 <span
+class="math inline">\(P(X^{(i)}=x^{(i)}|Y=c_k)\)</span>
+进行估计，估计的方法选择极大似然估计法。</p>
+<p>对先验概率 <span class="math inline">\(P(Y=c_k)\)</span>
+的极大似然估计为 <span class="math display">\[
+P(Y=c_k)=\frac{\sum_{i=1}^K{I(y_i=c_k)}}{N}
+\]</span> <span class="math inline">\(N\)</span> 为训练样本个数。</p>
+<p>设第 <span class="math inline">\(j\)</span> 个特征 <span
+class="math inline">\(x^{(j)}\)</span> 可能取值的集合为 <span
+class="math inline">\(\{a_{j1},a_{j2},\cdots,a_{jS_j}\}\)</span>，条件概率
+<span class="math inline">\(P(X^{(i)}=a_{jl}|Y=c_k)\)</span>
+的极大似然估计为 <span class="math display">\[
+P(X^{(j)}=a_{jl}|Y=c_k)=\frac{\sum_{i=1}^N{I(x_i^{(j)}=a_{jl}},y_i=c_k)}{\sum_{i=1}^N{I(y_i=c_k)}}
+\]</span> 其中 <span class="math inline">\(S_j = |x^{(j)}|\)</span>
+。</p>
 <blockquote>
 <p>这里的联合概率直接利用训练数据中满足条件的进行计算即可。</p>
 </blockquote>
-<h3 id="利用贝叶斯估计改进估计效果"><a href="#利用贝叶斯估计改进估计效果" class="headerlink" title="利用贝叶斯估计改进估计效果"></a>利用贝叶斯估计改进估计效果</h3><p>用极大似然估计可能会出现所要估计的概率值为 $0$ 的情况，影响后验概率的计算结果。为了解决这一问题可以采用贝叶斯估计。</p>
-<p>条件概率的贝叶斯估计为<br>$$<br>P_\lambda(X^{(j)}&#x3D;a_{jl}|Y&#x3D;c_k)&#x3D;\frac{\sum_{i&#x3D;1}^N{I(x_i^{(j)}&#x3D;a_{jl}},y_i&#x3D;c_k)+\lambda}{\sum_{i&#x3D;1}^N{I(y_i&#x3D;c_k)+S_j \lambda}}<br>$$<br>先验概率的贝叶斯估计为<br>$$<br>P(Y&#x3D;c_k)&#x3D;\frac{\sum_{i&#x3D;1}^K{I(y_i&#x3D;c_k)+\lambda}}{N+K\lambda}<br>$$<br>其中 $\lambda \geqslant 0$，当 $\lambda &#x3D; 0$ 时就是极大似然估计。常取 $\lambda &#x3D; 1$，称为拉普拉斯平滑 (Laplacian smoothing)。</p>
+<h3 id="利用贝叶斯估计改进估计效果">利用贝叶斯估计改进估计效果</h3>
+<p>用极大似然估计可能会出现所要估计的概率值为 <span
+class="math inline">\(0\)</span>
+的情况，影响后验概率的计算结果。为了解决这一问题可以采用贝叶斯估计。</p>
+<p>条件概率的贝叶斯估计为 <span class="math display">\[
+P_\lambda(X^{(j)}=a_{jl}|Y=c_k)=\frac{\sum_{i=1}^N{I(x_i^{(j)}=a_{jl}},y_i=c_k)+\lambda}{\sum_{i=1}^N{I(y_i=c_k)+S_j
+\lambda}}
+\]</span> 先验概率的贝叶斯估计为 <span class="math display">\[
+P(Y=c_k)=\frac{\sum_{i=1}^K{I(y_i=c_k)+\lambda}}{N+K\lambda}
+\]</span> 其中 <span class="math inline">\(\lambda \geqslant
+0\)</span>，当 <span class="math inline">\(\lambda = 0\)</span>
+时就是极大似然估计。常取 <span class="math inline">\(\lambda =
+1\)</span>，称为拉普拉斯平滑 (Laplacian smoothing)。</p>
 
     </div>
 

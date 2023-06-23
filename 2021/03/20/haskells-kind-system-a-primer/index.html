@@ -19,27 +19,22 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"julytreee.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Haskell 的 Kind 系统入门本文是对这篇文章的翻译，文章通过与 type 的对比帮助读者入门 kind 理论。  文中所有的代码基于 GHC 8.4.3。">
+    <meta name="description" content="Haskell 的 Kind 系统入门 本文是对这篇文章的翻译，文章通过与 type 的对比帮助读者入门 kind 理论。  文中所有的代码基于 GHC 8.4.3。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Haskell 的 Kind 系统入门">
 <meta property="og:url" content="http://julytreee.cn/2021/03/20/haskells-kind-system-a-primer/index.html">
 <meta property="og:site_name" content="追求卓越 成功就会在不经意间追上你">
-<meta property="og:description" content="Haskell 的 Kind 系统入门本文是对这篇文章的翻译，文章通过与 type 的对比帮助读者入门 kind 理论。  文中所有的代码基于 GHC 8.4.3。">
+<meta property="og:description" content="Haskell 的 Kind 系统入门 本文是对这篇文章的翻译，文章通过与 type 的对比帮助读者入门 kind 理论。  文中所有的代码基于 GHC 8.4.3。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://julytreee.cn/imgs/haskells-kind-system-a-primer/kind-system001.svg">
-<meta property="og:image" content="http://julytreee.cn/imgs/haskells-kind-system-a-primer/kind-system002.svg">
-<meta property="og:image" content="http://julytreee.cn/imgs/haskells-kind-system-a-primer/kind-system003.svg">
-<meta property="og:image" content="http://julytreee.cn/imgs/haskells-kind-system-a-primer/kind-system007.svg">
 <meta property="og:image" content="http://julytreee.cn/imgs/haskells-kind-system-a-primer/kind-system004.svg">
 <meta property="og:image" content="http://julytreee.cn/imgs/haskells-kind-system-a-primer/kind-system005.svg">
-<meta property="og:image" content="http://julytreee.cn/imgs/haskells-kind-system-a-primer/kind-system006.svg">
 <meta property="article:published_time" content="2021-03-20T22:05:30.000Z">
-<meta property="article:modified_time" content="2023-06-23T14:36:11.167Z">
+<meta property="article:modified_time" content="2023-06-23T15:38:14.893Z">
 <meta property="article:author" content="JulyTreee">
 <meta property="article:tag" content="type system">
 <meta property="article:tag" content="kind system">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://julytreee.cn/imgs/haskells-kind-system-a-primer/kind-system001.svg">
+<meta name="twitter:image" content="http://julytreee.cn/imgs/haskells-kind-system-a-primer/kind-system004.svg">
 
 
 <link rel="canonical" href="http://julytreee.cn/2021/03/20/haskells-kind-system-a-primer/">
@@ -97,7 +92,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-links"><a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-links"><a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a></li><li class="menu-item menu-item-hoh"><a href="/hoh/" rel="section"><i class="fa fa-book fa-fw"></i>Haskell 优化手册</a></li>
   </ul>
 </nav>
 
@@ -122,7 +117,9 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Haskell-%E7%9A%84-Kind-%E7%B3%BB%E7%BB%9F%E5%85%A5%E9%97%A8"><span class="nav-number">1.</span> <span class="nav-text">Haskell 的 Kind 系统入门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Types-%E5%92%8C-Kinds"><span class="nav-number">1.1.</span> <span class="nav-text">Types 和 Kinds</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Data-constructors-%E5%92%8C-Type-constructors"><span class="nav-number">1.2.</span> <span class="nav-text">Data constructors 和 Type constructors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Type-signatures-%E5%92%8C-Kind-signatures"><span class="nav-number">1.3.</span> <span class="nav-text">Type signatures 和 Kind signatures</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HOFs-%E5%92%8C-HKTs"><span class="nav-number">1.4.</span> <span class="nav-text">HOFs 和 HKTs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kind-%E7%9A%84%E5%85%B6%E4%BB%96%E5%86%85%E5%AE%B9"><span class="nav-number">1.5.</span> <span class="nav-text">kind 的其他内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Unboxed-x2F-unlifted-types"><span class="nav-number">1.5.1.</span> <span class="nav-text">Unboxed&#x2F;unlifted types</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Constraint"><span class="nav-number">1.5.2.</span> <span class="nav-text">Constraint</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Datatype-promotion"><span class="nav-number">1.5.3.</span> <span class="nav-text">Datatype promotion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GHC-TypeLits"><span class="nav-number">1.5.4.</span> <span class="nav-text">GHC.TypeLits</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kind-polymorphism"><span class="nav-number">1.5.5.</span> <span class="nav-text">Kind polymorphism</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Levity-polymorphism"><span class="nav-number">1.5.6.</span> <span class="nav-text">Levity polymorphism</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#haskell-%E7%9A%84-kind-%E7%B3%BB%E7%BB%9F%E5%85%A5%E9%97%A8"><span class="nav-number">1.</span> <span class="nav-text">Haskell 的 Kind 系统入门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#types-%E5%92%8C-kinds"><span class="nav-number">1.1.</span> <span class="nav-text">Types 和 Kinds</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#data-constructors-%E5%92%8C-type-constructors"><span class="nav-number">1.2.</span> <span class="nav-text">Data constructors 和
+Type constructors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#type-signatures-%E5%92%8C-kind-signatures"><span class="nav-number">1.3.</span> <span class="nav-text">Type signatures 和 Kind
+signatures</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hofs-%E5%92%8C-hkts"><span class="nav-number">1.4.</span> <span class="nav-text">HOFs 和 HKTs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kind-%E7%9A%84%E5%85%B6%E4%BB%96%E5%86%85%E5%AE%B9"><span class="nav-number">1.5.</span> <span class="nav-text">kind 的其他内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#unboxedunlifted-types"><span class="nav-number">1.5.1.</span> <span class="nav-text">Unboxed&#x2F;unlifted types</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#constraint"><span class="nav-number">1.5.2.</span> <span class="nav-text">Constraint</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#datatype-promotion"><span class="nav-number">1.5.3.</span> <span class="nav-text">Datatype promotion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ghc.typelits"><span class="nav-number">1.5.4.</span> <span class="nav-text">GHC.TypeLits</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kind-polymorphism"><span class="nav-number">1.5.5.</span> <span class="nav-text">Kind polymorphism</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#levity-polymorphism"><span class="nav-number">1.5.6.</span> <span class="nav-text">Levity polymorphism</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -223,7 +220,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-23 14:36:11" itemprop="dateModified" datetime="2023-06-23T14:36:11+00:00">2023-06-23</time>
+      <time title="修改时间：2023-06-23 15:38:14" itemprop="dateModified" datetime="2023-06-23T15:38:14+00:00">2023-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -244,183 +241,347 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="Haskell-的-Kind-系统入门"><a href="#Haskell-的-Kind-系统入门" class="headerlink" title="Haskell 的 Kind 系统入门"></a>Haskell 的 Kind 系统入门</h1><p>本文是对<a target="_blank" rel="noopener" href="https://diogocastro.com/blog/2018/10/17/haskells-kind-system-a-primer/">这篇</a>文章的翻译，文章通过与 type 的对比帮助读者入门 kind 理论。</p>
+    <div class="post-body" itemprop="articleBody"><h1 id="haskell-的-kind-系统入门">Haskell 的 Kind 系统入门</h1>
+<p>本文是对<a
+target="_blank" rel="noopener" href="https://diogocastro.com/blog/2018/10/17/haskells-kind-system-a-primer/">这篇</a>文章的翻译，文章通过与
+type 的对比帮助读者入门 kind 理论。</p>
 <blockquote>
 <p>文中所有的代码基于 <code>GHC 8.4.3</code>。</p>
 </blockquote>
 <span id="more"></span>
-
-<h2 id="Types-和-Kinds"><a href="#Types-和-Kinds" class="headerlink" title="Types 和 Kinds"></a>Types 和 Kinds</h2><p>简单来说</p>
+<h2 id="types-和-kinds">Types 和 Kinds</h2>
+<p>简单来说</p>
 <blockquote>
-<p>正如表达式 (values&#x2F;terms) 都有类型 (types)，types 也有自己对应的 kinds。</p>
+<p>正如表达式 (values/terms) 都有类型 (types)，types 也有自己对应的
+kinds。</p>
 </blockquote>
-<p> 例如 <code>&quot;hello&quot;</code> 和 <code>&quot;world&quot;</code> 都属于 <code>String</code> 类型，<code>True</code> 和 <code>False</code> 都属于 <code>Bool</code> 类型。相似地，<code>String</code> 类型和 <code>Bool</code> 类型都属于 <code>*</code>（读作 “star”）kind。<br><img src="/imgs/haskells-kind-system-a-primer/kind-system001.svg" alt="State type"></p>
-<p>GHCi 中可以使用 <code>:t</code> 或 <code>:type</code> 来查看某个表达式的类型，用 <code>:k</code> 或 <code>:kind</code> 可以查看某个类型对应的 kind。</p>
+<p>例如 <code>"hello"</code> 和 <code>"world"</code> 都属于
+<code>String</code> 类型，<code>True</code> 和 <code>False</code> 都属于
+<code>Bool</code> 类型。相似地，<code>String</code> 类型和
+<code>Bool</code> 类型都属于 <code>*</code>（读作 "star"）kind。 <img
+src="/imgs/haskells-kind-system-a-primer/kind-system001.svg"
+alt="State type" /></p>
+<p>GHCi 中可以使用 <code>:t</code> 或 <code>:type</code>
+来查看某个表达式的类型，用 <code>:k</code> 或 <code>:kind</code>
+可以查看某个类型对应的 kind。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; :t <span class="type">True</span></span><br><span class="line"><span class="type">True</span> :: <span class="type">Bool</span></span><br><span class="line"></span><br><span class="line">λ&gt; :k <span class="type">Bool</span></span><br><span class="line"><span class="type">Bool</span> :: *</span><br></pre></td></tr></table></figure>
-
-<p>在标准的 Haskell 中所有的原始 (inhabited) 类型 (即至少有一个取值的类型) 都属于 <code>*</code> 的 kind。因此 <code>Int</code>、<code>Int -&gt; String</code>、<code>[Int]</code>、<code>Maybe Int</code>、<code>Either Int Int</code> 这些至少拥有一个取值的类型都属于 <code>*</code> 的 kind。</p>
+<p>在标准的 Haskell 中所有的原始 (inhabited) 类型
+(即至少有一个取值的类型) 都属于 <code>*</code> 的 kind。因此
+<code>Int</code>、<code>Int -&gt; String</code>、<code>[Int]</code>、<code>Maybe Int</code>、<code>Either Int Int</code>
+这些至少拥有一个取值的类型都属于 <code>*</code> 的 kind。</p>
 <blockquote>
-<p>一个明显无法构造的例外是 <code>data Void</code>，这种类型没有取值，其只能由无法成功完成的语句来产生，例如 <code>undefined</code> 或无限循环 <code>f x = f x</code>。</p>
+<p>一个明显无法构造的例外是
+<code>data Void</code>，这种类型没有取值，其只能由无法成功完成的语句来产生，例如
+<code>undefined</code> 或无限循环 <code>f x = f x</code>。</p>
 </blockquote>
-<p>不是所有的类型都是原始类型，例如 <code>Maybe</code> 和 <code>Either</code> 就不属于，对于 <code>Maybe</code> 来说，没有任何值可以取，即没有任何表达式 (或值) 属于 <code>Maybe</code> 类型，不同于 <code>Just True</code> 属于 <code>Maybe Bool</code> 类型，<code>Just &#39;C&#39;</code> 属于 <code>Maybe Char</code> 类型，我们无法构造一个属于 <code>Maybe</code> 的表达式。</p>
+<p>不是所有的类型都是原始类型，例如 <code>Maybe</code> 和
+<code>Either</code> 就不属于，对于 <code>Maybe</code>
+来说，没有任何值可以取，即没有任何表达式 (或值) 属于 <code>Maybe</code>
+类型，不同于 <code>Just True</code> 属于 <code>Maybe Bool</code>
+类型，<code>Just 'C'</code> 属于 <code>Maybe Char</code>
+类型，我们无法构造一个属于 <code>Maybe</code> 的表达式。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; x = undefined :: <span class="type">Maybe</span></span><br><span class="line">&lt;interactive&gt;:<span class="number">9</span>:<span class="number">18</span>: error</span><br><span class="line">    • <span class="type">Expecting</span> one more argument to ‘<span class="type">Maybe</span>’</span><br><span class="line"></span><br><span class="line">λ&gt; f x = f x :: <span class="type">Maybe</span></span><br><span class="line">&lt;interactive&gt;:<span class="number">10</span>:<span class="number">14</span>: error:</span><br><span class="line">    • <span class="type">Expecting</span> one more argument to ‘<span class="type">Maybe</span>’</span><br></pre></td></tr></table></figure>
-
-<p>那么 <code>Maybe</code> 和 <code>Either</code> 属于什么呢？它们实际是类型构造器 (type constructor)。</p>
-<h2 id="Data-constructors-和-Type-constructors"><a href="#Data-constructors-和-Type-constructors" class="headerlink" title="Data constructors 和 Type constructors"></a>Data constructors 和 Type constructors</h2><p>正如可以利用数据构造器 (data constructor) 来构造一个 data，我们也可以利用类型构造器 (type constructor) 来创建 types。</p>
+<p>那么 <code>Maybe</code> 和 <code>Either</code>
+属于什么呢？它们实际是类型构造器 (type constructor)。</p>
+<h2 id="data-constructors-和-type-constructors">Data constructors 和
+Type constructors</h2>
+<p>正如可以利用数据构造器 (data constructor) 来构造一个
+data，我们也可以利用类型构造器 (type constructor) 来创建 types。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; <span class="class"><span class="keyword">data</span> <span class="type">Person</span> = <span class="type">MkPerson</span> &#123; <span class="title">name</span> :: <span class="type">String</span>, <span class="title">age</span> :: <span class="type">Int</span> &#125;</span></span><br><span class="line"></span><br><span class="line">λ&gt; :t <span class="type">MkPerson</span></span><br><span class="line"><span class="type">MkPerson</span> :: <span class="type">String</span> -&gt; <span class="type">Int</span> -&gt; <span class="type">Person</span></span><br></pre></td></tr></table></figure>
-
-<p>如上面的代码所示，<code>MkPerson</code> 是一个数据构造器，通过接受类型为 <code>String</code> 的 <code>name</code> 和类型为 <code>Int</code> 的 <code>age</code> 来构造一个 <code>Person</code> 类型的值，换句话说，<code>MkPerson</code> 具有 <code>String -&gt; Int -&gt; Person</code> 的类型。</p>
+<p>如上面的代码所示，<code>MkPerson</code>
+是一个数据构造器，通过接受类型为 <code>String</code> 的
+<code>name</code> 和类型为 <code>Int</code> 的 <code>age</code>
+来构造一个 <code>Person</code> 类型的值，换句话说，<code>MkPerson</code>
+具有 <code>String -&gt; Int -&gt; Person</code> 的类型。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; <span class="class"><span class="keyword">data</span> <span class="type">Either</span> a b = <span class="type">Left</span> a | <span class="type">Right</span> b</span></span><br><span class="line"></span><br><span class="line">λ&gt; :k <span class="type">Either</span></span><br><span class="line"><span class="type">Either</span> :: * -&gt; * -&gt; *</span><br></pre></td></tr></table></figure>
-
-<p>相似地，<code>Either</code> 是一个接受两个 kind 为 <code>*</code> 的类型来构造一个新的类型为 <code>*</code> 的类型构造器，即 <code>Either</code> 是一个具有 <code>* -&gt; * -&gt; *</code> 的 kind 的类型。</p>
+<p>相似地，<code>Either</code> 是一个接受两个 kind 为 <code>*</code>
+的类型来构造一个新的类型为 <code>*</code> 的类型构造器，即
+<code>Either</code> 是一个具有 <code>* -&gt; * -&gt; *</code> 的 kind
+的类型。</p>
 <blockquote>
-<p>这里要注意，<code>Either</code> 接受类型 <code>a</code> 和类型 <code>b</code> 来构造一个新的类型，<code>Left</code> 接受一个具有 <code>a</code> 类型的值来构造一个新的值。</p>
+<p>这里要注意，<code>Either</code> 接受类型 <code>a</code> 和类型
+<code>b</code> 来构造一个新的类型，<code>Left</code> 接受一个具有
+<code>a</code> 类型的值来构造一个新的值。</p>
 </blockquote>
 <p>数据构造器可以科里化 (currying)，类型构造器同样也可以。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; :t <span class="type">MkPerson</span></span><br><span class="line"><span class="type">MkPerson</span> :: <span class="type">String</span> -&gt; <span class="type">Int</span> -&gt; <span class="type">Person</span></span><br><span class="line">λ&gt; :t <span class="type">MkPerson</span> <span class="string">&quot;Diogo&quot;</span></span><br><span class="line"><span class="type">MkPerson</span> <span class="string">&quot;Diogo&quot;</span> :: <span class="type">Int</span> -&gt; <span class="type">Person</span></span><br><span class="line">λ&gt; :t <span class="type">MkPerson</span> <span class="string">&quot;Diogo&quot;</span> <span class="number">29</span></span><br><span class="line"><span class="type">MkPerson</span> <span class="string">&quot;Diogo&quot;</span> <span class="number">29</span> :: <span class="type">Person</span></span><br></pre></td></tr></table></figure>
-<p><img src="/imgs/haskells-kind-system-a-primer/kind-system002.svg"></p>
+<p><img
+src="/imgs/haskells-kind-system-a-primer/kind-system002.svg" /></p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; :k <span class="type">Either</span></span><br><span class="line"><span class="type">Either</span> :: * -&gt; * -&gt; *</span><br><span class="line">λ&gt; :k <span class="type">Either</span> <span class="type">String</span></span><br><span class="line"><span class="type">Either</span> <span class="type">String</span> :: * -&gt; *</span><br><span class="line">λ&gt; :k <span class="type">Either</span> <span class="type">String</span> <span class="type">Int</span></span><br><span class="line"><span class="type">Either</span> <span class="type">String</span> <span class="type">Int</span> :: *</span><br></pre></td></tr></table></figure>
-<p><img src="/imgs/haskells-kind-system-a-primer/kind-system003.svg"></p>
-<h2 id="Type-signatures-和-Kind-signatures"><a href="#Type-signatures-和-Kind-signatures" class="headerlink" title="Type signatures 和 Kind signatures"></a>Type signatures 和 Kind signatures</h2><p>GHC 不仅可以正确推断出一个表达式的类型，也可以推断出一个类型对应的 kind。</p>
+<p><img
+src="/imgs/haskells-kind-system-a-primer/kind-system003.svg" /></p>
+<h2 id="type-signatures-和-kind-signatures">Type signatures 和 Kind
+signatures</h2>
+<p>GHC 不仅可以正确推断出一个表达式的类型，也可以推断出一个类型对应的
+kind。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- `x` 被推断为`Bool` 类型</span></span><br><span class="line"><span class="title">x</span> = <span class="type">True</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- `y` 被推断为 `String -&gt; IO ()` 类型</span></span><br><span class="line"><span class="title">y</span> = putStrLn</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- `a` 被推断为 `*` kind</span></span><br><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">List</span> a = <span class="type">Cons</span> a (<span class="type">List</span> <span class="title">a</span>) | <span class="type">Nil</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- `f` 被推断为 `* -&gt; *` kind</span></span><br><span class="line"><span class="comment">-- `a` 和 `b` 被推断为 `*` kind</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="type">Functor</span> f <span class="keyword">where</span></span></span><br><span class="line">  fmap :: (a -&gt; b) -&gt; (f a -&gt; f b)</span><br></pre></td></tr></table></figure>
-
-<p>正如我们可以手动标明某个值的类型，我们也可以开启 <code>KindSignatures</code> 扩展来手动标明某个类型的 kind。</p>
+<p>正如我们可以手动标明某个值的类型，我们也可以开启
+<code>KindSignatures</code> 扩展来手动标明某个类型的 kind。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">x</span> :: <span class="type">Bool</span></span><br><span class="line"><span class="title">x</span> = <span class="type">True</span></span><br><span class="line"></span><br><span class="line"><span class="title">y</span> :: <span class="type">String</span> -&gt; <span class="type">IO</span> ()</span><br><span class="line"><span class="title">y</span> = putStrLn</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#123;-# LANGUAGE KindSignatures #-&#125;</span></span><br><span class="line"><span class="meta">&#123;-# LANGUAGE ExplicitForAll #-&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">List</span> (<span class="title">a</span> :: *) = <span class="type">Cons</span> a (<span class="type">List</span> <span class="title">a</span>) | <span class="type">Nil</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="type">Functor</span> (<span class="title">f</span> :: * -&gt; *) <span class="keyword">where</span></span></span><br><span class="line">  fmap :: <span class="keyword">forall</span> (a :: *) (b :: *). (a -&gt; b) -&gt; (f a -&gt; f b)</span><br></pre></td></tr></table></figure>
-
-<p>这里启用了 <code>ExplicitForAll</code> 扩展来显示地标明每个类型的 kind。</p>
-<h2 id="HOFs-和-HKTs"><a href="#HOFs-和-HKTs" class="headerlink" title="HOFs 和 HKTs"></a>HOFs 和 HKTs</h2><p>正如我们拥有高阶函数 (higher-order functions, HOFs) 这种可以接受其他函数作为参数的函数，我们也可以拥有高阶类型 (higher-kinded types, HKTs) 这种接受其他类型构造器作为参数的类型构造器。</p>
+<p>这里启用了 <code>ExplicitForAll</code> 扩展来显示地标明每个类型的
+kind。</p>
+<h2 id="hofs-和-hkts">HOFs 和 HKTs</h2>
+<p>正如我们拥有高阶函数 (higher-order functions, HOFs)
+这种可以接受其他函数作为参数的函数，我们也可以拥有高阶类型
+(higher-kinded types, HKTs)
+这种接受其他类型构造器作为参数的类型构造器。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; :t map</span><br><span class="line"><span class="title">map</span> :: (a -&gt; b) -&gt; [a] -&gt; [b]</span><br></pre></td></tr></table></figure>
-
-<p>这里 <code>map</code> 是接受两个参数的函数，这两个参数分别是一个 <code>a -&gt; b</code> 类型的函数和一个 <code>a</code> 类型的 list。</p>
+<p>这里 <code>map</code> 是接受两个参数的函数，这两个参数分别是一个
+<code>a -&gt; b</code> 类型的函数和一个 <code>a</code> 类型的 list。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; <span class="class"><span class="keyword">data</span> <span class="type">NonEmpty</span> f a = <span class="type">MkNonEmpty</span> &#123; <span class="title">head</span> :: <span class="title">a</span>, <span class="title">tail</span> :: <span class="title">f</span> <span class="title">a</span> &#125;</span></span><br><span class="line"></span><br><span class="line">λ&gt; :k <span class="type">NonEmpty</span></span><br><span class="line"><span class="type">NonEmpty</span> :: (* -&gt; *) -&gt; * -&gt; *</span><br></pre></td></tr></table></figure>
-
-<p>相似地，<code>NonEmpty</code> 是接受两个参数的类型构造器，这两个参数分别是一个具有 <code>* -&gt; *</code> 的 kind 的类型构造器和一个具有 <code>*</code> 的 kind 的类型。</p>
-<p>当给 <code>NonEmpty</code> 应用 <code>[]</code> 和 <code>Bool</code> 两个类型时，可以得到 <code>NonEmpty [] Bool</code> 类型，即一个保证至少有一个元素存在的 <code>Bool</code> 类型的 list。</p>
+<p>相似地，<code>NonEmpty</code>
+是接受两个参数的类型构造器，这两个参数分别是一个具有
+<code>* -&gt; *</code> 的 kind 的类型构造器和一个具有 <code>*</code> 的
+kind 的类型。</p>
+<p>当给 <code>NonEmpty</code> 应用 <code>[]</code> 和 <code>Bool</code>
+两个类型时，可以得到 <code>NonEmpty [] Bool</code>
+类型，即一个保证至少有一个元素存在的 <code>Bool</code> 类型的 list。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; :t <span class="type">MkNonEmpty</span> <span class="type">True</span> [<span class="type">False</span>, <span class="type">True</span>]</span><br><span class="line"><span class="type">MkNonEmpty</span> <span class="type">True</span> [<span class="type">False</span>, <span class="type">True</span>] :: <span class="type">NonEmpty</span> [] <span class="type">Bool</span></span><br></pre></td></tr></table></figure>
-
-<p>我们可以将任何满足 kind 约束的类型应用在 <code>NonEmpty</code> 上构造我们需要的类型，例如：<code>NonEmpty [] Int</code>、<code>NonEmpty Tree String</code> 和 <code>NonEmpty Vector Char</code>。</p>
-<h2 id="kind-的其他内容"><a href="#kind-的其他内容" class="headerlink" title="kind 的其他内容"></a>kind 的其他内容</h2><h3 id="Unboxed-x2F-unlifted-types"><a href="#Unboxed-x2F-unlifted-types" class="headerlink" title="Unboxed&#x2F;unlifted types"></a>Unboxed&#x2F;unlifted types</h3><p>在文章的开头说过所有的原始类型都具有 kind <code>*</code>，更标准的表达应该是：在标准 Haskell 中，<code>*</code> 是所有装箱的 (boxed) [或升格 (lifted)] 的原始类型的 kind。然而，在 GHC 对 Haskell 的实现中，有一些原始类型是未装箱 (unboxed) [或未升格 (unlifted)] 的。它们是 <code>ghc-prim</code> 包 (package) 中的 <code>GHC.Prim</code> 模块 (module)。为了方便起见，所有的未升格的类型都用 <code>#</code> 结尾，它们被称为 <em>magic hash</em>，需要开启 <code>MagicHash</code> 扩展。例如 <code>Char#</code> 和 <code>Int#</code>，甚至可以拥有未装箱的 tuple <code>(# a, b #)</code> 和未装箱的 <code>(# a | b #)</code>。</p>
-<p>每一个未升格的类型都拥有一个描述其运行时状态的 kind。这个状态标明该类型是否是一个指向某个堆的指针、是否是一个有符号的 <em>word-size</em> 值。编译器随后会利用类型的 kind 信息来确定生成对应的机器码，这一过程叫做类型指向的编译 (kind-directed compilation)。</p>
-<p>下图是一个具体的例子：<br><img src="/imgs/haskells-kind-system-a-primer/kind-system007.svg" alt="Unboxed types and kinds"></p>
+<p>我们可以将任何满足 kind 约束的类型应用在 <code>NonEmpty</code>
+上构造我们需要的类型，例如：<code>NonEmpty [] Int</code>、<code>NonEmpty Tree String</code>
+和 <code>NonEmpty Vector Char</code>。</p>
+<h2 id="kind-的其他内容">kind 的其他内容</h2>
+<h3 id="unboxedunlifted-types">Unboxed/unlifted types</h3>
+<p>在文章的开头说过所有的原始类型都具有 kind
+<code>*</code>，更标准的表达应该是：在标准 Haskell 中，<code>*</code>
+是所有装箱的 (boxed) [或升格 (lifted)] 的原始类型的 kind。然而，在 GHC
+对 Haskell 的实现中，有一些原始类型是未装箱 (unboxed) [或未升格
+(unlifted)] 的。它们是 <code>ghc-prim</code> 包 (package) 中的
+<code>GHC.Prim</code> 模块
+(module)。为了方便起见，所有的未升格的类型都用 <code>#</code>
+结尾，它们被称为 <em>magic hash</em>，需要开启 <code>MagicHash</code>
+扩展。例如 <code>Char#</code> 和 <code>Int#</code>，甚至可以拥有未装箱的
+tuple <code>(# a, b #)</code> 和未装箱的 <code>(# a | b #)</code>。</p>
+<p>每一个未升格的类型都拥有一个描述其运行时状态的
+kind。这个状态标明该类型是否是一个指向某个堆的指针、是否是一个有符号的
+<em>word-size</em> 值。编译器随后会利用类型的 kind
+信息来确定生成对应的机器码，这一过程叫做类型指向的编译 (kind-directed
+compilation)。</p>
+<p>下图是一个具体的例子： <img
+src="/imgs/haskells-kind-system-a-primer/kind-system007.svg"
+alt="Unboxed types and kinds" /></p>
 <p>后面会对 <code>TYPE</code> 做介绍。</p>
-<h3 id="Constraint"><a href="#Constraint" class="headerlink" title="Constraint"></a>Constraint</h3><p><code>Constraint</code> kind 是用来描述所有需要受到约束的类型的 kind，它通常出现在 $\Rightarrow$ 的左边，包括 typeclass 的限制、多个 typeclass tuple 组成的限制等。</p>
+<h3 id="constraint">Constraint</h3>
+<p><code>Constraint</code> kind 是用来描述所有需要受到约束的类型的
+kind，它通常出现在 <span class="math inline">\(\Rightarrow\)</span>
+的左边，包括 typeclass 的限制、多个 typeclass tuple 组成的限制等。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; :t show</span><br><span class="line"><span class="title">show</span> :: <span class="type">Show</span> a =&gt; a -&gt; <span class="type">String</span></span><br><span class="line"></span><br><span class="line">λ&gt; :t fmap</span><br><span class="line"><span class="title">fmap</span> :: <span class="type">Functor</span> f =&gt; (a -&gt; b) -&gt; f a -&gt; f b</span><br></pre></td></tr></table></figure>
-
-<p>如上所示，<code>show</code> 函数接受的 <code>a</code> 类型的参数需要是 <code>Show</code> 类型的实例，即 <code>Show</code> 一个具有 <code>Constraint</code> kind 的类型，<code>fmap</code> 同理。</p>
+<p>如上所示，<code>show</code> 函数接受的 <code>a</code>
+类型的参数需要是 <code>Show</code> 类型的实例，即 <code>Show</code>
+一个具有 <code>Constraint</code> kind 的类型，<code>fmap</code>
+同理。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; :k <span class="type">Show</span></span><br><span class="line"><span class="type">Show</span> :: * -&gt; <span class="type">Constraint</span></span><br><span class="line"></span><br><span class="line">λ&gt; :k <span class="type">Show</span> <span class="type">Int</span></span><br><span class="line"><span class="type">Show</span> <span class="type">Int</span> :: <span class="type">Constraint</span></span><br><span class="line"></span><br><span class="line">λ&gt; :k <span class="type">Functor</span></span><br><span class="line"><span class="type">Functor</span> :: (* -&gt; *) -&gt; <span class="type">Constraint</span></span><br><span class="line"></span><br><span class="line">λ&gt; :k <span class="type">Functor</span> <span class="type">IO</span></span><br><span class="line"><span class="type">Functor</span> <span class="type">IO</span> :: <span class="type">Constraint</span></span><br></pre></td></tr></table></figure>
-
-<p>利用 <code>ConstraintKinds</code> 扩展可以将约束作为一等公民使用达到令人惊奇的效果。例如 <code>Set</code> 不是 <code>Functor</code> 的实例，原因是 <code>Set.map</code> 拥有 <code>Ord</code> 的约束，而 <code>fmap :: (a -&gt; b) -&gt; f a -&gt; f b</code> 并不满足。</p>
+<p>利用 <code>ConstraintKinds</code>
+扩展可以将约束作为一等公民使用达到令人惊奇的效果。例如 <code>Set</code>
+不是 <code>Functor</code> 的实例，原因是 <code>Set.map</code> 拥有
+<code>Ord</code> 的约束，而
+<code>fmap :: (a -&gt; b) -&gt; f a -&gt; f b</code> 并不满足。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; :t <span class="type">Data</span>.<span class="type">Set</span>.map</span><br><span class="line"><span class="type">Data</span>.<span class="type">Set</span>.map :: <span class="type">Ord</span> b =&gt; (a -&gt; b) -&gt; <span class="type">Set</span> a -&gt; <span class="type">Set</span> b</span><br></pre></td></tr></table></figure>
-
-<p>可以看到 <code>Set.map</code> 需要 <code>b</code> 是 <code>Ord</code> 的实例。</p>
-<p>通过 <code>ConstraintKinds</code> 我们可以实现一个既可以拥有约束也可以没有约束的 <code>Functor</code> typeclass。</p>
+<p>可以看到 <code>Set.map</code> 需要 <code>b</code> 是 <code>Ord</code>
+的实例。</p>
+<p>通过 <code>ConstraintKinds</code>
+我们可以实现一个既可以拥有约束也可以没有约束的 <code>Functor</code>
+typeclass。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#123;-# LANGUAGE ConstraintKinds #-&#125;</span></span><br><span class="line"><span class="meta">&#123;-# LANGUAGE KindSignatures #-&#125;</span></span><br><span class="line"><span class="meta">&#123;-# LANGUAGE FunctionalDependencies #-&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> Data.Kind (<span class="type">Constraint</span>)</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">qualified</span> Data.Set <span class="keyword">as</span> Set</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">qualified</span> Data.List <span class="keyword">as</span> List</span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="type">GFunctor</span> (<span class="title">c</span> :: * -&gt; <span class="type">Constraint</span>) (<span class="title">f</span> :: * -&gt; *) | f -&gt; c <span class="keyword">where</span></span></span><br><span class="line">  gfmap :: c b =&gt; (a -&gt; b) -&gt; (f a -&gt; f b)</span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="keyword">instance</span> <span class="type">GFunctor</span> <span class="type">Ord</span> <span class="type">Set</span>.<span class="type">Set</span> <span class="keyword">where</span></span></span><br><span class="line">  gfmap = <span class="type">Set</span>.map</span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="keyword">instance</span> <span class="type">GFunctor</span> <span class="type">EmptyConstraint</span> [] <span class="keyword">where</span></span></span><br><span class="line">  gfmap = <span class="type">List</span>.map</span><br></pre></td></tr></table></figure>
-
 <p>其中 <code>EmptyConstraint</code> 是一个满足所有类型的约束。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#123;-# LANGUAGE FlexibleInstances #-&#125;</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="type">EmptyConstraint</span> a</span></span><br><span class="line"><span class="class"><span class="keyword">instance</span> <span class="type">EmptyConstraint</span> a</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="Datatype-promotion"><a href="#Datatype-promotion" class="headerlink" title="Datatype promotion"></a>Datatype promotion</h3><p>在标准 Haskell 中，可以利用 <code>data</code> 关键字定义由一个或多个数据构造器定义的类型或类型构造器。</p>
+<h3 id="datatype-promotion">Datatype promotion</h3>
+<p>在标准 Haskell 中，可以利用 <code>data</code>
+关键字定义由一个或多个数据构造器定义的类型或类型构造器。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">ConnectionStatus</span> = <span class="type">Open</span> | <span class="type">Closed</span></span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/imgs/haskells-kind-system-a-primer/kind-system004.svg" alt="ConnectionStatus type"><br>当开启 GHC 的 <code>DataKinds</code> 扩展后，<code>data</code> 关键字会在原有的基础上增加一个自定义的 <code>kind</code> 和满足该 <code>kind</code> 的类型或类型构造器。</p>
+<p><img src="/imgs/haskells-kind-system-a-primer/kind-system004.svg"
+alt="ConnectionStatus type" /> 当开启 GHC 的 <code>DataKinds</code>
+扩展后，<code>data</code> 关键字会在原有的基础上增加一个自定义的
+<code>kind</code> 和满足该 <code>kind</code> 的类型或类型构造器。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#123;-# LANGUAGE DataKinds #-&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">ConnectionStatus</span> = <span class="type">Open</span> | <span class="type">Closed</span></span></span><br></pre></td></tr></table></figure>
-
-<p>上述代码会创建一个新的 <code>ConnectionStatus</code> kind，该 kind 拥有两个非原始的类型，分别是 <code>&#39;Open</code> 和 <code>&#39;Close</code>。<br><img src="/imgs/haskells-kind-system-a-primer/kind-system005.svg" alt="ConnectionStatus kind"></p>
-<p>此时，我们说 <code>ConnectionStatus</code> 已经被提升 (promoted) 为了拥有 <code>Open</code> 和 <code>Close</code> 两个类型的 kind，注意到这里 <code>Open</code> 和 <code>Close</code> 都省略了 <code>&#39;</code>前缀，该前缀在大多数情况下可以省略，只有在<a target="_blank" rel="noopener" href="https://downloads.haskell.org/~ghc/8.4.3/docs/html/users_guide/glasgow_exts.html#distinguishing-between-types-and-constructors">极少数情况下</a>需要写明以避免歧义。</p>
-<p>通过利用新生成的 kind，我们可以定义<strong>只</strong>接受被实例化为 <code>Open</code> 和 <code>Closed</code> 的类型变量。</p>
+<p>上述代码会创建一个新的 <code>ConnectionStatus</code> kind，该 kind
+拥有两个非原始的类型，分别是 <code>'Open</code> 和 <code>'Close</code>。
+<img src="/imgs/haskells-kind-system-a-primer/kind-system005.svg"
+alt="ConnectionStatus kind" /></p>
+<p>此时，我们说 <code>ConnectionStatus</code> 已经被提升 (promoted)
+为了拥有 <code>Open</code> 和 <code>Close</code> 两个类型的
+kind，注意到这里 <code>Open</code> 和 <code>Close</code> 都省略了
+<code>'</code>前缀，该前缀在大多数情况下可以省略，只有在<a
+target="_blank" rel="noopener" href="https://downloads.haskell.org/~ghc/8.4.3/docs/html/users_guide/glasgow_exts.html#distinguishing-between-types-and-constructors">极少数情况下</a>需要写明以避免歧义。</p>
+<p>通过利用新生成的 kind，我们可以定义<strong>只</strong>接受被实例化为
+<code>Open</code> 和 <code>Closed</code> 的类型变量。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#123;-# LANGUAGE KindSignatures #-&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">Connection</span> (<span class="title">s</span> :: <span class="type">ConnectionStatus</span>) = <span class="type">MkConnection</span> ...</span></span><br><span class="line"></span><br><span class="line"><span class="title">newConnection</span>     :: <span class="type">Address</span>           -&gt; <span class="type">Connection</span> <span class="type">Closed</span></span><br><span class="line"><span class="title">openConnection</span>    :: <span class="type">Connection</span> <span class="type">Closed</span> -&gt; <span class="type">Connection</span> <span class="type">Open</span></span><br><span class="line"><span class="title">closeConnection</span>   :: <span class="type">Connection</span> <span class="type">Open</span>   -&gt; <span class="type">Connection</span> <span class="type">Closed</span></span><br><span class="line"><span class="title">connectionAddress</span> :: <span class="type">Connection</span> s      -&gt; <span class="type">Address</span></span><br></pre></td></tr></table></figure>
-
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; :k <span class="type">Connection</span> <span class="type">Int</span></span><br><span class="line">&lt;interactive&gt;:<span class="number">1</span>:<span class="number">12</span>: error:</span><br><span class="line">    • <span class="type">Expected</span> kind ‘<span class="type">ConnectionStatus</span>’, but ‘<span class="type">Int</span>’ has kind ‘*’</span><br></pre></td></tr></table></figure>
-
-<p>通过连接状态，我们可以在编译期实现例如 <code>closeConnection</code> 只能在开启的连接中被调用，而不能在关闭的连接中被调用的限制。</p>
-<p>这种功能并不仅限于我们自定义的 <code>data</code>，例如在开启 <code>DataKinds</code> 扩展后，<code>Bool</code> 类型也可以被提升为 kind。</p>
+<p>通过连接状态，我们可以在编译期实现例如 <code>closeConnection</code>
+只能在开启的连接中被调用，而不能在关闭的连接中被调用的限制。</p>
+<p>这种功能并不仅限于我们自定义的 <code>data</code>，例如在开启
+<code>DataKinds</code> 扩展后，<code>Bool</code> 类型也可以被提升为
+kind。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; <span class="class"><span class="keyword">data</span> <span class="type">F</span> (<span class="title">b</span> :: <span class="type">Bool</span>) = <span class="type">MkF</span> <span class="keyword">deriving</span> <span class="type">Show</span></span></span><br><span class="line"></span><br><span class="line">λ&gt; <span class="type">MkF</span> :: <span class="type">F</span> &#x27;<span class="type">True</span></span><br><span class="line"><span class="type">MkF</span></span><br><span class="line"></span><br><span class="line">λ&gt; <span class="type">MkF</span> :: <span class="type">F</span> &#x27;<span class="type">False</span></span><br><span class="line"><span class="type">MkF</span></span><br><span class="line"></span><br><span class="line">λ&gt; <span class="type">MkF</span> :: <span class="type">F</span> &#x27;<span class="type">Open</span></span><br><span class="line">&lt;interactive&gt;:<span class="number">30</span>:<span class="number">10</span>: error:</span><br><span class="line">    • <span class="type">Expected</span> kind ‘<span class="type">Bool</span>’, but ‘ &#x27;<span class="type">Open</span>’ has kind ‘<span class="type">ConnectionStatus</span>’</span><br></pre></td></tr></table></figure>
-
-<h3 id="GHC-TypeLits"><a href="#GHC-TypeLits" class="headerlink" title="GHC.TypeLits"></a>GHC.TypeLits</h3><p>GHC 还提供了两个方便的未装箱的 kind， 它们被定义在 <em>base</em> 中的 <code>GCH.TypeLits</code> 模块下。</p>
-<p>第一个是 <code>Symbol</code>，<code>Symbol</code> 是类型层面 (type-level) 的字符串表示的 kind。例如我们可以将 <code>&quot;hello&quot;</code> 字符串作为一种类型使用，这时 <code>&quot;Hello&quot;</code> 就拥有 <code>Symbol</code> 的 kind。<br><img src="/imgs/haskells-kind-system-a-primer/kind-system006.svg" alt="Symbol kind"></p>
+<h3 id="ghc.typelits">GHC.TypeLits</h3>
+<p>GHC 还提供了两个方便的未装箱的 kind， 它们被定义在 <em>base</em> 中的
+<code>GCH.TypeLits</code> 模块下。</p>
+<p>第一个是 <code>Symbol</code>，<code>Symbol</code> 是类型层面
+(type-level) 的字符串表示的 kind。例如我们可以将 <code>"hello"</code>
+字符串作为一种类型使用，这时 <code>"Hello"</code> 就拥有
+<code>Symbol</code> 的 kind。 <img
+src="/imgs/haskells-kind-system-a-primer/kind-system006.svg"
+alt="Symbol kind" /></p>
 <p>这样我们就可以用字符串字面量来表示一种类型了。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#123;-# LANGUAGE KindSignatures, DataKinds #-&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> GHC.TypeLits (<span class="type">Symbol</span>)</span><br><span class="line"><span class="keyword">import</span> Data.Ratio ((%))</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">newtype</span> <span class="type">Money</span> (<span class="title">currency</span> :: <span class="type">Symbol</span>) = <span class="type">Money</span> <span class="type">Rational</span></span></span><br><span class="line"></span><br><span class="line"><span class="title">fivePence</span> :: <span class="type">Money</span> <span class="string">&quot;GBP&quot;</span></span><br><span class="line"><span class="title">fivePence</span> = <span class="type">Money</span> (<span class="number">5</span> % <span class="number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="title">twoEuros</span> :: <span class="type">Money</span> <span class="string">&quot;EUR&quot;</span></span><br><span class="line"><span class="title">twoEuros</span> = <span class="type">Money</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<p>将货币在类型层面表示，而不是在表达式层面 (term-level) 上表示 (例如 <code>data Money = Money String Rational</code>) 可以静态地有效避免将不同货币弄混，犯下例如将英镑和欧元直接相加这样的错误。</p>
+<p>将货币在类型层面表示，而不是在表达式层面 (term-level) 上表示 (例如
+<code>data Money = Money String Rational</code>)
+可以静态地有效避免将不同货币弄混，犯下例如将英镑和欧元直接相加这样的错误。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">add</span> :: <span class="type">Money</span> c -&gt; <span class="type">Money</span> c -&gt; <span class="type">Money</span> c</span><br><span class="line"><span class="title">add</span> (<span class="type">Money</span> x) (<span class="type">Money</span> y) = <span class="type">Money</span> (x + y)</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; add fivePence fivePence</span><br><span class="line"><span class="type">Money</span> (<span class="number">1</span> % <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">λ&gt; add fivePence twoEuros</span><br><span class="line">&lt;interactive&gt;:<span class="number">8</span>:<span class="number">15</span>: error:</span><br><span class="line">    • <span class="type">Couldn&#x27;t</span> match <span class="class"><span class="keyword">type</span> ‘&quot;<span class="type">EUR</span>&quot;’ with ‘&quot;<span class="type">GBP</span>&quot;’</span></span><br></pre></td></tr></table></figure>
-
-<p>如果只在表达式层面进行定义，那么在相加货币时必须对货币的类型进行运行时检查，相关的函数也要添加类似 <code>Maybe</code> 、<code>Either</code> 或 <code>MonadError e m</code> 这种表示失败的返回结果。</p>
+<p>如果只在表达式层面进行定义，那么在相加货币时必须对货币的类型进行运行时检查，相关的函数也要添加类似
+<code>Maybe</code> 、<code>Either</code> 或 <code>MonadError e m</code>
+这种表示失败的返回结果。</p>
 <blockquote>
-<p>一个有趣的事实：上面的例子不是仅仅只为演示而虚构的，这是真实存在的 <em>safe-money</em> 库的<a target="_blank" rel="noopener" href="https://hackage.haskell.org/package/safe-money-0.7/docs/Money.html#t:Dense">表示方式</a>。</p>
+<p>一个有趣的事实：上面的例子不是仅仅只为演示而虚构的，这是真实存在的
+<em>safe-money</em> 库的<a
+target="_blank" rel="noopener" href="https://hackage.haskell.org/package/safe-money-0.7/docs/Money.html#t:Dense">表示方式</a>。</p>
 </blockquote>
-<p>此外，如果我们不需要对金钱进行数学运算的话，将货币值用 <code>Rational</code> 保存显得过于浪费了一点。因此 <em>safe-money</em> 库还提供了另一种对 <code>Integer</code> 简单包装的 <a target="_blank" rel="noopener" href="https://hackage.haskell.org/package/safe-money-0.7/docs/Money.html#t:Discrete-39-">Discrete</a> 类型来满足不需要进行运算的场景。要注意的是，根据 <em>safe-money</em> 库官方的<a target="_blank" rel="noopener" href="https://ren.zone/articles/safe-money#scales">解释</a>，用 <code>Integer</code> 表示货币值时仅仅保存货币值本身还不够，还应该记录货币的单位间的换算关系。例如表示美元时，这种关系就是 1 比 1，而表示美分时，这种关系就变成了 100 比 1 (100 美分换 1 美元)。</p>
-<p>为了在类型层面表示这种换算关系，需要用到在 <code>GHC.TypeLits</code> 里定义的另一个在类型层面表示自然数的 kind <code>Nat</code>。它的用法和 <code>Symbol</code> 相似，只需要将字符串字面量换成数字就可以了。</p>
+<p>此外，如果我们不需要对金钱进行数学运算的话，将货币值用
+<code>Rational</code> 保存显得过于浪费了一点。因此 <em>safe-money</em>
+库还提供了另一种对 <code>Integer</code> 简单包装的 <a
+target="_blank" rel="noopener" href="https://hackage.haskell.org/package/safe-money-0.7/docs/Money.html#t:Discrete-39-">Discrete</a>
+类型来满足不需要进行运算的场景。要注意的是，根据 <em>safe-money</em>
+库官方的<a
+target="_blank" rel="noopener" href="https://ren.zone/articles/safe-money#scales">解释</a>，用
+<code>Integer</code>
+表示货币值时仅仅保存货币值本身还不够，还应该记录货币的单位间的换算关系。例如表示美元时，这种关系就是
+1 比 1，而表示美分时，这种关系就变成了 100 比 1 (100 美分换 1
+美元)。</p>
+<p>为了在类型层面表示这种换算关系，需要用到在 <code>GHC.TypeLits</code>
+里定义的另一个在类型层面表示自然数的 kind <code>Nat</code>。它的用法和
+<code>Symbol</code> 相似，只需要将字符串字面量换成数字就可以了。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#123;-# LANGUAGE KindSignatures, DataKinds #-&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> GHC.TypeLits (<span class="type">Symbol</span>, <span class="type">Nat</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">newtype</span> <span class="type">Discrete</span> (<span class="title">currency</span> :: <span class="type">Symbol</span>) (<span class="title">scale</span> :: (<span class="type">Nat</span>, <span class="type">Nat</span>))</span></span><br><span class="line">  = <span class="type">Discrete</span> <span class="type">Integer</span></span><br><span class="line"></span><br><span class="line"><span class="title">oneDollar</span> :: <span class="type">Discrete</span> <span class="string">&quot;USD&quot;</span> &#x27;(<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line"><span class="title">oneDollar</span> = <span class="type">Discrete</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="title">oneDollarThirtyCents</span> :: <span class="type">Discrete</span> <span class="string">&quot;USD&quot;</span> &#x27;(<span class="number">100</span>, <span class="number">1</span>)</span><br><span class="line"><span class="title">oneDollarThirtyCents</span> = <span class="type">Discrete</span> <span class="number">130</span></span><br></pre></td></tr></table></figure>
-
-<p>其中 <code>scale :: (Nat, Nat)</code> 中的 tuple <code>(,)</code> 是通过 <code>DataKinds</code> 提升为 kind 的，同时 <code>&#39;(,)</code> 这一类型构造器也是由原始的数据构造器提升来的。</p>
-<h3 id="Kind-polymorphism"><a href="#Kind-polymorphism" class="headerlink" title="Kind polymorphism"></a>Kind polymorphism</h3><p>参数多态性 (parametric polymorphism) 广泛存在于 Haskell 中，它可以帮助我们对类型进行抽象。通过开启 <code>PolyKinds</code> 扩展可以达到对 kind 更高程度的抽象。</p>
+<p>其中 <code>scale :: (Nat, Nat)</code> 中的 tuple <code>(,)</code>
+是通过 <code>DataKinds</code> 提升为 kind 的，同时 <code>'(,)</code>
+这一类型构造器也是由原始的数据构造器提升来的。</p>
+<h3 id="kind-polymorphism">Kind polymorphism</h3>
+<p>参数多态性 (parametric polymorphism) 广泛存在于 Haskell
+中，它可以帮助我们对类型进行抽象。通过开启 <code>PolyKinds</code>
+扩展可以达到对 kind 更高程度的抽象。</p>
 <p>让我们来看一个例子：</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">Proxy</span> a = <span class="type">MkProxy</span></span></span><br></pre></td></tr></table></figure>
-
-<p>这里 <code>Proxy</code> 是接受一个类型变量的类型构造器，它拥有一个不带参数的数据构造器。在我们手边没有任何数据时，使用 <code>Proxy</code> 传递类型十分方便。</p>
+<p>这里 <code>Proxy</code>
+是接受一个类型变量的类型构造器，它拥有一个不带参数的数据构造器。在我们手边没有任何数据时，使用
+<code>Proxy</code> 传递类型十分方便。</p>
 <blockquote>
-<p><code>Proxy</code> 已经被定义在 <em>base</em> 中的 <code>Data.Proxy</code> 模块中，本文中的实现是为了演示 kind 的逻辑，要更深入地了解 <code>Data.Proxy</code> 及其使用的例子，可以阅读 Kwang Seo 的<a target="_blank" rel="noopener" href="https://kseo.github.io/posts/2017-01-15-data-proxy.html">这篇</a>博客。</p>
+<p><code>Proxy</code> 已经被定义在 <em>base</em> 中的
+<code>Data.Proxy</code> 模块中，本文中的实现是为了演示 kind
+的逻辑，要更深入地了解 <code>Data.Proxy</code> 及其使用的例子，可以阅读
+Kwang Seo 的<a
+target="_blank" rel="noopener" href="https://kseo.github.io/posts/2017-01-15-data-proxy.html">这篇</a>博客。</p>
 </blockquote>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; intRepresentative = <span class="type">MkProxy</span> :: <span class="type">Proxy</span> <span class="type">Int</span></span><br><span class="line"></span><br><span class="line">λ&gt; stringRepresentative = <span class="type">MkProxy</span> :: <span class="type">Proxy</span> <span class="type">String</span></span><br></pre></td></tr></table></figure>
-
-<p>有一个问题是默认情况下，GHC 会假设 a 具有 <code>*</code> 的 kind，这意味着 <code>Proxy</code> 仅适用于具有 <code>*</code> 的 kind 的类型，无法适用于所有的类型。</p>
+<p>有一个问题是默认情况下，GHC 会假设 a 具有 <code>*</code> 的
+kind，这意味着 <code>Proxy</code> 仅适用于具有 <code>*</code> 的 kind
+的类型，无法适用于所有的类型。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; :k <span class="type">Proxy</span></span><br><span class="line"><span class="type">Proxy</span> :: * -&gt; *</span><br><span class="line"></span><br><span class="line">λ&gt; maybeRepresentative = <span class="type">MkProxy</span> :: <span class="type">Proxy</span> <span class="type">Maybe</span></span><br><span class="line">&lt;interactive&gt;:<span class="number">9</span>:<span class="number">38</span>: error:</span><br><span class="line">    • <span class="type">Expecting</span> one more argument to ‘<span class="type">Maybe</span>’</span><br><span class="line">      <span class="type">Expected</span> a <span class="class"><span class="keyword">type</span>, but ‘<span class="type">Maybe</span>’ has kind ‘* -&gt; *’</span></span><br></pre></td></tr></table></figure>
-
-<p>正常情况下，我们需要应该为所有可能的 kind 创建下面这样属于其的 <code>Proxy</code> 类型。</p>
+<p>正常情况下，我们需要应该为所有可能的 kind 创建下面这样属于其的
+<code>Proxy</code> 类型。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">Proxy</span> a = <span class="type">MkProxy</span></span></span><br><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">Proxy1</span> (<span class="title">a</span> :: * -&gt; *) = <span class="type">MkProxy1</span></span></span><br><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">Proxy2</span> (<span class="title">a</span> :: * -&gt; * -&gt; *) = <span class="type">MkProxy2</span></span></span><br><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">HKProxy1</span> (<span class="title">a</span> :: (* -&gt; *) -&gt; * -&gt; *) = <span class="type">MkHKProxy1</span></span></span><br><span class="line"></span><br><span class="line"><span class="title">stringRepresentative</span>   = <span class="type">MkProxy</span>    :: <span class="type">Proxy</span> <span class="type">String</span></span><br><span class="line"><span class="title">maybeRepresentative</span>    = <span class="type">MkProxy1</span>   :: <span class="type">Proxy1</span> <span class="type">Maybe</span></span><br><span class="line"><span class="title">eitherRepresentative</span>   = <span class="type">MkProxy2</span>   :: <span class="type">Proxy2</span> <span class="type">Either</span></span><br><span class="line"><span class="title">nonEmptyRepresentative</span> = <span class="type">MkHKProxy1</span> :: <span class="type">HKProxy1</span> <span class="type">NonEmpty</span></span><br></pre></td></tr></table></figure>
-
-<p>很明显上面这种写法不具有扩展性，但是在开启 <code>PolyKinds</code> 扩展后我们可以创建适用于所有具有 <code>k</code> 的 kind 类型 的 <code>Proxy</code>。</p>
+<p>很明显上面这种写法不具有扩展性，但是在开启 <code>PolyKinds</code>
+扩展后我们可以创建适用于所有具有 <code>k</code> 的 kind 类型 的
+<code>Proxy</code>。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#123;-# LANGUAGE PolyKinds #-&#125;</span></span><br><span class="line"><span class="meta">&#123;-# LANGUAGE DataKinds #-&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">Proxy</span> (<span class="title">a</span> :: <span class="title">k</span>) = <span class="type">MkProxy</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- Now `a` can be anything at all</span></span><br><span class="line"><span class="title">maybeRepresentative</span>    = <span class="type">MkProxy</span> :: <span class="type">Proxy</span> <span class="type">Maybe</span></span><br><span class="line"><span class="title">nonEmptyRepresentative</span> = <span class="type">MkProxy</span> :: <span class="type">Proxy</span> <span class="type">NonEmpty</span></span><br><span class="line"><span class="title">functionRepresentative</span> = <span class="type">MkProxy</span> :: <span class="type">Proxy</span> (-&gt;)</span><br><span class="line"><span class="title">helloRepresentative</span>    = <span class="type">MkProxy</span> :: <span class="type">Proxy</span> <span class="string">&quot;hello&quot;</span></span><br><span class="line"><span class="title">showRepresentative</span>     = <span class="type">MkProxy</span> :: <span class="type">Proxy</span> <span class="type">Show</span></span><br><span class="line"><span class="title">functorRepresentative</span>  = <span class="type">MkProxy</span> :: <span class="type">Proxy</span> <span class="type">Functor</span></span><br><span class="line"><span class="title">openRepresentative</span>     = <span class="type">MkProxy</span> :: <span class="type">Proxy</span> &#x27;<span class="type">Open</span></span><br></pre></td></tr></table></figure>
-
 <p>事实上，我们可以省略 <code>a :: k</code> 由 GHC 自动推断。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">λ&gt; :set -<span class="type">XPolyKinds</span></span><br><span class="line">λ&gt; <span class="class"><span class="keyword">data</span> <span class="type">Proxy</span> a = <span class="type">MkProxy</span></span></span><br><span class="line"></span><br><span class="line">λ&gt; :k <span class="type">Proxy</span></span><br><span class="line"><span class="type">Proxy</span> :: k -&gt; *</span><br></pre></td></tr></table></figure>
-
-<p><em><a target="_blank" rel="noopener" href="https://docs.servant.dev/en/stable/">Servant</a></em> 是另一个使用 kind polymorphism 的例子，<em>Servant</em> 用于编写类型安全的 web APIs。其中有一个名为 <code>:&gt;</code> 的类型用于将一个 API 的各个组件 (component) 组合成一个拥有完整类型信息的用例。这些组件可能拥有不同的类型和不同的 kind。</p>
+<p><em><a target="_blank" rel="noopener" href="https://docs.servant.dev/en/stable/">Servant</a></em>
+是另一个使用 kind polymorphism 的例子，<em>Servant</em>
+用于编写类型安全的 web APIs。其中有一个名为 <code>:&gt;</code>
+的类型用于将一个 API 的各个组件 (component)
+组合成一个拥有完整类型信息的用例。这些组件可能拥有不同的类型和不同的
+kind。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#123;-# LANGUAGE PolyKinds #-&#125;</span></span><br><span class="line"><span class="meta">&#123;-# LANGUAGE TypeOperators #-&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">data</span> (:&gt;) (<span class="title">a</span> :: <span class="title">k</span>) (<span class="title">b</span> :: *)</span></span><br><span class="line"><span class="keyword">infixr</span> <span class="number">4</span> :&gt;</span><br></pre></td></tr></table></figure>
-
-<p>通过这样可以描述请求的响应，例如 <code>POST /books</code>，通过使用 <code>:&gt;</code> 将 <code>&quot;books&quot; :: Symbol</code>、<code>ReqBody &#39;[JSON] Book :: *</code> 和 <code>Post &#39;[JSON] () :: *</code> 结合在一起。</p>
+<p>通过这样可以描述请求的响应，例如 <code>POST /books</code>，通过使用
+<code>:&gt;</code> 将
+<code>"books" :: Symbol</code>、<code>ReqBody '[JSON] Book :: *</code>
+和 <code>Post '[JSON] () :: *</code> 结合在一起。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="type">BooksAPI</span> = &quot;books&quot; :&gt; <span class="type">ReqBody</span> &#x27;[<span class="type">JSON</span>] <span class="type">Book</span> :&gt; <span class="type">Post</span> &#x27;[<span class="type">JSON</span>] ()</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="Levity-polymorphism"><a href="#Levity-polymorphism" class="headerlink" title="Levity polymorphism"></a>Levity polymorphism</h3><p>在一些情况下，我们可能需要对升格的类型和未升格的类型做统一的抽象。例如 <code>error</code> 函数接受一个错误信息并抛出异常：</p>
+<h3 id="levity-polymorphism">Levity polymorphism</h3>
+<p>在一些情况下，我们可能需要对升格的类型和未升格的类型做统一的抽象。例如
+<code>error</code> 函数接受一个错误信息并抛出异常：</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#123;-# LANGUAGE ExplicitForAll #-&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="title">error</span> :: <span class="keyword">forall</span> a. <span class="type">String</span> -&gt; a</span><br></pre></td></tr></table></figure>
-
-<p>由于 <code>error</code> 的返回值具有多态性，它可以应用于大多数的场景：</p>
+<p>由于 <code>error</code>
+的返回值具有多态性，它可以应用于大多数的场景：</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">increment</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span></span><br><span class="line"><span class="title">increment</span> x = error <span class="string">&quot;oops&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>但是因为 <code>a</code> 会被默认推断为具有 <code>*</code> 的 kind，因此我们无法将其应用于未升格的类型：</p>
+<p>但是因为 <code>a</code> 会被默认推断为具有 <code>*</code> 的
+kind，因此我们无法将其应用于未升格的类型：</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">incrementUnlifted</span> :: <span class="type">Int</span># -&gt; <span class="type">Int</span>#</span><br><span class="line"><span class="title">incrementUnlifted</span> x = error <span class="string">&quot;oops&quot;</span></span><br></pre></td></tr></table></figure>
-
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;interactive&gt;:<span class="number">22</span>-<span class="number">40</span>: error</span><br><span class="line">   • <span class="type">Couldn&#x27;t</span> match a lifted <span class="class"><span class="keyword">type</span> with an unlifted <span class="keyword">type</span></span></span><br></pre></td></tr></table></figure>
-
-<p>在现有的知识下，我们可能会想到开启 <code>PolyKinds</code> 并引入 kind 变量 <code>k</code> 来实现上面的目的，但是这并不能成功：</p>
+<p>在现有的知识下，我们可能会想到开启 <code>PolyKinds</code> 并引入 kind
+变量 <code>k</code> 来实现上面的目的，但是这并不能成功：</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">error</span> :: <span class="keyword">forall</span> k (a :: k). <span class="type">String</span> -&gt; a</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/<span class="type">Playground</span>.hs:<span class="number">15</span>:<span class="number">40</span>: error:</span><br><span class="line">    • <span class="type">Expected</span> a <span class="class"><span class="keyword">type</span>, but ‘a’ has kind ‘k’</span></span><br><span class="line">    • <span class="type">In</span> the <span class="class"><span class="keyword">type</span> signature: error :: forall k (<span class="title">a</span> :: <span class="title">k</span>). <span class="type">String</span> -&gt; a</span></span><br></pre></td></tr></table></figure>
-
-<p>原因是 <code>a :: k</code> 对原始类型以外的其他类型没有意义。例如 <code>k</code> 是 <code>Symbol</code>，<code>a</code> 是 <code>&quot;hello&quot;</code>，当 <code>&quot;hello&quot;</code> 不是原始类型时，<code>error</code> 应该返回什么呢？</p>
-<p>为了让 <code>error</code> 可以适用于所有的原始类型 (升格的和未升格的)，我们需要 <em>levity polymorphism</em>。</p>
-<p>秘诀在于我们之前提到的 <code>TYPE r</code> kind。这种 kind 是 <code>r :: RuntimeRep</code> 的参数化的结果，描述了类型的运行时状态，其取值可以为下列之一：</p>
+<p>原因是 <code>a :: k</code> 对原始类型以外的其他类型没有意义。例如
+<code>k</code> 是 <code>Symbol</code>，<code>a</code> 是
+<code>"hello"</code>，当 <code>"hello"</code>
+不是原始类型时，<code>error</code> 应该返回什么呢？</p>
+<p>为了让 <code>error</code> 可以适用于所有的原始类型
+(升格的和未升格的)，我们需要 <em>levity polymorphism</em>。</p>
+<p>秘诀在于我们之前提到的 <code>TYPE r</code> kind。这种 kind 是
+<code>r :: RuntimeRep</code>
+的参数化的结果，描述了类型的运行时状态，其取值可以为下列之一：</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">RuntimeRep</span> = <span class="type">VecRep</span> <span class="type">VecCount</span> <span class="type">VecElem</span>   <span class="comment">-- ^ a SIMD vector type</span></span></span><br><span class="line">                | <span class="type">TupleRep</span> [<span class="type">RuntimeRep</span>]     <span class="comment">-- ^ An unboxed tuple of the given reps</span></span><br><span class="line">                | <span class="type">SumRep</span> [<span class="type">RuntimeRep</span>]       <span class="comment">-- ^ An unboxed sum of the given reps</span></span><br><span class="line">                | <span class="type">LiftedRep</span>       <span class="comment">-- ^ lifted; represented by a pointer</span></span><br><span class="line">                | <span class="type">UnliftedRep</span>     <span class="comment">-- ^ unlifted; represented by a pointer</span></span><br><span class="line">                | <span class="type">IntRep</span>          <span class="comment">-- ^ signed, word-sized value</span></span><br><span class="line">                | <span class="type">WordRep</span>         <span class="comment">-- ^ unsigned, word-sized value</span></span><br><span class="line">                | <span class="type">Int64Rep</span>        <span class="comment">-- ^ signed, 64-bit value (on 32-bit only)</span></span><br><span class="line">                | <span class="type">Word64Rep</span>       <span class="comment">-- ^ unsigned, 64-bit value (on 32-bit only)</span></span><br><span class="line">                | <span class="type">AddrRep</span>         <span class="comment">-- ^ A pointer, but /not/ to a Haskell value</span></span><br><span class="line">                | <span class="type">FloatRep</span>        <span class="comment">-- ^ a 32-bit floating point number</span></span><br><span class="line">                | <span class="type">DoubleRep</span>       <span class="comment">-- ^ a 64-bit floating point number</span></span><br></pre></td></tr></table></figure>
-
-<p>我们之前已经见过 <code>TYPE &#39;IntRep</code> 是未升格的 integer 的 kind，<code>TYPE &#39;FloatRep</code> 是未升格的 float 的kind。对于 <code>TYPE &#39;LiftRep</code> 则是所有升格的类型的 kind，事实上，<code>*</code> 就是 <code>TYPE &#39;LiftRep</code> 的<a target="_blank" rel="noopener" href="https://hackage.haskell.org/package/ghc-prim-0.5.2.0/docs/GHC-Types.html#t:-42-">同义词</a>。</p>
-<p>所以，实际上我们可以用 <code>TYPE r</code> 表示未升格的类型和已经升格的类型。</p>
+<p>我们之前已经见过 <code>TYPE 'IntRep</code> 是未升格的 integer 的
+kind，<code>TYPE 'FloatRep</code> 是未升格的 float 的kind。对于
+<code>TYPE 'LiftRep</code> 则是所有升格的类型的
+kind，事实上，<code>*</code> 就是 <code>TYPE 'LiftRep</code> 的<a
+target="_blank" rel="noopener" href="https://hackage.haskell.org/package/ghc-prim-0.5.2.0/docs/GHC-Types.html#t:-42-">同义词</a>。</p>
+<p>所以，实际上我们可以用 <code>TYPE r</code>
+表示未升格的类型和已经升格的类型。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#123;-# LANGUAGE KindSignatures #-&#125;</span></span><br><span class="line"><span class="meta">&#123;-# LANGUAGE ExplicitForAll #-&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> GHC.Exts (<span class="type">TYPE</span>, <span class="type">RuntimeRep</span>)</span><br><span class="line"></span><br><span class="line"><span class="title">error</span> :: <span class="keyword">forall</span> (r :: <span class="type">RuntimeRep</span>) (a :: <span class="type">TYPE</span> r). <span class="type">String</span> -&gt; a</span><br></pre></td></tr></table></figure>
-
-<p>此时，<code>error</code> 就可以同时被应用于 <code>increment</code> 和 <code>incrementUnlifted</code> 了。</p>
-<p>levity polymorphism 也有其自身的限制，有些地方并不能使用，<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=lSJwXZ7vWBw">这里</a>可以了解到具体不能使用的地方和不能使用的原因。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>到目前为止读者可能会好奇：上面的这些东西有什么意义？为什么要有 kind 系统？为什么我们会关心 kind？实际上，在 Java 或 C# 等语言中所有的泛型类型 <code>&lt;T&gt;</code> 都属于 <code>*</code> 的 kind，我们无法得到例如 <code>Functor&lt;List&gt;</code> 的这种拥有 <code>* -&gt; *</code> 的 kind 的类型。如果没有 kind 系统，我们无法定义 functor 和 monad，甚至之前提到的 <code>NonEmpty f a</code> 都无法做到。更进一步，利用 levity polymorphism，我们可以<a target="_blank" rel="noopener" href="https://gist.github.com/dcastro/a7f9730981fa404415588224350dc918">实现</a>同时适用于升格类型和未升格类型的抽象，而 Java 只能实现适用于升格类型的泛型变量。</p>
-<p>同时，kind 系统打开了通向类型层面编程的大门，类似于 <code>Connection s</code> 和 <code>Money c</code> 等可扩展的记录 (record)、<em>Servant</em> 的类型层面的 web API都可以通过 kind 实现。Simon Peyton Jones 整合前沿研究，讨论了在 Haskell 中的 practical linearity，通过这种方式可以给函数类型 <code>(-&gt;) a b</code> 一个额外的拥有 <code>Linearity</code> 的 kind 类型变量 <code>l</code> ，这里 <code>Linearity</code> 是类型 <code>Omega</code> 和 <code>One</code> 的整合。</p>
-<p>另一个读者可能会问的问题是：如果所有的表达式都有类型、所有的类型都有 kind，那么所有的 kind 会有什么？在 GHC 7 及其之前的版本中，kind 拥有的是 <em>sorts</em>，所有的 kind 都有一个<a target="_blank" rel="noopener" href="https://downloads.haskell.org/~ghc/7.6.1/docs/html/users_guide/promotion.html">唯一的 sort <code>Box</code></a>，这些 sort 仅存在与 GHC 的内部，对于我们开发人员来说是不可见的。</p>
-<p>在 GHC 8 中，情况有了一点变化。读者可能注意到，本文尝试比较类型和 kind 之间的相似程度：包括都可以实现高阶、都可以有多态性、都可以被推断、都可以进行科里化。这并不是巧合！随着 GHC 8 中 <code>TypeInType</code> 扩展的到来，类型 (type) 和 kind (包括 sort) 都称为了同一个东西。如之前类型属于 kind，现在类型可以属于其他的类型。<code>3</code> 属于类型 <code>Int</code>，<code>Int</code> 属于类型 <code>*</code>，<code>*</code> 属于类型 <code>*</code>。这种统一为 Haskell 实现完全类型依赖铺平了道路。</p>
-<p>在最近的论文中，读者可能会看到 kind <code>*</code> 被认为是 Type (和前文的 <code>TYPE r</code> <strong>不是</strong>同一个东西)，<del>目前 (2018 年) 这两个词是<a target="_blank" rel="noopener" href="https://hackage.haskell.org/package/base-4.11.1.0/docs/Data-Kind.html#t:Type">同义词</a></del>，(2021 年已<a target="_blank" rel="noopener" href="https://hackage.haskell.org/package/base-4.14.1.0/docs/Data-Kind.html#t:Type">取消</a>) ，已逐步过渡为 <code>Type</code>。</p>
+<p>此时，<code>error</code> 就可以同时被应用于 <code>increment</code> 和
+<code>incrementUnlifted</code> 了。</p>
+<p>levity polymorphism 也有其自身的限制，有些地方并不能使用，<a
+target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=lSJwXZ7vWBw">这里</a>可以了解到具体不能使用的地方和不能使用的原因。</p>
+<h2 id="总结">总结</h2>
+<p>到目前为止读者可能会好奇：上面的这些东西有什么意义？为什么要有 kind
+系统？为什么我们会关心 kind？实际上，在 Java 或 C#
+等语言中所有的泛型类型 <code>&lt;T&gt;</code> 都属于 <code>*</code> 的
+kind，我们无法得到例如 <code>Functor&lt;List&gt;</code> 的这种拥有
+<code>* -&gt; *</code> 的 kind 的类型。如果没有 kind 系统，我们无法定义
+functor 和 monad，甚至之前提到的 <code>NonEmpty f a</code>
+都无法做到。更进一步，利用 levity polymorphism，我们可以<a
+target="_blank" rel="noopener" href="https://gist.github.com/dcastro/a7f9730981fa404415588224350dc918">实现</a>同时适用于升格类型和未升格类型的抽象，而
+Java 只能实现适用于升格类型的泛型变量。</p>
+<p>同时，kind 系统打开了通向类型层面编程的大门，类似于
+<code>Connection s</code> 和 <code>Money c</code> 等可扩展的记录
+(record)、<em>Servant</em> 的类型层面的 web API都可以通过 kind
+实现。Simon Peyton Jones 整合前沿研究，讨论了在 Haskell 中的 practical
+linearity，通过这种方式可以给函数类型 <code>(-&gt;) a b</code>
+一个额外的拥有 <code>Linearity</code> 的 kind 类型变量 <code>l</code>
+，这里 <code>Linearity</code> 是类型 <code>Omega</code> 和
+<code>One</code> 的整合。</p>
+<p>另一个读者可能会问的问题是：如果所有的表达式都有类型、所有的类型都有
+kind，那么所有的 kind 会有什么？在 GHC 7 及其之前的版本中，kind 拥有的是
+<em>sorts</em>，所有的 kind 都有一个<a
+target="_blank" rel="noopener" href="https://downloads.haskell.org/~ghc/7.6.1/docs/html/users_guide/promotion.html">唯一的
+sort <code>Box</code></a>，这些 sort 仅存在与 GHC
+的内部，对于我们开发人员来说是不可见的。</p>
+<p>在 GHC 8 中，情况有了一点变化。读者可能注意到，本文尝试比较类型和
+kind
+之间的相似程度：包括都可以实现高阶、都可以有多态性、都可以被推断、都可以进行科里化。这并不是巧合！随着
+GHC 8 中 <code>TypeInType</code> 扩展的到来，类型 (type) 和 kind (包括
+sort) 都称为了同一个东西。如之前类型属于
+kind，现在类型可以属于其他的类型。<code>3</code> 属于类型
+<code>Int</code>，<code>Int</code> 属于类型
+<code>*</code>，<code>*</code> 属于类型 <code>*</code>。这种统一为
+Haskell 实现完全类型依赖铺平了道路。</p>
+<p>在最近的论文中，读者可能会看到 kind <code>*</code> 被认为是 Type
+(和前文的 <code>TYPE r</code>
+<strong>不是</strong>同一个东西)，<del>目前 (2018 年) 这两个词是<a
+target="_blank" rel="noopener" href="https://hackage.haskell.org/package/base-4.11.1.0/docs/Data-Kind.html#t:Type">同义词</a></del>，(2021
+年已<a
+target="_blank" rel="noopener" href="https://hackage.haskell.org/package/base-4.14.1.0/docs/Data-Kind.html#t:Type">取消</a>)
+，已逐步过渡为 <code>Type</code>。</p>
 <blockquote>
-<p>如果想要了解更多关于类型依赖的知识，可以阅读 <em>Type-Driven Development with Idris</em> <a target="_blank" rel="noopener" href="https://www.manning.com/books/type-driven-development-with-idris">这本书</a> 或最新发布的 <em>The Little Typer</em> <a target="_blank" rel="noopener" href="https://mitpress.mit.edu/books/little-typer">这本书</a>。</p>
+<p>如果想要了解更多关于类型依赖的知识，可以阅读 <em>Type-Driven
+Development with Idris</em> <a
+target="_blank" rel="noopener" href="https://www.manning.com/books/type-driven-development-with-idris">这本书</a>
+或最新发布的 <em>The Little Typer</em> <a
+target="_blank" rel="noopener" href="https://mitpress.mit.edu/books/little-typer">这本书</a>。</p>
 </blockquote>
 
     </div>

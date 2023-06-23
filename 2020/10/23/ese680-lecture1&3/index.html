@@ -19,25 +19,22 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"julytreee.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="UPenn ESE 680(Graph neural networks) lecture note 1 and 3课程目标 理解图神经网络的基础 培养利用 GNN 开发实际应用的能力  应用场景 论文作者识别：给定匿名文章推断其作者 推荐系统：预测不同客户对物品的评分 无线电资源分配 etc.  NN -&gt; CNN -&gt; GNN">
+    <meta name="description" content="UPenn ESE 680(Graph neural networks) lecture note 1 and 3 课程目标  理解图神经网络的基础 培养利用 GNN 开发实际应用的能力  应用场景  论文作者识别：给定匿名文章推断其作者 推荐系统：预测不同客户对物品的评分 无线电资源分配 etc.  NN -&gt; CNN -&gt; GNN">
 <meta property="og:type" content="article">
 <meta property="og:title" content="UPenn ESE 680(Graph neural networks) lecture note 1 and 3">
 <meta property="og:url" content="http://julytreee.cn/2020/10/23/ese680-lecture1&3/index.html">
 <meta property="og:site_name" content="追求卓越 成功就会在不经意间追上你">
-<meta property="og:description" content="UPenn ESE 680(Graph neural networks) lecture note 1 and 3课程目标 理解图神经网络的基础 培养利用 GNN 开发实际应用的能力  应用场景 论文作者识别：给定匿名文章推断其作者 推荐系统：预测不同客户对物品的评分 无线电资源分配 etc.  NN -&gt; CNN -&gt; GNN">
+<meta property="og:description" content="UPenn ESE 680(Graph neural networks) lecture note 1 and 3 课程目标  理解图神经网络的基础 培养利用 GNN 开发实际应用的能力  应用场景  论文作者识别：给定匿名文章推断其作者 推荐系统：预测不同客户对物品的评分 无线电资源分配 etc.  NN -&gt; CNN -&gt; GNN">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://julytreee.cn/imgs/image-20201023152434602.png">
-<meta property="og:image" content="http://julytreee.cn/imgs/image-20201023152524467.png">
 <meta property="og:image" content="http://julytreee.cn/imgs/image-20201023152926000.png">
-<meta property="og:image" content="http://julytreee.cn/imgs/image-20201023163245998.png">
 <meta property="og:image" content="http://julytreee.cn/imgs/image-20201023164634883.png">
 <meta property="og:image" content="http://julytreee.cn/imgs/image-20201023174657644.png">
 <meta property="article:published_time" content="2020-10-23T18:09:55.000Z">
-<meta property="article:modified_time" content="2023-06-23T14:36:11.167Z">
+<meta property="article:modified_time" content="2023-06-23T15:38:14.893Z">
 <meta property="article:author" content="JulyTreee">
 <meta property="article:tag" content="GNN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://julytreee.cn/imgs/image-20201023152434602.png">
+<meta name="twitter:image" content="http://julytreee.cn/imgs/image-20201023152926000.png">
 
 
 <link rel="canonical" href="http://julytreee.cn/2020/10/23/ese680-lecture1&3/">
@@ -95,7 +92,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-links"><a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-links"><a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a></li><li class="menu-item menu-item-hoh"><a href="/hoh/" rel="section"><i class="fa fa-book fa-fw"></i>Haskell 优化手册</a></li>
   </ul>
 </nav>
 
@@ -120,7 +117,13 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#UPenn-ESE-680-Graph-neural-networks-lecture-note-1-and-3"><span class="nav-number">1.</span> <span class="nav-text">UPenn ESE 680(Graph neural networks) lecture note 1 and 3</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E7%9B%AE%E6%A0%87"><span class="nav-number">1.1.</span> <span class="nav-text">课程目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.2.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NN-gt-CNN-gt-GNN"><span class="nav-number">1.3.</span> <span class="nav-text">NN -&gt; CNN -&gt; GNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E7%9A%84%E5%8D%B7%E7%A7%AF%E3%80%81%E7%A9%BA%E9%97%B4%E7%9A%84%E5%8D%B7%E7%A7%AF%E5%92%8C%E5%9B%BE%E4%B8%8A%E7%9A%84%E5%8D%B7%E7%A7%AF"><span class="nav-number">1.3.1.</span> <span class="nav-text">时间的卷积、空间的卷积和图上的卷积</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A4-x-i-in-mathbb-R-1-times-N-%E4%B8%BA-N-%E7%BB%B4%E8%A1%8C%E5%90%91%E9%87%8F%EF%BC%8C%E5%88%99-Ax-i-%E4%B8%BA%E7%AC%AC-i-%E4%B8%AA%E7%BB%93%E7%82%B9%E7%9A%84%E4%B8%80%E9%98%B6%E9%82%BB%E5%B1%85-begin-bmatrix-0-amp-1-amp-1-amp-1-1-amp-0-amp-0-amp-0-1-amp-0-amp-0-amp-1-1-amp-0-amp-1-amp-0-end-bmatrix-times-begin-bmatrix-x-0-x-1-x-2-x-3-end-bmatrix"><span class="nav-number">2.</span> <span class="nav-text">令 $x_i \in {\mathbb{R}^{1 \times N}} $ 为 $N$ 维行向量，则 $Ax_i$ 为第 $i$ 个结点的一阶邻居$$\begin{bmatrix}0 &amp; 1 &amp; 1 &amp; 1\1 &amp; 0 &amp; 0 &amp; 0\1 &amp; 0 &amp; 0 &amp; 1\1 &amp; 0 &amp; 1 &amp; 0\end{bmatrix}\times\begin{bmatrix}x_0\x_1\x_2\x_3\end{bmatrix}</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8C%E7%90%86%EF%BC%8C%E5%AF%B9%E4%BA%8E%E4%BA%8C%E9%98%B6%E9%82%BB%E5%B1%85%EF%BC%8C%E5%8F%AA%E9%9C%80%E8%A6%81%E5%86%8D%E4%B9%98%E4%B8%80%E6%AC%A1%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-begin-bmatrix-0-amp-1-amp-1-amp-1-1-amp-0-amp-0-amp-0-1-amp-0-amp-0-amp-1-1-amp-0-amp-1-amp-0-end-bmatrix-times-begin-bmatrix-x-1-x-2-x-3-x-0-x-0-x-3-x-0-x-2-end-bmatrix"><span class="nav-number">3.</span> <span class="nav-text">同理，对于二阶邻居，只需要再乘一次邻接矩阵$$\begin{bmatrix}0 &amp; 1 &amp; 1 &amp; 1\1 &amp; 0 &amp; 0 &amp; 0\1 &amp; 0 &amp; 0 &amp; 1\1 &amp; 0 &amp; 1 &amp; 0\end{bmatrix}\times\begin{bmatrix}x_1 + x_2 + x_3 \x_0 \x_0 + x_3 \x_0 + x_2\end{bmatrix}</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CNN-%E5%92%8C-GNN-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.0.1.</span> <span class="nav-text">CNN 和 GNN 的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E4%BD%8D%E7%A7%BB%E7%AE%97%E5%AD%90-Graph-shift-operator"><span class="nav-number">3.1.</span> <span class="nav-text">图位移算子 (Graph shift operator)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%A6%E7%9F%A9%E9%98%B5"><span class="nav-number">3.1.1.</span> <span class="nav-text">度矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E7%9F%A9%E9%98%B5-Laplacian-matrix"><span class="nav-number">3.1.2.</span> <span class="nav-text">拉普拉斯矩阵 (Laplacian matrix)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96-normalized-%E7%9A%84%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5"><span class="nav-number">3.1.3.</span> <span class="nav-text">正则化 (normalized) 的邻接矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96%E7%9A%84%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E7%9F%A9%E9%98%B5"><span class="nav-number">3.1.4.</span> <span class="nav-text">正则化的拉普拉斯矩阵</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E4%BF%A1%E5%8F%B7-Graph-signal"><span class="nav-number">3.2.</span> <span class="nav-text">图信号 (Graph signal)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%8D%B7%E7%A7%AF%E8%BF%87%E6%BB%A4%E5%99%A8-Graph-Convolutional-Filters"><span class="nav-number">3.2.1.</span> <span class="nav-text">图卷积过滤器 (Graph Convolutional Filters)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2-Graph-Fourier-Transform"><span class="nav-number">3.3.</span> <span class="nav-text">图傅里叶变换 (Graph Fourier Transform)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E8%BF%87%E6%BB%A4%E5%99%A8%E5%AF%B9%E9%A2%91%E7%8E%87%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%93%8D%E5%BA%94"><span class="nav-number">3.4.</span> <span class="nav-text">图过滤器对频率信号的响应</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.5.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#upenn-ese-680graph-neural-networks-lecture-note-1-and-3"><span class="nav-number">1.</span> <span class="nav-text">UPenn
+ESE 680(Graph neural networks) lecture note 1 and 3</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E7%9B%AE%E6%A0%87"><span class="nav-number">1.1.</span> <span class="nav-text">课程目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.2.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nn---cnn---gnn"><span class="nav-number">1.3.</span> <span class="nav-text">NN -&gt; CNN -&gt; GNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E7%9A%84%E5%8D%B7%E7%A7%AF%E7%A9%BA%E9%97%B4%E7%9A%84%E5%8D%B7%E7%A7%AF%E5%92%8C%E5%9B%BE%E4%B8%8A%E7%9A%84%E5%8D%B7%E7%A7%AF"><span class="nav-number">1.3.1.</span> <span class="nav-text">时间的卷积、空间的卷积和图上的卷积</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cnn-%E5%92%8C-gnn-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.3.2.</span> <span class="nav-text">CNN 和 GNN 的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E4%BD%8D%E7%A7%BB%E7%AE%97%E5%AD%90-graph-shift-operator"><span class="nav-number">1.4.</span> <span class="nav-text">图位移算子 (Graph shift
+operator)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%A6%E7%9F%A9%E9%98%B5"><span class="nav-number">1.4.1.</span> <span class="nav-text">度矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E7%9F%A9%E9%98%B5-laplacian-matrix"><span class="nav-number">1.4.2.</span> <span class="nav-text">拉普拉斯矩阵 (Laplacian
+matrix)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96-normalized-%E7%9A%84%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5"><span class="nav-number">1.4.3.</span> <span class="nav-text">正则化 (normalized)
+的邻接矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96%E7%9A%84%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E7%9F%A9%E9%98%B5"><span class="nav-number">1.4.4.</span> <span class="nav-text">正则化的拉普拉斯矩阵</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E4%BF%A1%E5%8F%B7-graph-signal"><span class="nav-number">1.5.</span> <span class="nav-text">图信号 (Graph signal)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%8D%B7%E7%A7%AF%E8%BF%87%E6%BB%A4%E5%99%A8-graph-convolutional-filters"><span class="nav-number">1.5.1.</span> <span class="nav-text">图卷积过滤器 (Graph
+Convolutional Filters)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2-graph-fourier-transform"><span class="nav-number">1.6.</span> <span class="nav-text">图傅里叶变换 (Graph
+Fourier Transform)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E8%BF%87%E6%BB%A4%E5%99%A8%E5%AF%B9%E9%A2%91%E7%8E%87%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%93%8D%E5%BA%94"><span class="nav-number">1.7.</span> <span class="nav-text">图过滤器对频率信号的响应</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.8.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -221,7 +224,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-23 14:36:11" itemprop="dateModified" datetime="2023-06-23T14:36:11+00:00">2023-06-23</time>
+      <time title="修改时间：2023-06-23 15:38:14" itemprop="dateModified" datetime="2023-06-23T15:38:14+00:00">2023-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -242,64 +245,237 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="UPenn-ESE-680-Graph-neural-networks-lecture-note-1-and-3"><a href="#UPenn-ESE-680-Graph-neural-networks-lecture-note-1-and-3" class="headerlink" title="UPenn ESE 680(Graph neural networks) lecture note 1 and 3"></a>UPenn ESE 680(Graph neural networks) lecture note 1 and 3</h1><h2 id="课程目标"><a href="#课程目标" class="headerlink" title="课程目标"></a>课程目标</h2><ol>
+    <div class="post-body" itemprop="articleBody"><h1 id="upenn-ese-680graph-neural-networks-lecture-note-1-and-3">UPenn
+ESE 680(Graph neural networks) lecture note 1 and 3</h1>
+<h2 id="课程目标">课程目标</h2>
+<ol type="1">
 <li>理解图神经网络的基础</li>
 <li>培养利用 GNN 开发实际应用的能力</li>
 </ol>
-<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><ol>
+<h2 id="应用场景">应用场景</h2>
+<ol type="1">
 <li>论文作者识别：给定匿名文章推断其作者</li>
 <li>推荐系统：预测不同客户对物品的评分</li>
 <li>无线电资源分配</li>
 <li>etc.</li>
 </ol>
-<h2 id="NN-gt-CNN-gt-GNN"><a href="#NN-gt-CNN-gt-GNN" class="headerlink" title="NN -&gt; CNN -&gt; GNN"></a>NN -&gt; CNN -&gt; GNN</h2><span id="more"></span>
-
+<h2 id="nn---cnn---gnn">NN -&gt; CNN -&gt; GNN</h2>
+<span id="more"></span>
 <p>传统的神经网络无法处理多维数据，因此引入卷积操作来增强神经网络的处理能力，卷积神经网络通过堆叠多个卷积层和非线性变换层来处理数据，因此猜测图卷积神经网络也可以通过堆叠多个图卷积层和非线性变换层来达到目标，为什么会有这样的想法呢？</p>
-<h3 id="时间的卷积、空间的卷积和图上的卷积"><a href="#时间的卷积、空间的卷积和图上的卷积" class="headerlink" title="时间的卷积、空间的卷积和图上的卷积"></a>时间的卷积、空间的卷积和图上的卷积</h3><p>我们可以利用图来处理离散的时间和空间的信号<br><img src="/imgs/image-20201023152434602.png" alt="时间信号"><br><img src="/imgs/image-20201023152524467.png" alt="空间信号"></p>
-<p>以下图为例<br><img src="/imgs/image-20201023152926000.png" alt="图1"></p>
-<p>该图的邻接矩阵 $A$ (adjacency matrix) 为<br>$$<br>\begin{bmatrix}<br>0 &amp; 1 &amp; 1 &amp; 1\<br>1 &amp; 0 &amp; 0 &amp; 0\<br>1 &amp; 0 &amp; 0 &amp; 1\<br>1 &amp; 0 &amp; 1 &amp; 0<br>\end{bmatrix}<br>$$</p>
-<p>可以观察到 $A &#x3D; A^T$</p>
-<h1 id="令-x-i-in-mathbb-R-1-times-N-为-N-维行向量，则-Ax-i-为第-i-个结点的一阶邻居-begin-bmatrix-0-amp-1-amp-1-amp-1-1-amp-0-amp-0-amp-0-1-amp-0-amp-0-amp-1-1-amp-0-amp-1-amp-0-end-bmatrix-times-begin-bmatrix-x-0-x-1-x-2-x-3-end-bmatrix"><a href="#令-x-i-in-mathbb-R-1-times-N-为-N-维行向量，则-Ax-i-为第-i-个结点的一阶邻居-begin-bmatrix-0-amp-1-amp-1-amp-1-1-amp-0-amp-0-amp-0-1-amp-0-amp-0-amp-1-1-amp-0-amp-1-amp-0-end-bmatrix-times-begin-bmatrix-x-0-x-1-x-2-x-3-end-bmatrix" class="headerlink" title="令 $x_i \in {\mathbb{R}^{1 \times N}} $ 为 $N$ 维行向量，则 $Ax_i$ 为第 $i$ 个结点的一阶邻居$$\begin{bmatrix}0 &amp; 1 &amp; 1 &amp; 1\1 &amp; 0 &amp; 0 &amp; 0\1 &amp; 0 &amp; 0 &amp; 1\1 &amp; 0 &amp; 1 &amp; 0\end{bmatrix}\times\begin{bmatrix}x_0\x_1\x_2\x_3\end{bmatrix}"></a>令 $x_i \in {\mathbb{R}^{1 \times N}} $ 为 $N$ 维行向量，则 $Ax_i$ 为第 $i$ 个结点的一阶邻居<br>$$<br>\begin{bmatrix}<br>0 &amp; 1 &amp; 1 &amp; 1\<br>1 &amp; 0 &amp; 0 &amp; 0\<br>1 &amp; 0 &amp; 0 &amp; 1\<br>1 &amp; 0 &amp; 1 &amp; 0<br>\end{bmatrix}<br>\times<br>\begin{bmatrix}<br>x_0\<br>x_1\<br>x_2\<br>x_3<br>\end{bmatrix}</h1><p>\begin{bmatrix}<br>x_1 + x_2 + x_3 \<br>x_0 \<br>x_0 + x_3 \<br>x_0 + x_2<br>\end{bmatrix}<br>$$<br>可以看到每个结点都得到了它的一阶邻居的值。</p>
-<h1 id="同理，对于二阶邻居，只需要再乘一次邻接矩阵-begin-bmatrix-0-amp-1-amp-1-amp-1-1-amp-0-amp-0-amp-0-1-amp-0-amp-0-amp-1-1-amp-0-amp-1-amp-0-end-bmatrix-times-begin-bmatrix-x-1-x-2-x-3-x-0-x-0-x-3-x-0-x-2-end-bmatrix"><a href="#同理，对于二阶邻居，只需要再乘一次邻接矩阵-begin-bmatrix-0-amp-1-amp-1-amp-1-1-amp-0-amp-0-amp-0-1-amp-0-amp-0-amp-1-1-amp-0-amp-1-amp-0-end-bmatrix-times-begin-bmatrix-x-1-x-2-x-3-x-0-x-0-x-3-x-0-x-2-end-bmatrix" class="headerlink" title="同理，对于二阶邻居，只需要再乘一次邻接矩阵$$\begin{bmatrix}0 &amp; 1 &amp; 1 &amp; 1\1 &amp; 0 &amp; 0 &amp; 0\1 &amp; 0 &amp; 0 &amp; 1\1 &amp; 0 &amp; 1 &amp; 0\end{bmatrix}\times\begin{bmatrix}x_1 + x_2 + x_3 \x_0 \x_0 + x_3 \x_0 + x_2\end{bmatrix}"></a>同理，对于二阶邻居，只需要再乘一次邻接矩阵<br>$$<br>\begin{bmatrix}<br>0 &amp; 1 &amp; 1 &amp; 1\<br>1 &amp; 0 &amp; 0 &amp; 0\<br>1 &amp; 0 &amp; 0 &amp; 1\<br>1 &amp; 0 &amp; 1 &amp; 0<br>\end{bmatrix}<br>\times<br>\begin{bmatrix}<br>x_1 + x_2 + x_3 \<br>x_0 \<br>x_0 + x_3 \<br>x_0 + x_2<br>\end{bmatrix}</h1><p>\begin{bmatrix}<br>x_0 + x_0 + x_3 + x_0 + x_2 \<br>x_1 + x_2 + x_3 \<br>x_1 + x_2 + x_3 + x_0 + x_2 \<br>x_1 + x_2 + x_3 + x_0 + x_3<br>\end{bmatrix}<br>$$<br>对于每一阶邻居，给它们分别乘以一个相关系数，加起来就得到了某个结点吸收其邻居信息后的信号值<br>$$<br>Output\space z &#x3D; h_0S^0x_i + h_1S^1x_i + h_2S^x_i + \cdots &#x3D; \sum_{k&#x3D;0}^{\infty}h_kS^kx_i<br>$$</p>
-<h3 id="CNN-和-GNN-的区别"><a href="#CNN-和-GNN-的区别" class="headerlink" title="CNN 和 GNN 的区别"></a>CNN 和 GNN 的区别</h3><p>CNN 和 GNN 最大的区别在于 CNN 由于其标准的结构，其卷积层可以直接进行线性变换，而 GNN 则需要邻接矩阵吸收周围信息来进行卷积。</p>
-<h2 id="图位移算子-Graph-shift-operator"><a href="#图位移算子-Graph-shift-operator" class="headerlink" title="图位移算子 (Graph shift operator)"></a>图位移算子 (Graph shift operator)</h2><p>图位移算子就是图的矩阵表示，但是表示一个图的矩阵有很多种，我们把这些矩阵都称为图位移算子。</p>
+<h3
+id="时间的卷积空间的卷积和图上的卷积">时间的卷积、空间的卷积和图上的卷积</h3>
+<p>我们可以利用图来处理离散的时间和空间的信号 <img
+src="/imgs/image-20201023152434602.png" alt="时间信号" /> <img
+src="/imgs/image-20201023152524467.png" alt="空间信号" /></p>
+<p>以下图为例 <img src="/imgs/image-20201023152926000.png"
+alt="图1" /></p>
+<p>该图的邻接矩阵 <span class="math inline">\(A\)</span> (adjacency
+matrix) 为 <span class="math display">\[
+\begin{bmatrix}
+0 &amp; 1 &amp; 1 &amp; 1\\
+1 &amp; 0 &amp; 0 &amp; 0\\
+1 &amp; 0 &amp; 0 &amp; 1\\
+1 &amp; 0 &amp; 1 &amp; 0
+\end{bmatrix}
+\]</span></p>
+<p>可以观察到 <span class="math inline">\(A = A^T\)</span></p>
+<p>令 $x_i $ 为 <span class="math inline">\(N\)</span> 维行向量，则
+<span class="math inline">\(Ax_i\)</span> 为第 <span
+class="math inline">\(i\)</span> 个结点的一阶邻居 <span
+class="math display">\[
+\begin{bmatrix}
+0 &amp; 1 &amp; 1 &amp; 1\\
+1 &amp; 0 &amp; 0 &amp; 0\\
+1 &amp; 0 &amp; 0 &amp; 1\\
+1 &amp; 0 &amp; 1 &amp; 0
+\end{bmatrix}
+\times
+\begin{bmatrix}
+x_0\\
+x_1\\
+x_2\\
+x_3
+\end{bmatrix}
+=
+\begin{bmatrix}
+x_1 + x_2 + x_3 \\
+x_0 \\
+x_0 + x_3 \\
+x_0 + x_2
+\end{bmatrix}
+\]</span> 可以看到每个结点都得到了它的一阶邻居的值。</p>
+<p>同理，对于二阶邻居，只需要再乘一次邻接矩阵 <span
+class="math display">\[
+\begin{bmatrix}
+0 &amp; 1 &amp; 1 &amp; 1\\
+1 &amp; 0 &amp; 0 &amp; 0\\
+1 &amp; 0 &amp; 0 &amp; 1\\
+1 &amp; 0 &amp; 1 &amp; 0
+\end{bmatrix}
+\times
+\begin{bmatrix}
+x_1 + x_2 + x_3 \\
+x_0 \\
+x_0 + x_3 \\
+x_0 + x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+x_0 + x_0 + x_3 + x_0 + x_2 \\
+x_1 + x_2 + x_3 \\
+x_1 + x_2 + x_3 + x_0 + x_2 \\
+x_1 + x_2 + x_3 + x_0 + x_3
+\end{bmatrix}
+\]</span>
+对于每一阶邻居，给它们分别乘以一个相关系数，加起来就得到了某个结点吸收其邻居信息后的信号值
+<span class="math display">\[
+Output\space z = h_0S^0x_i + h_1S^1x_i + h_2S^x_i + \cdots =
+\sum_{k=0}^{\infty}h_kS^kx_i
+\]</span></p>
+<h3 id="cnn-和-gnn-的区别">CNN 和 GNN 的区别</h3>
+<p>CNN 和 GNN 最大的区别在于 CNN
+由于其标准的结构，其卷积层可以直接进行线性变换，而 GNN
+则需要邻接矩阵吸收周围信息来进行卷积。</p>
+<h2 id="图位移算子-graph-shift-operator">图位移算子 (Graph shift
+operator)</h2>
+<p>图位移算子就是图的矩阵表示，但是表示一个图的矩阵有很多种，我们把这些矩阵都称为图位移算子。</p>
 <p>对于上一节的图，若图上的边带有权值，则在吸收邻居信息的时候会受权值大小的影响。</p>
-<h3 id="度矩阵"><a href="#度矩阵" class="headerlink" title="度矩阵"></a>度矩阵</h3><p>下面定义结点的度 (degree)，结点的度等于等于其所有边的权值的和，若为不带权的图通常将每条边的权值看作 $1$。对于上图，有图的度矩阵<br>$$<br>D &#x3D;<br>\begin{bmatrix}<br>3 &amp; 0 &amp; 0 &amp; 0 \<br>0 &amp; 1 &amp; 0 &amp; 0 \<br>0 &amp; 0 &amp; 2 &amp; 0 \<br>0 &amp; 0 &amp; 0 &amp; 2<br>\end{bmatrix}<br>$$<br>可以看到度矩阵是一个对角阵且$D&#x3D;Diag(d_i), d_i&#x3D;\sum_j{w_{ij}}$。</p>
-<h3 id="拉普拉斯矩阵-Laplacian-matrix"><a href="#拉普拉斯矩阵-Laplacian-matrix" class="headerlink" title="拉普拉斯矩阵 (Laplacian matrix)"></a>拉普拉斯矩阵 (Laplacian matrix)</h3><p>拉普拉斯矩阵定义为<br>$$<br>L &#x3D; D - A<br>$$<br>其对角线上的值为度的值，非对角线上的值为对应边的权值</p>
-<h3 id="正则化-normalized-的邻接矩阵"><a href="#正则化-normalized-的邻接矩阵" class="headerlink" title="正则化 (normalized) 的邻接矩阵"></a>正则化 (normalized) 的邻接矩阵</h3><p>正则化的邻接矩阵定义为<br>$$<br>\bar{A} &#x3D; D^{-1&#x2F;2}AD^{-1&#x2F;2}<br>$$<br>即<br>$$<br>a_{ij} &#x3D; \frac{w_{ij}}{\sqrt{d_id_j}}<br>$$<br>若 $A&#x3D; A^T$，则 $\bar{A} &#x3D; \bar{A}{^T}$</p>
-<h3 id="正则化的拉普拉斯矩阵"><a href="#正则化的拉普拉斯矩阵" class="headerlink" title="正则化的拉普拉斯矩阵"></a>正则化的拉普拉斯矩阵</h3><p>正则化的拉普拉斯矩阵定义为<br>$$<br>\bar{L}&#x3D;D^{-1&#x2F;2}LD^{-1&#x2F;2}&#x3D;D^{-1&#x2F;2}(D-A)D^{-1&#x2F;2} &#x3D; I - \bar{A}<br>$$<br>即正则化的拉普拉斯和正则化的邻接矩阵是线性关系。</p>
-<p>同样，若 $A &#x3D; A^T$，则 $\bar{L} &#x3D; \bar{L}^{T}$</p>
-<hr>
+<h3 id="度矩阵">度矩阵</h3>
+<p>下面定义结点的度
+(degree)，结点的度等于等于其所有边的权值的和，若为不带权的图通常将每条边的权值看作
+<span class="math inline">\(1\)</span>。对于上图，有图的度矩阵 <span
+class="math display">\[
+D =
+\begin{bmatrix}
+3 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 1 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 2 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; 2
+\end{bmatrix}
+\]</span> 可以看到度矩阵是一个对角阵且<span
+class="math inline">\(D=Diag(d_i), d_i=\sum_j{w_{ij}}\)</span>。</p>
+<h3 id="拉普拉斯矩阵-laplacian-matrix">拉普拉斯矩阵 (Laplacian
+matrix)</h3>
+<p>拉普拉斯矩阵定义为 <span class="math display">\[
+L = D - A
+\]</span> 其对角线上的值为度的值，非对角线上的值为对应边的权值</p>
+<h3 id="正则化-normalized-的邻接矩阵">正则化 (normalized)
+的邻接矩阵</h3>
+<p>正则化的邻接矩阵定义为 <span class="math display">\[
+\bar{A} = D^{-1/2}AD^{-1/2}
+\]</span> 即 <span class="math display">\[
+a_{ij} = \frac{w_{ij}}{\sqrt{d_id_j}}
+\]</span> 若 <span class="math inline">\(A= A^T\)</span>，则 <span
+class="math inline">\(\bar{A} = \bar{A}{^T}\)</span></p>
+<h3 id="正则化的拉普拉斯矩阵">正则化的拉普拉斯矩阵</h3>
+<p>正则化的拉普拉斯矩阵定义为 <span class="math display">\[
+\bar{L}=D^{-1/2}LD^{-1/2}=D^{-1/2}(D-A)D^{-1/2} = I - \bar{A}
+\]</span> 即正则化的拉普拉斯和正则化的邻接矩阵是线性关系。</p>
+<p>同样，若 <span class="math inline">\(A = A^T\)</span>，则 <span
+class="math inline">\(\bar{L} = \bar{L}^{T}\)</span></p>
+<hr />
 <p>图位移算子可以为以上任意一个矩阵</p>
 <ul>
-<li>$S &#x3D; A$</li>
-<li>$S &#x3D; L$</li>
-<li>$S &#x3D; \bar{A}$</li>
-<li>$S &#x3D; \bar{L}$</li>
+<li><span class="math inline">\(S = A\)</span></li>
+<li><span class="math inline">\(S = L\)</span></li>
+<li><span class="math inline">\(S = \bar{A}\)</span></li>
+<li><span class="math inline">\(S = \bar{L}\)</span></li>
 </ul>
-<p>对于 $S$ 具体选择哪一个则需要具体问题具体分析，但是在分析 GNN 的时候选择哪一个 $S$ 大多数情况下不会影响我们的结果。</p>
-<h2 id="图信号-Graph-signal"><a href="#图信号-Graph-signal" class="headerlink" title="图信号 (Graph signal)"></a>图信号 (Graph signal)</h2><p>图信号是图上结点所携带的信息，通常为该结点的特征表示。</p>
-<p>图信号的扩散可以定义为<br>$$<br>y &#x3D; Sx<br>$$<br>下图展示了图上信息的扩散过程<br><img src="/imgs/image-20201023163245998.png" alt="图信号的扩散"></p>
+<p>对于 <span class="math inline">\(S\)</span>
+具体选择哪一个则需要具体问题具体分析，但是在分析 GNN 的时候选择哪一个
+<span class="math inline">\(S\)</span>
+大多数情况下不会影响我们的结果。</p>
+<h2 id="图信号-graph-signal">图信号 (Graph signal)</h2>
+<p>图信号是图上结点所携带的信息，通常为该结点的特征表示。</p>
+<p>图信号的扩散可以定义为 <span class="math display">\[
+y = Sx
+\]</span> 下图展示了图上信息的扩散过程 <img
+src="/imgs/image-20201023163245998.png" alt="图信号的扩散" /></p>
 <p>要注意的是，某个结点从其他结点收集信息的过程也是其他结点进行信息扩散的过程。</p>
-<h3 id="图卷积过滤器-Graph-Convolutional-Filters"><a href="#图卷积过滤器-Graph-Convolutional-Filters" class="headerlink" title="图卷积过滤器 (Graph Convolutional Filters)"></a>图卷积过滤器 (Graph Convolutional Filters)</h3><p>图卷积过滤器本质上是进行图信号线性处理的工具，给定图位移算子 $S$ 和系数 $h_k$，图卷积操作可表示为多项式的和<br>$$<br>H(S) &#x3D; \sum_{k&#x3D;0}^{\infty}h_kS^k<br>$$<br>将结果应用于图信号后可以得到<br>$$<br>y &#x3D; H(S)x &#x3D; \sum_{k&#x3D;0}^{\infty}h_kS^kx<br>$$</p>
+<h3 id="图卷积过滤器-graph-convolutional-filters">图卷积过滤器 (Graph
+Convolutional Filters)</h3>
+<p>图卷积过滤器本质上是进行图信号线性处理的工具，给定图位移算子 <span
+class="math inline">\(S\)</span> 和系数 <span
+class="math inline">\(h_k\)</span>，图卷积操作可表示为多项式的和 <span
+class="math display">\[
+H(S) = \sum_{k=0}^{\infty}h_kS^k
+\]</span> 将结果应用于图信号后可以得到 <span class="math display">\[
+y = H(S)x = \sum_{k=0}^{\infty}h_kS^kx
+\]</span></p>
 <blockquote>
-<p>卷积过滤器 (convolutional filter) 通常定义为 $y &#x3D; h_i \star x$</p>
+<p>卷积过滤器 (convolutional filter) 通常定义为 <span
+class="math inline">\(y = h_i \star x\)</span></p>
 </blockquote>
-<p>此处我们说 $y&#x3D;h_{\star S}x$ 是过滤器 $h&#x3D;{h_k}_{k&#x3D;0}^\infty$ 在信号 $x$ 上的图卷积结果，即 $h$ 就是我们定义的过滤器。</p>
+<p>此处我们说 <span class="math inline">\(y=h_{\star S}x\)</span>
+是过滤器 <span class="math inline">\(h=\{h_k\}_{k=0}^\infty\)</span>
+在信号 <span class="math inline">\(x\)</span> 上的图卷积结果，即 <span
+class="math inline">\(h\)</span> 就是我们定义的过滤器。</p>
 <p>经过图卷积操作，图信号邻居出发逐渐扩展至全图，实现了图信息的获得。</p>
-<p>在课程中，教授将图卷积操作表示为<br>$$<br>Convolution &#x3D; Shift \space . \space Scale \space . \space Sum<br>$$<br><img src="/imgs/image-20201023164634883.png" alt="Convolution"></p>
-<p>如图所示，先对信号乘以图位移算子进行 Shift 操作，随后再乘以系数进行 Scale 操作，最后将结果与上一步的结果累加起来直到结束。</p>
-<h2 id="图傅里叶变换-Graph-Fourier-Transform"><a href="#图傅里叶变换-Graph-Fourier-Transform" class="headerlink" title="图傅里叶变换 (Graph Fourier Transform)"></a>图傅里叶变换 (Graph Fourier Transform)</h2><p>图傅里叶变换可以将图信号从空域 (spatial domain) 转换到频域 (frequency domain)。</p>
-<p>对于图位移算子 $S$， 有 $Sv_i &#x3D; \lambda_i v_i$，其中，$\lambda_i$ 为 $S$ 的一个特征值， $v_i$ 为该特征值对应的特征向量。不是一般性，我们将特征值从小到大排列，即<br>$$<br>\lambda_0 \leq \lambda_1 \leq \dots \leq \lambda_n<br>$$<br>由于图位移算子 $S$ 是实对称矩阵，所以 $S$ 必可以正交对角化，有<br>$$<br>S &#x3D; V\Lambda V^T<br>$$<br>其中，$VV^T&#x3D;I$。</p>
-<p>现在，我们可以对图上的信号 $x$ 定义图傅里叶变换，有<br>$$<br>\tilde{x} &#x3D; V^Tx<br>$$<br>该变换是在图位移算子上特征空间的投影，$\tilde{x}$ 是 $x$ 在图上频率的表示。</p>
-<p>图傅里叶的逆变换定义为<br>$$<br>\tilde{\tilde{x}} &#x3D; V\tilde{x}<br>$$<br>注意到<br>$$<br>\tilde{\tilde{x}} &#x3D; V\tilde{x} &#x3D; V(V^Tx) &#x3D; Ix &#x3D; x<br>$$</p>
-<h2 id="图过滤器对频率信号的响应"><a href="#图过滤器对频率信号的响应" class="headerlink" title="图过滤器对频率信号的响应"></a>图过滤器对频率信号的响应</h2><p>对于变换后的图信号 $\tilde{x} &#x3D; V^Tx$ 和 $\tilde{y} &#x3D; V^Ty$，有<br>$$<br>\tilde{y} &#x3D; V^Ty &#x3D; V^T(\sum_{k&#x3D;0}^{\infty}h_kS^kx) &#x3D; V^T(\sum_{k&#x3D;0}^{\infty}h_k(V\Lambda V^T)x)&#x3D;\sum_{k&#x3D;0}^{\infty}h_k\Lambda^k\tilde{x}<br>$$<br>可以看到，对于变换后的信号，图位移算子从 $S$ 变成了 $S$ 的特征值 $\Lambda$，即对原始图信号在图过滤器上的信息扩散等价于图傅里叶变换后的信号在图过滤器的投影上的信息扩散。<br>$$<br>\tilde{h}(\lambda) &#x3D; \sum_{k&#x3D;0}^{\infty}h_k\Lambda^k<br>$$</p>
+<p>在课程中，教授将图卷积操作表示为 <span class="math display">\[
+Convolution = Shift \space . \space Scale \space . \space Sum
+\]</span> <img src="/imgs/image-20201023164634883.png"
+alt="Convolution" /></p>
+<p>如图所示，先对信号乘以图位移算子进行 Shift 操作，随后再乘以系数进行
+Scale 操作，最后将结果与上一步的结果累加起来直到结束。</p>
+<h2 id="图傅里叶变换-graph-fourier-transform">图傅里叶变换 (Graph
+Fourier Transform)</h2>
+<p>图傅里叶变换可以将图信号从空域 (spatial domain) 转换到频域 (frequency
+domain)。</p>
+<p>对于图位移算子 <span class="math inline">\(S\)</span>， 有 <span
+class="math inline">\(Sv_i = \lambda_i v_i\)</span>，其中，<span
+class="math inline">\(\lambda_i\)</span> 为 <span
+class="math inline">\(S\)</span> 的一个特征值， <span
+class="math inline">\(v_i\)</span>
+为该特征值对应的特征向量。不是一般性，我们将特征值从小到大排列，即 <span
+class="math display">\[
+\lambda_0 \leq \lambda_1 \leq \dots \leq \lambda_n
+\]</span> 由于图位移算子 <span class="math inline">\(S\)</span>
+是实对称矩阵，所以 <span class="math inline">\(S\)</span>
+必可以正交对角化，有 <span class="math display">\[
+S = V\Lambda V^T
+\]</span> 其中，<span class="math inline">\(VV^T=I\)</span>。</p>
+<p>现在，我们可以对图上的信号 <span class="math inline">\(x\)</span>
+定义图傅里叶变换，有 <span class="math display">\[
+\tilde{x} = V^Tx
+\]</span> 该变换是在图位移算子上特征空间的投影，<span
+class="math inline">\(\tilde{x}\)</span> 是 <span
+class="math inline">\(x\)</span> 在图上频率的表示。</p>
+<p>图傅里叶的逆变换定义为 <span class="math display">\[
+\tilde{\tilde{x}} = V\tilde{x}
+\]</span> 注意到 <span class="math display">\[
+\tilde{\tilde{x}} = V\tilde{x} = V(V^Tx) = Ix = x
+\]</span></p>
+<h2 id="图过滤器对频率信号的响应">图过滤器对频率信号的响应</h2>
+<p>对于变换后的图信号 <span class="math inline">\(\tilde{x} =
+V^Tx\)</span> 和 <span class="math inline">\(\tilde{y} =
+V^Ty\)</span>，有 <span class="math display">\[
+\tilde{y} = V^Ty = V^T(\sum_{k=0}^{\infty}h_kS^kx) =
+V^T(\sum_{k=0}^{\infty}h_k(V\Lambda
+V^T)x)=\sum_{k=0}^{\infty}h_k\Lambda^k\tilde{x}
+\]</span> 可以看到，对于变换后的信号，图位移算子从 <span
+class="math inline">\(S\)</span> 变成了 <span
+class="math inline">\(S\)</span> 的特征值 <span
+class="math inline">\(\Lambda\)</span>，即对原始图信号在图过滤器上的信息扩散等价于图傅里叶变换后的信号在图过滤器的投影上的信息扩散。
+<span class="math display">\[
+\tilde{h}(\lambda) = \sum_{k=0}^{\infty}h_k\Lambda^k
+\]</span></p>
 <blockquote>
-<p>要明确扩散的方式与图无关，仅取决于算子前的系数，也就是过滤器的值，图的作用是决定进行扩散的特征值。也是因为此，我们可以在不同的图上运行同一个过滤器的值，GNN 的稳定性和可迁移性也是来源于此。</p>
+<p>要明确扩散的方式与图无关，仅取决于算子前的系数，也就是过滤器的值，图的作用是决定进行扩散的特征值。也是因为此，我们可以在不同的图上运行同一个过滤器的值，GNN
+的稳定性和可迁移性也是来源于此。</p>
 </blockquote>
-<p><img src="/imgs/image-20201023174657644.png" alt="同一个过滤器应用不同的特征向量"><br>上图演示了在不同的两个图 (蓝色和红色) 上运行同一个过滤器的过程，可以看到过滤器已经固定了，对于不同的图的不同特征值，其过滤结果已经被确定了，说人话就是 $\lambda$ 是函数 $\tilde{h}$ 的参数，$\tilde{h}$ 是一个具体的函数，函数的表达式被系数确定，函数的参数决定了函数最后输出什么值。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这两节课讲了 GNN 运行的整个流程以及 GNN 运行中需要的参数 。</p>
-<p>GNN 与 CNN 最大的不同就是在于卷积层的实现方式，GNN 的卷积过程被表现为图上的多次位移操作 (Shift . Scale . Sum)。在确认了对图位移算子进行多次相乘可以进行信息传递后，对图信号的转换方式开始探究，将图位移算子改为图的特征值之后，可以通过图傅里叶变换将图信号从空域转到频域，将图上的信号相互关联起来。</p>
+<p><img src="/imgs/image-20201023174657644.png"
+alt="同一个过滤器应用不同的特征向量" /> 上图演示了在不同的两个图
+(蓝色和红色)
+上运行同一个过滤器的过程，可以看到过滤器已经固定了，对于不同的图的不同特征值，其过滤结果已经被确定了，说人话就是
+<span class="math inline">\(\lambda\)</span> 是函数 <span
+class="math inline">\(\tilde{h}\)</span> 的参数，<span
+class="math inline">\(\tilde{h}\)</span>
+是一个具体的函数，函数的表达式被系数确定，函数的参数决定了函数最后输出什么值。</p>
+<h2 id="总结">总结</h2>
+<p>这两节课讲了 GNN 运行的整个流程以及 GNN 运行中需要的参数 。</p>
+<p>GNN 与 CNN 最大的不同就是在于卷积层的实现方式，GNN
+的卷积过程被表现为图上的多次位移操作 (Shift . Scale .
+Sum)。在确认了对图位移算子进行多次相乘可以进行信息传递后，对图信号的转换方式开始探究，将图位移算子改为图的特征值之后，可以通过图傅里叶变换将图信号从空域转到频域，将图上的信号相互关联起来。</p>
 
     </div>
 

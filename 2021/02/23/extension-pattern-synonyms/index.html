@@ -19,15 +19,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"julytreee.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="PatternSynonymsPatternSynonyms 用来处理在进行模式匹配 (pattern matching) 时模式名称过长的问题，通过给模式一个简化的名称来实现降低代码量和增加易理解程度的功能。PatternSynonyms 开启需要显式指明 &amp;#123;-# LANGUAGE PatternSynonyms #-&amp;#125;。">
+    <meta name="description" content="PatternSynonyms PatternSynonyms 用来处理在进行模式匹配 (pattern matching) 时模式名称过长的问题，通过给模式一个简化的名称来实现降低代码量和增加易理解程度的功能。PatternSynonyms 开启需要显式指明 &amp;#123;-# LANGUAGE PatternSynonyms #-&amp;#125;。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Haskell 扩展 -- PatternSynonyms">
 <meta property="og:url" content="http://julytreee.cn/2021/02/23/extension-pattern-synonyms/index.html">
 <meta property="og:site_name" content="追求卓越 成功就会在不经意间追上你">
-<meta property="og:description" content="PatternSynonymsPatternSynonyms 用来处理在进行模式匹配 (pattern matching) 时模式名称过长的问题，通过给模式一个简化的名称来实现降低代码量和增加易理解程度的功能。PatternSynonyms 开启需要显式指明 &amp;#123;-# LANGUAGE PatternSynonyms #-&amp;#125;。">
+<meta property="og:description" content="PatternSynonyms PatternSynonyms 用来处理在进行模式匹配 (pattern matching) 时模式名称过长的问题，通过给模式一个简化的名称来实现降低代码量和增加易理解程度的功能。PatternSynonyms 开启需要显式指明 &amp;#123;-# LANGUAGE PatternSynonyms #-&amp;#125;。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-02-23T22:21:45.000Z">
-<meta property="article:modified_time" content="2023-06-23T14:36:11.167Z">
+<meta property="article:modified_time" content="2023-06-23T15:38:14.893Z">
 <meta property="article:author" content="JulyTreee">
 <meta property="article:tag" content="haskell extensions">
 <meta name="twitter:card" content="summary">
@@ -88,7 +88,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-links"><a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-links"><a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>友情链接</a></li><li class="menu-item menu-item-hoh"><a href="/hoh/" rel="section"><i class="fa fa-book fa-fw"></i>Haskell 优化手册</a></li>
   </ul>
 </nav>
 
@@ -113,7 +113,8 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PatternSynonyms"><span class="nav-number">1.</span> <span class="nav-text">PatternSynonyms</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Uni-directional-amp-bidirectional"><span class="nav-number">1.1.</span> <span class="nav-text">Uni-directional &amp; bidirectional</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">1.2.</span> <span class="nav-text">References</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#patternsynonyms"><span class="nav-number">1.</span> <span class="nav-text">PatternSynonyms</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#uni-directional-bidirectional"><span class="nav-number">1.1.</span> <span class="nav-text">Uni-directional &amp;
+bidirectional</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-number">1.2.</span> <span class="nav-text">References</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -214,7 +215,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-23 14:36:11" itemprop="dateModified" datetime="2023-06-23T14:36:11+00:00">2023-06-23</time>
+      <time title="修改时间：2023-06-23 15:38:14" itemprop="dateModified" datetime="2023-06-23T15:38:14+00:00">2023-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -235,28 +236,38 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="PatternSynonyms"><a href="#PatternSynonyms" class="headerlink" title="PatternSynonyms"></a>PatternSynonyms</h1><p>PatternSynonyms 用来处理在进行模式匹配 (pattern matching) 时模式名称过长的问题，通过给模式一个简化的名称来实现降低代码量和增加易理解程度的功能。PatternSynonyms 开启需要显式指明 <code>&#123;-# LANGUAGE PatternSynonyms #-&#125;</code>。</p>
+    <div class="post-body" itemprop="articleBody"><h1 id="patternsynonyms">PatternSynonyms</h1>
+<p>PatternSynonyms 用来处理在进行模式匹配 (pattern matching)
+时模式名称过长的问题，通过给模式一个简化的名称来实现降低代码量和增加易理解程度的功能。PatternSynonyms
+开启需要显式指明 <code>&#123;-# LANGUAGE PatternSynonyms #-&#125;</code>。</p>
 <span id="more"></span>
-
-<p>例如有如下实现:</p>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">newtype</span> <span class="type">Type</span> = <span class="type">T</span> <span class="type">String</span> [<span class="type">Exp</span>]</span></span><br><span class="line"></span><br><span class="line"><span class="title">collectTarget</span> :: <span class="type">Exp</span> -&gt; [<span class="type">Exp</span>]</span><br><span class="line"><span class="title">collectTarget</span> (<span class="type">T</span> <span class="string">&quot;refer&quot;</span> [t1, t2]) = t1 : collectTarget t2</span><br><span class="line"><span class="title">collectTarget</span> _ = []</span><br></pre></td></tr></table></figure>
-
-<p>在匹配我们想要的特殊的模式时，可以开启 PatternSynonyms 扩展来减少匹配中的代码量。</p>
+<p>例如有如下实现: <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">newtype</span> <span class="type">Type</span> = <span class="type">T</span> <span class="type">String</span> [<span class="type">Exp</span>]</span></span><br><span class="line"></span><br><span class="line"><span class="title">collectTarget</span> :: <span class="type">Exp</span> -&gt; [<span class="type">Exp</span>]</span><br><span class="line"><span class="title">collectTarget</span> (<span class="type">T</span> <span class="string">&quot;refer&quot;</span> [t1, t2]) = t1 : collectTarget t2</span><br><span class="line"><span class="title">collectTarget</span> _ = []</span><br></pre></td></tr></table></figure></p>
+<p>在匹配我们想要的特殊的模式时，可以开启 PatternSynonyms
+扩展来减少匹配中的代码量。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">pattern</span> <span class="type">Refer</span> :: <span class="type">Type</span> -&gt; <span class="type">Type</span> -&gt; <span class="type">Type</span></span><br><span class="line"><span class="title">pattern</span> <span class="type">Refer</span> t1 t2 = <span class="type">T</span> <span class="string">&quot;refer&quot;</span> [t1, t2]</span><br></pre></td></tr></table></figure>
-
-<p>这里 Refer 是接收两个 Type 的 pattern synonyms，pattern 的签名可以省略。有了 Refer 后上面的 <code>collectTarget</code> 就可以改为</p>
+<p>这里 Refer 是接收两个 Type 的 pattern synonyms，pattern
+的签名可以省略。有了 Refer 后上面的 <code>collectTarget</code>
+就可以改为</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">collectTarget</span> :: <span class="type">Type</span> -&gt; [<span class="type">Type</span>]</span><br><span class="line"><span class="title">collectTarget</span> (<span class="type">Refer</span> t1 t2) = t1 : collectTarget t2</span><br><span class="line"><span class="title">collectTarget</span> _ = []</span><br></pre></td></tr></table></figure>
-
-<h2 id="Uni-directional-amp-bidirectional"><a href="#Uni-directional-amp-bidirectional" class="headerlink" title="Uni-directional &amp; bidirectional"></a>Uni-directional &amp; bidirectional</h2><p>上面的 pattern 还可以写为</p>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">pattern</span> <span class="type">Refer</span> t1 t2 &lt;- <span class="type">T</span> <span class="string">&quot;refer&quot;</span> [t1, t2]</span><br></pre></td></tr></table></figure>
-
-<p>区别是将 <code>=</code> 替换为了 <code>&lt;-</code>。这两种写法的区别在于 <code>=</code> 是 bidirectional pattern synonyms，而 <code>&lt;-</code> 是 Uni-directional 的。bidirectional 允许将创建的 pattern 作为一个具体的 Constructor 来使用，uni-directional 则不行。</p>
+<h2 id="uni-directional-bidirectional">Uni-directional &amp;
+bidirectional</h2>
+<p>上面的 pattern 还可以写为 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">pattern</span> <span class="type">Refer</span> t1 t2 &lt;- <span class="type">T</span> <span class="string">&quot;refer&quot;</span> [t1, t2]</span><br></pre></td></tr></table></figure></p>
+<p>区别是将 <code>=</code> 替换为了
+<code>&lt;-</code>。这两种写法的区别在于 <code>=</code> 是 bidirectional
+pattern synonyms，而 <code>&lt;-</code> 是 Uni-directional
+的。bidirectional 允许将创建的 pattern 作为一个具体的 Constructor
+来使用，uni-directional 则不行。</p>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">refers</span> :: [<span class="type">Type</span>] -&gt; <span class="type">Type</span> -&gt; <span class="type">Type</span></span><br><span class="line"><span class="title">refers</span> = flip $ foldr <span class="type">Refer</span></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; refers [<span class="type">App</span> <span class="string">&quot;Int&quot;</span> [], <span class="type">App</span> <span class="string">&quot;Bool&quot;</span> []] (<span class="type">App</span> <span class="string">&quot;Double&quot;</span> [])</span><br><span class="line"><span class="comment">-- App &quot;-&gt;&quot; [App &quot;Int&quot; [],App &quot;-&gt;&quot; [App &quot;Bool&quot; [],App &quot;Double&quot; []]]</span></span><br></pre></td></tr></table></figure>
-
-<p>在使用 <code>=</code> 后，可以将 Refer 作为表达式的一部分进行使用。</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ol>
-<li><a target="_blank" rel="noopener" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/pattern-synonyms">pattern synonyms</a></li>
-<li><a target="_blank" rel="noopener" href="https://ocharles.org.uk/posts/2014-12-03-pattern-synonyms.html">24 Days of GHC Extensions: Pattern Synonyms</a></li>
+<p>在使用 <code>=</code> 后，可以将 Refer
+作为表达式的一部分进行使用。</p>
+<h2 id="references">References</h2>
+<ol type="1">
+<li><a
+target="_blank" rel="noopener" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/pattern-synonyms">pattern
+synonyms</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://ocharles.org.uk/posts/2014-12-03-pattern-synonyms.html">24
+Days of GHC Extensions: Pattern Synonyms</a></li>
 </ol>
 
     </div>
