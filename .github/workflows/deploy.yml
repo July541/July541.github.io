@@ -33,3 +33,4 @@ jobs:
           branch: deploy
           folder: ./public
           token: ${{ secrets.GITHUB_TOKEN }}
+          clean-exclude: hoh
