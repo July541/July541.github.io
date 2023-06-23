@@ -1,1 +1,0 @@
-module BadDomain where

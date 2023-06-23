@@ -1,4 +1,0 @@
-.. _SBV572:
-
-:lightgrey:`Impact of Seq Removal on SBV's Internal Cache`
-==========================================================
