@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+      <title>How to Contribute</title>
+    
+          <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../_static/theme.css " type="text/css" />
+          <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+          <link rel="stylesheet" href="../_static/css/s4defs-roles.css" type="text/css" />
+          <link rel="stylesheet" href="../_static/css/iframe.css" type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../_static/theme-vendors.js"></script> -->
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../contents.html" class="home-link">
+    
+      <span class="site-name">Haskell Optimization Handbook</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../src/zh-cn/Preliminaries/index.html#id1"
+         class="nav-link ">
+         前期准备
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../src/zh-cn/Preliminaries/index.html#id1"
+         class="nav-link ">
+         前期准备
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../contents.html#haskell-optimization-handbook">Table of Contents</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../src/Preliminaries/index.html" class="reference internal ">Preliminaries</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../src/Measurement_Observation/index.html" class="reference internal ">Measurement, Profiling, and Observation</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../src/Optimizations/index.html" class="reference internal ">Optimizations</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../src/Case_Studies/index.html" class="reference internal ">Case Studies</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../src/zh-cn/Preliminaries/index.html#id1">前期准备</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../src/zh-cn/Preliminaries/how_to_use.html" class="reference internal ">如何使用本书</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../contents.html#indices-and-tables">indices and tables</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../src/glossary.html" class="reference internal ">Glossary</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../contents.html">Docs</a> &raquo;</li>
+    
+    <li>How to Contribute</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="how-to-contribute">
+<h1>How to Contribute<a class="headerlink" href="#how-to-contribute" title="Permalink to this heading">¶</a></h1>
+<section id="as-an-editor">
+<h2>As an Editor<a class="headerlink" href="#as-an-editor" title="Permalink to this heading">¶</a></h2>
+<section id="introduction">
+<h3>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h3>
+<p>This is a checklist for editors of (Optimizations) of the Handbook. A word to
+editors. Writing is hard and it is easy to get frustrated. Good writing is even
+harder and requires a constant and consistent willpower to iterate, revise,
+draft and edit. Please keep this in mind when editing someone’s contribution.</p>
+</section>
+<section id="the-checklist">
+<h3>The Checklist<a class="headerlink" href="#the-checklist" title="Permalink to this heading">¶</a></h3>
+<ul>
+<li><p>☐ The issue I am editing has been moved to <code class="docutils literal notranslate"><span class="pre">Review</span> <span class="pre">in</span> <span class="pre">Progress</span></code> on the
+<a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/projects/1">project dashboard</a></p></li>
+<li><p>☐ The issue abides by the checklist for its section of the book. <span class="incremental">Part 1
+&lt;https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part1.rst&gt;</span>
+or <span class="incremental">Part 2
+&lt;https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part2.rst&gt;</span></p></li>
+<li><p>☐ My comments and edit requests are actionable. Do not just say:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">This</span> <span class="n">was</span> <span class="n">hard</span> <span class="n">to</span> <span class="n">understand</span>
+</pre></div>
+</div>
+<p>Be specific and say <em>why</em> it was hard to understand::</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>This was hard to understand because the terminology keeps changing. In
+paragraph 1 it was ``foo``, then it paragraph 4 it was ``bar`` and now
+you are using ``baz`` and each interchangeably! Please stick to one
+phrase and use it consistently throughout the piece.
+</pre></div>
+</div>
+</li>
+<li><p>☐ If an example is given. The example is introduced, <em>and</em> the point of the
+example is explicitly stated in the text. For example:</p>
+<dl>
+<dt>Do:</dt><dd><div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">fmap</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="w"></span>
+<span class="nf">fmap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="kt">[]</span><span class="w">     </span><span class="ow">=</span><span class="w"> </span><span class="kt">[]</span><span class="w"></span>
+<span class="nf">fmap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="kt">:</span><span class="w"> </span><span class="n">fmap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Above we see the higher ordered function <code class="docutils literal notranslate"><span class="pre">fmap</span></code>. It is a higher ordered
+function because the parameter <code class="docutils literal notranslate"><span class="pre">f</span></code> is a function as shown in f’s type:
+<code class="docutils literal notranslate"><span class="pre">(a</span> <span class="pre">-&gt;</span> <span class="pre">b)</span></code>. This means that in order to use <code class="docutils literal notranslate"><span class="pre">fmap</span></code> we must pass into
+it a function!</p>
+</dd>
+<dt>Don’t:</dt><dd><div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">fmap</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="w"></span>
+<span class="nf">fmap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="kt">[]</span><span class="w">     </span><span class="ow">=</span><span class="w"> </span><span class="kt">[]</span><span class="w"></span>
+<span class="nf">fmap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="kt">:</span><span class="w"> </span><span class="n">fmap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Above we see the higher ordered function <code class="docutils literal notranslate"><span class="pre">fmap</span></code>. It is a higher ordered
+function because it takes a function as input.</p>
+</dd>
+</dl>
+</li>
+<li><p>☐ Sentences are <em>concise</em>. That is, there are not many words in each sentence
+that <em>do no work</em>. See <a class="reference external" href="https://owl.purdue.edu/owl/general_writing/academic_writing/conciseness/eliminating_words.html">here</a>
+for examples.</p></li>
+<li><p>☐ The section defines an internal reference target, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">_sec</span><span class="o">-</span><span class="n">four</span><span class="o">-</span><span class="n">horsemen</span><span class="p">:</span>
+
+<span class="n">The</span> <span class="n">Four</span> <span class="n">Horsemen</span> <span class="n">of</span> <span class="n">Bad</span> <span class="n">Haskell</span> <span class="n">Performance</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022-2023, Jeffrey Young (doyougnu).
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>
