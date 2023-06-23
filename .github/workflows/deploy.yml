@@ -12,6 +12,8 @@ jobs:
       - uses: actions/checkout@v2.4.0
         with:
           submodules: recursive
+      - name: Setup pandoc
+        uses: nikeee/setup-pandoc@v1
       - name: Use Node.js 16.x
         uses: actions/setup-node@v2
         with:
