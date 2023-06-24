@@ -6,5 +6,5 @@
    :name: PreliminariesCN
 
    how_to_use
-..    what_makes_fast_hs
+   what_makes_fast_hs
 ..    repeatable_measurements
