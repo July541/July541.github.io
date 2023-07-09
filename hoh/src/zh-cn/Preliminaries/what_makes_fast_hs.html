@@ -193,6 +193,10 @@
                 
                   <li class="toctree-l2"><a href="#canonical-fusion" class="reference internal">融合</a></li>
                 
+                  <li class="toctree-l2"><a href="#pointer-chasing" class="reference internal">过度的 Pointer Chasing</a></li>
+                
+                  <li class="toctree-l2"><a href="#canonical-closure-alloc" class="reference internal">过度的闭包分配</a></li>
+                
                   <li class="toctree-l2"><a href="#references" class="reference internal">References</a></li>
                 
               </ul>
@@ -258,9 +262,9 @@
 <span id="id2"></span><h2><span class="section-number">1.2.1. </span>内联<a class="headerlink" href="#canonical-inlining" title="Permalink to this heading">¶</a></h2>
 <section id="id3">
 <h3><span class="section-number">1.2.1.1. </span>什么是内联<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
-<p>内联 <a class="footnote-reference brackets" href="#id12" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> 是一个几乎所有编译器都会使用的简单的优化技巧。内联核心的想法是将函数 <code class="docutils literal notranslate"><span class="pre">f</span></code> 的调用点展开为 <code class="docutils literal notranslate"><span class="pre">f</span></code> 本身的实现。例如：</p>
-<div class="literal-block-wrapper docutils container" id="id15">
-<div class="code-block-caption"><span class="caption-text">未执行内联</span><a class="headerlink" href="#id15" title="Permalink to this code">¶</a></div>
+<p>内联 <a class="footnote-reference brackets" href="#id23" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> 是一个几乎所有编译器都会使用的简单的优化技巧。内联核心的想法是将函数 <code class="docutils literal notranslate"><span class="pre">f</span></code> 的调用点展开为 <code class="docutils literal notranslate"><span class="pre">f</span></code> 本身的实现。例如：</p>
+<div class="literal-block-wrapper docutils container" id="id26">
+<div class="code-block-caption"><span class="caption-text">未执行内联</span><a class="headerlink" href="#id26" title="Permalink to this code">¶</a></div>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
 <span class="c1">--- somewhere else</span><span class="w"></span>
 <span class="o">&gt;</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span><span class="w"></span>
@@ -268,8 +272,8 @@
 </div>
 </div>
 <p>上述代码首先定义了一个函数 <code class="docutils literal notranslate"><span class="pre">f</span></code>，随后函数 <code class="docutils literal notranslate"><span class="pre">f</span></code> 应用于 <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">(a</span> <span class="pre">+</span> <span class="pre">b)</span> <span class="pre">-</span> <span class="pre">c</span></code>。内联机制会将 <code class="docutils literal notranslate"><span class="pre">f</span></code> 在调用点进行展开，<code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">(a</span> <span class="pre">+</span> <span class="pre">b)</span></code> 会被替换为 <code class="docutils literal notranslate"><span class="pre">f</span></code> 本身的实现。</p>
-<div class="literal-block-wrapper docutils container" id="id16">
-<div class="code-block-caption"><span class="caption-text">执行内联</span><a class="headerlink" href="#id16" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id27">
+<div class="code-block-caption"><span class="caption-text">执行内联</span><a class="headerlink" href="#id27" title="Permalink to this code">¶</a></div>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
 <span class="c1">-- somewhere else</span><span class="w"></span>
 <span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span><span class="w"></span>
@@ -283,7 +287,7 @@
 <p>内联也被称为“所有优化的起点”。首先，内联减少了函数调用的开销，这对频繁调用的函数有很大益处。其次，通过将函数的调用点替换为函数本身的实现，编译器在后续可以对内联之后的结果做进一步的优化来生成运行速度更快的代码。这种性能上的优化与其说是计算机科学的应用，比如说是艺术的展现，任何微小的变化都可能会产生出意想不到的效果。</p>
 </section>
 <section id="id6">
-<h3><span class="section-number">1.2.1.3. </span>什么场景下内联会降低运行速度<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
+<h3><span class="section-number">1.2.1.3. </span>什么场景下内联会影响性能<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
 <p>内联操作本身并不会降低运行速度，而缺乏内联会影响后续可能的优化操作的执行，从而导致运行速度降低。然而，这并不意味着我们需要永远让 GHC 执行内联操作或手动强制内联，相反，我们有时可以通过禁止内联来实现性能优势。在后续的 <a class="reference internal" href="../../Optimizations/Code_Changes/inlining.html#inlining-chapter"><span class="std std-ref">内联</span></a> 一章中会对内联的性能效果做出分析，并展示 GHC 如何执行内联。</p>
 </section>
 </section>
@@ -291,7 +295,7 @@
 <span id="id7"></span><h2><span class="section-number">1.2.2. </span>融合<a class="headerlink" href="#canonical-fusion" title="Permalink to this heading">¶</a></h2>
 <section id="id8">
 <h3><span class="section-number">1.2.2.1. </span>什么是融合<a class="headerlink" href="#id8" title="Permalink to this heading">¶</a></h3>
-<p>融合 <a class="footnote-reference brackets" href="#id13" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#id14" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> (Fusion，也被称为 Deforestation，这里参考 Andy  Gill 论文中的例子，感谢 Andy Gill 的工作！) 是一种消除函数调用之间的中间状态和临时数据结构的优化技术。由于 Haskell 惯用的函数组合的写法，融合成为了一种关键的优化方法。例如：</p>
+<p>融合 <a class="footnote-reference brackets" href="#id24" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#id25" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> (Fusion，也被称为 Deforestation，这里参考 Andy  Gill 论文中的例子，感谢 Andy Gill 的工作！) 是一种消除函数调用之间的中间状态和临时数据结构的优化技术。由于 Haskell 惯用的函数组合的写法，融合成为了一种关键的优化方法。例如：</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">all</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="p">(</span><span class="n">map</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">xs</span><span class="p">)</span><span class="w"></span>
 </pre></div>
 </div>
@@ -317,19 +321,133 @@ transform this into the more efficient version <code class="docutils literal not
 <div><p>鱼与熊掌，不可兼得。我们既想编写 <code class="docutils literal notranslate"><span class="pre">all</span></code> 风格的代码，也希望编译器可以自动将我们的代码转化为更高效的 <code class="docutils literal notranslate"><span class="pre">all'</span></code> 形式。</p>
 </div></blockquote>
 </section>
+<section id="id12">
+<h3><span class="section-number">1.2.2.3. </span>什么场景下融合会影响性能<a class="headerlink" href="#id12" title="Permalink to this heading">¶</a></h3>
+<p>与内联类似，融合本身并不会降低系统的运行速度，反而缺乏融合会造成系统运行速度降低。这是由于系统会为那些本可以融合却并没有这样做的函数分配额外的内存，从而导致性能降低。</p>
+<p>对融合来说最困难的地方莫过于发现融合是使你性能降低的根本原因和告诉 GNHC 如何融合你的代码。<a class="reference internal" href="../../Optimizations/Code_Changes/fusion_and_rules.html#fusion-rules-chapter"><span class="std std-ref">融合</span></a> 会展示如何识别你的代码是否需要融合，同时也会介绍如何使 GHC 进行融合。</p>
+</section>
+</section>
+<section id="pointer-chasing">
+<span id="canonical-pointer-chasing"></span><h2><span class="section-number">1.2.3. </span>过度的 Pointer Chasing<a class="headerlink" href="#pointer-chasing" title="Permalink to this heading">¶</a></h2>
+<section id="id13">
+<h3><span class="section-number">1.2.3.1. </span>什么是过度的 Pointer Chasing<a class="headerlink" href="#id13" title="Permalink to this heading">¶</a></h3>
+<p>过度的 Pointer Chasing 是一种多余的计算形式；我们的程序在计算结果时做了比实际需要更多的工作。每当我们的程序解引用指针以检索值而不是直接引用值本身时，就会发生这种情况，这导致访问过程创建了一个不必要的中间过程。</p>
+<p>在 Haskell 程序中，这种情况最常发生在我们编写程序时没有考虑它们的内存表示方式，并且尤其涉及到惰性计算时这种情况更稳严重。大部分这些情况都是众所周知的，并且在社区中已经存在一段时间了。</p>
+</section>
+<section id="id14">
+<h3><span class="section-number">1.2.3.2. </span>过度的 Pointer Chasing 为什么会影响性能<a class="headerlink" href="#id14" title="Permalink to this heading">¶</a></h3>
+<p>经典例子是 fold 的惰性求值引起的内存泄漏，例如 <a href="#id30"><span class="problematic" id="id31"><span id="id15"></span>[#]_</span></a>：</p>
+<div class="literal-block-wrapper docutils container" id="id28">
+<div class="code-block-caption"><span class="caption-text">惰性的 foldl</span><a class="headerlink" href="#id28" title="Permalink to this code">¶</a></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">mean</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span><span class="w"></span>
+<span class="nf">mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span><span class="w"></span>
+<span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+<span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id29">
+<div class="code-block-caption"><span class="caption-text">立即求值的 foldl</span><a class="headerlink" href="#id29" title="Permalink to this code">¶</a></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">mean&#39;</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span><span class="w"></span>
+<span class="nf">mean&#39;</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span><span class="w"></span>
+<span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl&#39;</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+<span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">mean</span></code> 和 <code class="docutils literal notranslate"><span class="pre">mean'</span></code> 展示了两种常见的内存泄露形式。<code class="docutils literal notranslate"><span class="pre">mean</span></code> 使用惰性的 <code class="docutils literal notranslate"><span class="pre">foldl</span></code> 导致大量内存堆积； <code class="docutils literal notranslate"><span class="pre">mean'</span></code> 的问题在于，虽然 <code class="docutils literal notranslate"><span class="pre">foldl'</span></code> 是严格形式，但是 <code class="docutils literal notranslate"><span class="pre">foldl'</span></code> 只会将表达式求值到 <a class="reference internal" href="../../glossary.html#term-WHNF"><span class="xref std std-term">WHNF</span></a>。在本例中 <code class="docutils literal notranslate"><span class="pre">foldl'</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">step</span></code> 只会将 tuple 求值到它的 constructor，即 <code class="docutils literal notranslate"><span class="pre">(,)</span></code>，而不是 <code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">+</span> <span class="pre">a</span></code> 或者 <code class="docutils literal notranslate"><span class="pre">ln</span> <span class="pre">+</span> <span class="pre">1</span></code>。由于惰性计算的原因，这些 <code class="docutils literal notranslate"><span class="pre">(,)</span></code> 会被存储在堆上，因此我们必须通过这些指向 <code class="docutils literal notranslate"><span class="pre">(,)</span></code> 的指针来进行计算。</p>
+<p>另一种常见的过度 Pointer Chasing 的形式是在 data constructor 中过度使用惰性字段，特别是当该字段永远都会被求值时，使用惰性并没有任何优势，甚至会影响程序的性能。考虑如下例子，<code class="docutils literal notranslate"><span class="pre">step</span></code> 不再通过 tuple 计算，而是使用自定义类型：</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">Step</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Step</span><span class="w"> </span><span class="kt">Double</span><span class="w"> </span><span class="kt">Double</span><span class="w"></span>
+<span class="o">...</span><span class="w"></span>
+
+<span class="c1">-- mean rewritten with Step instead of (,)</span><span class="w"></span>
+<span class="nf">mean&#39;&#39;</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span><span class="w"></span>
+<span class="nf">mean&#39;&#39;</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span><span class="w"></span>
+<span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="kt">Step</span><span class="w"> </span><span class="n">s</span><span class="w">  </span><span class="n">ln</span><span class="p">)</span><span class="w">       </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl&#39;</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+<span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="kt">Step</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Step</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p>与 <code class="docutils literal notranslate"><span class="pre">mean'</span></code> 堆积了大量的 <code class="docutils literal notranslate"><span class="pre">(,)</span></code> 类似，由于 <code class="docutils literal notranslate"><span class="pre">Step</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Double</span></code> 是惰性的，<code class="docutils literal notranslate"><span class="pre">mean''</span></code> 同样也有大量的 <code class="docutils literal notranslate"><span class="pre">(s</span> <span class="pre">+</span> <span class="pre">a)</span></code> 和 <code class="docutils literal notranslate"><span class="pre">(ln</span> <span class="pre">+</span> <span class="pre">1)</span></code> 的 thunk。但是在我们的目标：计算平均值中，我们并没有从这种惰性中获得任何好处，因为我们的程序不需要惰性求值。因此在这种场景下应该立即对 <code class="docutils literal notranslate"><span class="pre">Step</span></code> 进行求值以消除中间的计算结果，避免不必要的内存分配。</p>
+<p>还有一种场景是，在 data constructor 可以使用 <a class="reference internal" href="../../glossary.html#term-Unboxed"><span class="xref std std-term">Unboxed</span></a> 的字段时反而使用了 <a class="reference internal" href="../../glossary.html#term-Boxed"><span class="xref std std-term">Boxed</span></a> 的版本。考虑如下例子，<code class="docutils literal notranslate"><span class="pre">Counter</span></code> 是对某个特定领域 Int 的包装：</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>通常情况下，使用 <code class="docutils literal notranslate"><span class="pre">-O2</span></code> 编译选项编译时，GHC 会识别这种场景并对 <code class="docutils literal notranslate"><span class="pre">Counter</span></code> 进行优化。</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Int</span></code> 是 <code class="docutils literal notranslate"><span class="pre">Counter</span></code> 中的一个 <a class="reference internal" href="../../glossary.html#term-Boxed"><span class="xref std std-term">Boxed</span></a> 且 <a class="reference internal" href="../../glossary.html#term-Lifted"><span class="xref std std-term">Lifted</span></a> 的类型。这意味着每个 <code class="docutils literal notranslate"><span class="pre">Counter</span></code> 都会储存一个指针，指向一个保存在堆上的 <code class="docutils literal notranslate"><span class="pre">Int</span></code> 对象，而不是 <code class="docutils literal notranslate"><span class="pre">Int</span></code> 本身的值。我们可以使用 <a class="reference external" href="https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/exts/pragmas.html?highlight=unpack#unpack-pragma">unpack</a> 和 bang pattern 来告诉 GHC 移除堆中的间接引用。</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="cm">{-# UNPACK -#} !Int</span>
+</pre></div>
+</div>
+<p>上面的代码告诉 GHC 将 <code class="docutils literal notranslate"><span class="pre">Int</span></code> 的值直接储存在 <code class="docutils literal notranslate"><span class="pre">Counter</span></code> 中，而不是储存一个指向 <code class="docutils literal notranslate"><span class="pre">Int</span></code> 的指针。在 <a class="reference internal" href="../../Optimizations/Code_Changes/unboxing.html#unboxing"><span class="std std-ref">Unboxing</span></a> 一章中将会对这种方法做进一步的介绍。</p>
+</section>
+</section>
+<section id="canonical-closure-alloc">
+<span id="id16"></span><h2><span class="section-number">1.2.4. </span>过度的闭包分配<a class="headerlink" href="#canonical-closure-alloc" title="Permalink to this heading">¶</a></h2>
+<section id="id17">
+<h3><span class="section-number">1.2.4.1. </span>什么是过度的闭包分配<a class="headerlink" href="#id17" title="Permalink to this heading">¶</a></h3>
+<p>过度的闭包分配（Excessive closure allocation）是另一种多余的计算和内存分配的形式；这意味着我们的程序在计算结果时进行了更多的内存分配和更多的计算。过度的闭包分配的形成有以下两种原因：首先是由于 GHC 通过 <a class="reference internal" href="../../glossary.html#term-Let-Floating"><span class="xref std std-term">Let Floating</span></a> 可以得到很好的优化结果，因此大多数 Haskell 用户从来没有意识到有这个问题存在（这也侧面说明了 GHC 的质量很高=。=）；另一方面，为了观察到过度的闭包分配，程序员必须大量跟踪程序在函数（functions）、模块（modules）和包（packages）中的内存分配，在大多数 Haskell 开发场景中是不会这样做的。</p>
+<p>我们将给出一些示例，GHC 可以轻松找到这些例子存在的问题并给出优化。<a class="reference internal" href="../../Case_Studies/sbv_572.html#sbv572"><span class="std std-ref">Impact of seq Removal on SBV’s cache</span></a> 会展示在一个广泛应用的库中存在的大量内存申请的例子。</p>
+<p>虽然 GHC 对这些场景的优化表现很好，但熟悉这些代码的变换原因是有益的；这会使得用户在阅读或编写 Haskell 代码时开始以内存分配为基础进行思考，并逐渐掌握如何在 GHC 无法进行优化时手动执行这些优化。</p>
+</section>
+<section id="id20">
+<h3><span class="section-number">1.2.4.2. </span>过度的闭包分配为什么会影响性能<a class="headerlink" href="#id20" title="Permalink to this heading">¶</a></h3>
+<p>考虑如下例子 <a href="#id30"><span class="problematic" id="id32"><span id="id21"></span>[#]_</span></a>：</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+<span class="kr">in</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="n">zs</span><span class="w"> </span><span class="kr">of</span><span class="w"></span>
+<span class="w">        </span><span class="kt">[]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="w"></span>
+<span class="w">        </span><span class="kr">_</span><span class="w">  </span><span class="ow">-&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+</pre></div>
+</div>
+<p>这是 <code class="docutils literal notranslate"><span class="pre">Let</span> <span class="pre">Floating</span> <span class="pre">inwards</span></code> 一个例子，注意到 <code class="docutils literal notranslate"><span class="pre">x</span></code> 只在 case 的一个分支中用到，另一个分支则不需要。因此 GHC 可以将 <code class="docutils literal notranslate"><span class="pre">x</span></code> 移动到第一个分支中（floating inward）：</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">case</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="n">zs</span><span class="w"> </span><span class="kr">of</span><span class="w"></span>
+<span class="w">     </span><span class="kt">[]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+<span class="w">           </span><span class="kr">in</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="w"></span>
+<span class="w">     </span><span class="kr">_</span><span class="w">  </span><span class="ow">-&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+</pre></div>
+</div>
+<p>在这种场景中，<code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">...</span></code> 从必定执行变成了在特定条件下执行（译者注：这里的执行指的是分配一个 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的 thunk），取决于 <code class="docutils literal notranslate"><span class="pre">tail</span> <span class="pre">zs</span></code> 的结果。因此，第二种写法虽然在语义上与第一种相同，但是却更高效，因为第二种写法可以在某些场景下避免 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">...</span></code>，从而避免额外的堆分配。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Let Floating 可能会改变 <a class="reference internal" href="../../glossary.html#term-Thunk"><span class="xref std std-term">Thunk</span></a> 的大小。</p>
+</div>
+<p>考虑 <span id="id22">Peyton Jones and Santos [<a class="reference internal" href="../../../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> 7.1 节中的一个例子：</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">w</span><span class="w">     </span><span class="c1">-- v 和 w 是 x 中的自由变量（free variables）</span><span class="w"></span>
+<span class="w">    </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="n">x</span><span class="o">...</span><span class="n">x</span><span class="w">  </span><span class="c1">-- y 使用到了 x</span><span class="w"></span>
+<span class="kr">in</span><span class="w"> </span><span class="kt">B</span><span class="w">              </span><span class="c1">-- B 没有使用 x</span><span class="w"></span>
+</pre></div>
+</div>
+<p>对 <code class="docutils literal notranslate"><span class="pre">x</span></code> 进行移动：</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="c1">-- v 和 w 变成了 y 的自由变量</span><span class="w"></span>
+<span class="w">        </span><span class="kr">in</span><span class="w"> </span><span class="o">...</span><span class="n">x</span><span class="o">...</span><span class="n">x</span><span class="w"></span>
+<span class="kr">in</span><span class="w"> </span><span class="kt">B</span><span class="w"></span>
+</pre></div>
+</div>
+<p>现在 <code class="docutils literal notranslate"><span class="pre">v</span></code> 和 <code class="docutils literal notranslate"><span class="pre">w</span></code> 变成了 <code class="docutils literal notranslate"><span class="pre">y</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的自由变量。<code class="docutils literal notranslate"><span class="pre">x</span></code> 是 <code class="docutils literal notranslate"><span class="pre">y</span></code> 中的变量（会被内联）。因此如果 <code class="docutils literal notranslate"><span class="pre">v</span></code> 和 <code class="docutils literal notranslate"><span class="pre">w</span></code> 是自由变量，那么 <code class="docutils literal notranslate"><span class="pre">y</span></code> 的 thunk 大小将会保持不变。然而如果 <code class="docutils literal notranslate"><span class="pre">v</span></code> 和 <code class="docutils literal notranslate"><span class="pre">w</span></code> 是新的自由变量，那么 <code class="docutils literal notranslate"><span class="pre">y</span></code> 的大小会进行对应的增加。</p>
+<p><code class="docutils literal notranslate"><span class="pre">Let</span> <span class="pre">bindings</span></code> 也可以向外移动（outwards）。在 <code class="docutils literal notranslate"><span class="pre">case</span></code> 表达式附近移动 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">bindings</span></code> 有不止一种方法，这里会介绍一种非常有效的移动方法，叫做 <a class="reference internal" href="../../glossary.html#term-Full-Laziness-transformation"><span class="xref std std-term">Full Laziness transformation</span></a>。<span class="incremental">Full Laziness transformation</span> 会将 <code class="docutils literal notranslate"><span class="pre">bindings</span></code> 完全从 lambda 表达式中抽离出来。</p>
+<p>考虑如下代码：</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">f</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="n">xs</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"></span>
+<span class="w">             </span><span class="n">g</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="n">y</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="n">xs</span><span class="w">  </span><span class="c1">-- 计算 n</span><span class="w"></span>
+<span class="w">                       </span><span class="kr">in</span><span class="w"> </span><span class="o">...</span><span class="n">g</span><span class="o">...</span><span class="n">n</span><span class="w">        </span><span class="c1">-- 使用 n 而不是 xs</span><span class="w"></span>
+<span class="w">           </span><span class="kr">in</span><span class="w"> </span><span class="o">...</span><span class="n">g</span><span class="o">...</span><span class="w"></span>
+</pre></div>
+</div>
+<p>TBD</p>
+</section>
 </section>
 <section id="references">
-<h2><span class="section-number">1.2.3. </span>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">1.2.5. </span>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h2>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id12" role="note">
+<aside class="footnote brackets" id="id23" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">1</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://wiki.haskell.org/Inlining_and_Specialisation">https://wiki.haskell.org/Inlining_and_Specialisation</a></p>
 </aside>
-<aside class="footnote brackets" id="id13" role="note">
+<aside class="footnote brackets" id="id24" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">2</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://www.sciencedirect.com/science/article/pii/030439759090147A?via%3Dihub">https://www.sciencedirect.com/science/article/pii/030439759090147A?via%3Dihub</a></p>
 </aside>
-<aside class="footnote brackets" id="id14" role="note">
+<aside class="footnote brackets" id="id25" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">3</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/deforestation-short-cut.pdf">https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/deforestation-short-cut.pdf</a></p>
 </aside>

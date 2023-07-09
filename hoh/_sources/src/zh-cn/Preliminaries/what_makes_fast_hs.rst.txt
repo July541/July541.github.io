@@ -38,7 +38,7 @@
 
 内联也被称为“所有优化的起点”。首先，内联减少了函数调用的开销，这对频繁调用的函数有很大益处。其次，通过将函数的调用点替换为函数本身的实现，编译器在后续可以对内联之后的结果做进一步的优化来生成运行速度更快的代码。这种性能上的优化与其说是计算机科学的应用，比如说是艺术的展现，任何微小的变化都可能会产生出意想不到的效果。
 
-什么场景下内联会降低运行速度
+什么场景下内联会影响性能
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 内联操作本身并不会降低运行速度，而缺乏内联会影响后续可能的优化操作的执行，从而导致运行速度降低。然而，这并不意味着我们需要永远让 GHC 执行内联操作或手动强制内联，相反，我们有时可以通过禁止内联来实现性能优势。在后续的 :ref:`内联
@@ -82,6 +82,155 @@
 大致翻译如下：
 
   鱼与熊掌，不可兼得。我们既想编写 ``all`` 风格的代码，也希望编译器可以自动将我们的代码转化为更高效的 ``all'`` 形式。
+
+什么场景下融合会影响性能
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+与内联类似，融合本身并不会降低系统的运行速度，反而缺乏融合会造成系统运行速度降低。这是由于系统会为那些本可以融合却并没有这样做的函数分配额外的内存，从而导致性能降低。
+
+对融合来说最困难的地方莫过于发现融合是使你性能降低的根本原因和告诉 GNHC 如何融合你的代码。:ref:`融合 <Fusion Rules Chapter>` 会展示如何识别你的代码是否需要融合，同时也会介绍如何使 GHC 进行融合。
+
+.. _canonical-pointer-chasing:
+
+过度的 Pointer Chasing
+----------------------
+
+什么是过度的 Pointer Chasing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+过度的 Pointer Chasing 是一种多余的计算形式；我们的程序在计算结果时做了比实际需要更多的工作。每当我们的程序解引用指针以检索值而不是直接引用值本身时，就会发生这种情况，这导致访问过程创建了一个不必要的中间过程。
+
+在 Haskell 程序中，这种情况最常发生在我们编写程序时没有考虑它们的内存表示方式，并且尤其涉及到惰性计算时这种情况更稳严重。大部分这些情况都是众所周知的，并且在社区中已经存在一段时间了。
+
+过度的 Pointer Chasing 为什么会影响性能
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+经典例子是 fold 的惰性求值引起的内存泄漏，例如 [#]_：
+
+.. code-block:: haskell
+   :caption: 惰性的 foldl
+
+   mean :: [Double] -> Double
+   mean xs = s / fromIntegral ln
+     where (s, ln)        = foldl step (0,0) xs
+           step (s, ln) a = (s + a, ln + 1)
+
+.. code-block:: haskell
+   :caption: 立即求值的 foldl
+
+   mean' :: [Double] -> Double
+   mean' xs = s / fromIntegral ln
+     where (s, ln)        = foldl' step (0,0) xs
+           step (s, ln) a = (s + a, ln + 1)
+
+``mean`` 和 ``mean'`` 展示了两种常见的内存泄露形式。``mean`` 使用惰性的 ``foldl`` 导致大量内存堆积； ``mean'`` 的问题在于，虽然 ``foldl'`` 是严格形式，但是 ``foldl'`` 只会将表达式求值到 :term:`WHNF`。在本例中 ``foldl'`` 中的 ``step`` 只会将 tuple 求值到它的 constructor，即 ``(,)``，而不是 ``s + a`` 或者 ``ln + 1``。由于惰性计算的原因，这些 ``(,)`` 会被存储在堆上，因此我们必须通过这些指向 ``(,)`` 的指针来进行计算。
+
+另一种常见的过度 Pointer Chasing 的形式是在 data constructor 中过度使用惰性字段，特别是当该字段永远都会被求值时，使用惰性并没有任何优势，甚至会影响程序的性能。考虑如下例子，``step`` 不再通过 tuple 计算，而是使用自定义类型：
+
+.. code-block:: haskell
+
+   data Step = Step Double Double
+   ...
+
+   -- mean rewritten with Step instead of (,)
+   mean'' :: [Double] -> Double
+   mean'' xs = s / fromIntegral ln
+     where (Step s  ln)       = foldl' step (0,0) xs
+           step (Step s ln) a = Step (s + a) (ln + 1)
+
+与 ``mean'`` 堆积了大量的 ``(,)`` 类似，由于 ``Step`` 和 ``Double`` 是惰性的，``mean''`` 同样也有大量的 ``(s + a)`` 和 ``(ln + 1)`` 的 thunk。但是在我们的目标：计算平均值中，我们并没有从这种惰性中获得任何好处，因为我们的程序不需要惰性求值。因此在这种场景下应该立即对 ``Step`` 进行求值以消除中间的计算结果，避免不必要的内存分配。
+
+还有一种场景是，在 data constructor 可以使用 :term:`Unboxed` 的字段时反而使用了 :term:`Boxed` 的版本。考虑如下例子，``Counter`` 是对某个特定领域 Int 的包装：
+
+.. code-block:: haskell
+
+   data Counter = Counter Int
+
+.. note::
+   通常情况下，使用 ``-O2`` 编译选项编译时，GHC 会识别这种场景并对 ``Counter`` 进行优化。
+
+``Int`` 是 ``Counter`` 中的一个 :term:`Boxed` 且 :term:`Lifted` 的类型。这意味着每个 ``Counter`` 都会储存一个指针，指向一个保存在堆上的 ``Int`` 对象，而不是 ``Int`` 本身的值。我们可以使用 `unpack
+<https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/exts/pragmas.html?highlight=unpack#unpack-pragma>`_ 和 bang pattern 来告诉 GHC 移除堆中的间接引用。
+
+.. code-block:: haskell
+
+   data Counter = Counter {-# UNPACK -#} !Int
+
+上面的代码告诉 GHC 将 ``Int`` 的值直接储存在 ``Counter`` 中，而不是储存一个指向 ``Int`` 的指针。在 :ref:`Unboxing` 一章中将会对这种方法做进一步的介绍。
+
+.. _canonical-closure-alloc:
+
+过度的闭包分配
+--------------
+
+什么是过度的闭包分配
+^^^^^^^^^^^^^^^^^^^^
+
+过度的闭包分配（Excessive closure allocation）是另一种多余的计算和内存分配的形式；这意味着我们的程序在计算结果时进行了更多的内存分配和更多的计算。过度的闭包分配的形成有以下两种原因：首先是由于 GHC 通过 :term:`Let Floating` 可以得到很好的优化结果，因此大多数 Haskell 用户从来没有意识到有这个问题存在（这也侧面说明了 GHC 的质量很高=。=）；另一方面，为了观察到过度的闭包分配，程序员必须大量跟踪程序在函数（functions）、模块（modules）和包（packages）中的内存分配，在大多数 Haskell 开发场景中是不会这样做的。
+
+我们将给出一些示例，GHC 可以轻松找到这些例子存在的问题并给出优化。:ref:`Impact of seq Removal on SBV's cache <SBV572>` 会展示在一个广泛应用的库中存在的大量内存申请的例子。
+
+.. todo::
+   Not yet written, see `#18 <https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/18>`_
+
+虽然 GHC 对这些场景的优化表现很好，但熟悉这些代码的变换原因是有益的；这会使得用户在阅读或编写 Haskell 代码时开始以内存分配为基础进行思考，并逐渐掌握如何在 GHC 无法进行优化时手动执行这些优化。
+
+过度的闭包分配为什么会影响性能
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+考虑如下例子 [#]_：
+
+.. code-block:: haskell
+
+   let x = y + 1
+   in case tail zs of
+           [] -> x * x
+           _  -> 1
+
+这是 ``Let Floating inwards`` 一个例子，注意到 ``x`` 只在 case 的一个分支中用到，另一个分支则不需要。因此 GHC 可以将 ``x`` 移动到第一个分支中（floating inward）：
+
+.. code-block:: haskell
+
+   case tail zs of
+        [] -> let x = y + 1
+              in x * x
+        _  -> 1
+
+在这种场景中，``let x = ...`` 从必定执行变成了在特定条件下执行（译者注：这里的执行指的是分配一个 ``x`` 的 thunk），取决于 ``tail zs`` 的结果。因此，第二种写法虽然在语义上与第一种相同，但是却更高效，因为第二种写法可以在某些场景下避免 ``let x = ...``，从而避免额外的堆分配。
+
+.. note::
+   Let Floating 可能会改变 :term:`Thunk` 的大小。
+
+考虑 :cite:t:`peytonjones1997a` 7.1 节中的一个例子：
+
+.. code-block:: haskell
+
+   let x = v + w     -- v 和 w 是 x 中的自由变量（free variables）
+       y = ...x...x  -- y 使用到了 x
+   in B              -- B 没有使用 x
+
+对 ``x`` 进行移动：
+
+.. code-block:: haskell
+
+   let y = let x = v + w -- v 和 w 变成了 y 的自由变量
+           in ...x...x
+   in B
+
+现在 ``v`` 和 ``w`` 变成了 ``y`` 而不是 ``x`` 的自由变量。``x`` 是 ``y`` 中的变量（会被内联）。因此如果 ``v`` 和 ``w`` 是自由变量，那么 ``y`` 的 thunk 大小将会保持不变。然而如果 ``v`` 和 ``w`` 是新的自由变量，那么 ``y`` 的大小会进行对应的增加。
+
+``Let bindings`` 也可以向外移动（outwards）。在 ``case`` 表达式附近移动 ``let bindings`` 有不止一种方法，这里会介绍一种非常有效的移动方法，叫做 :term:`Full Laziness transformation`。`Full Laziness transformation` 会将 ``bindings`` 完全从 lambda 表达式中抽离出来。
+
+考虑如下代码：
+
+.. code-block:: haskell
+
+   f = \xs -> let
+                g = \y -> let n = length xs  -- 计算 n
+                          in ...g...n        -- 使用 n 而不是 xs
+              in ...g...
+
+TBD  
 
 References
 ----------
