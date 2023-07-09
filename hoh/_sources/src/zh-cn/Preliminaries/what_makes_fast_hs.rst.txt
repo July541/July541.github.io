@@ -116,7 +116,7 @@
            step (s, ln) a = (s + a, ln + 1)
 
 .. code-block:: haskell
-   :caption: 立即求值的 foldl
+   :caption: 立即求值的 foldl'
 
    mean' :: [Double] -> Double
    mean' xs = s / fromIntegral ln
