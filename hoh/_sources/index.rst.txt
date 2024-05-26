@@ -26,6 +26,14 @@ by `Input Output Global <https://iohk.io/>`_.
 Release History
 ---------------
 
+* April, 2024
+
+  * :ref:`Linux Perf <Perf Chapter>` first draft finished.
+
+* February, 2024
+
+  * :ref:`How to Debug <How To Debug chapter>` first draft finished.
+
 * March/April, 2023
 
   * :ref:`Klister Case Study <klister case study>` first draft finished.

@@ -10,19 +10,67 @@ Glossary
       The arity of a function is the number of arguments the function must take
       to conclude to a result.
 
+   Algebraic Data Type
+
+      First implemented in the Hope programming language
+      :cite:t:`historyOfHaskell`, Algebraic Data Types are *composite*, meaning
+      that they are data types made from other data types. For example,
+
+      .. code-block:: haskell
+
+         data Foo = One Int Int
+                  | Two Bool Int
+                  | Three Float Bool Char
+
+      Here ``Foo`` is an algebraic data type made from the types ``Int``,
+      ``Bool``, ``Float``, and ``Char``. In general, these data types are
+      composed from *product types* and *sum types*.
+
+      Product types are the types on finds in most other imperative and object
+      oriented programming languages, such as ``struct`` in C or tuples in
+      Haskell. Product types are called so because they form the cartesian
+      product on the set of elements represented by the type, for example the
+      type ``(Int, Bool)`` would be written :math:`Int \times Bool`, and would
+      represent the set of all pairs of elements of the sets represented by the
+      types ``Int`` and ``Bool``.
+
+      Sum types are often not found in imperative and object oriented languages,
+      but are a *tagged union* or *disjoint union* of other types. Again,
+      thinking in terms of sets, a sum type represents a disjoint union of two
+      or more types. For example ``Foo`` is the union of three product types
+      that are each *tagged* with a constructor: ``One``, ``Two`` and ``Three``.
+      Thus in terms of sets on might write the type ``Foo`` as :math:`f \in Foo
+      = (Int \times Int) + (Bool \times Int) + (Float \times Bool \times Char)`.
+      Notice also that the type ``Foo`` with elements ``f`` are *structural* (by
+      its definition we know a ``Foo`` can only be a ``One``, ``Two``, or
+      ``Three`` and how many fields each of these constructors have) as opposed
+      to *nominal*. Nominal types are the kind of types created by a
+      ``newtype``. They can have the same *representation* but are treated as a
+      wholly unique type.
+
+      .. admonition:: Help Wanted
+         :class: help-wanted
+
+         I've tried to give a thorough description of algebraic data types
+         without diving into too much type theory, but I find the explanation a
+         bit unsatisfying. For example, it is not clear *why* these are called
+         ``Inductive`` or ``Algebraic`` because I deemed this was too much depth
+         for a glossary entry. If you have a good resource or would like to take
+         a stab at this entry then please make an issue and have at it!
+
+
    Boxed : Levity
 
-      A Boxed value is a value that is represented by a pointer to the heap.
+      A Boxed value is a value that is represented by a pointer to the heap. For
+      example, a value such as ``1729 :: Int`` is represented as:
+
 
    Cardinality Analysis
 
-      A static analysis that GHC performs to determine:
-      #. How many times a lambda-expression is called.
-      #. Which components of a data structure are never evaluated.
-      #. How many times a particular thunk is evaluated.
-
-      See :cite:t:`callArityVsDemandAnalysis` and :cite:t:`hoCardinality` for
-      more.
+      A static analysis that GHC performs to determine: (1) How many times a
+      lambda-expression is called, (2) Which components of a data structure are
+      never evaluated, (3) How many times a particular thunk is evaluated. See
+      :cite:t:`callArityVsDemandAnalysis` and :cite:t:`hoCardinality` for more.
 
    Closure
 
@@ -89,9 +137,11 @@ Glossary
      .. code-block:: haskell
 
         -- these are CAFs
+        -- A static literal is a CAF
         foo :: Int
         foo = 12
 
+        -- A reducible expression that requires no input is a CAF
         bar :: (Int, [Int])
         bar = ((*) 10 10, [1..])
 
@@ -144,20 +194,27 @@ Glossary
 
       See :ref:`What is Fusion <canonical-fusion>`.
 
+   HNF : Normal Forms
+
+      An expression that is in *head normal form* is a value which contains at
+      least one :term:`thunk`. If the value does not contain any thunks, then it
+      is said to be in normal form (:term:`NF`). See
+      :cite:t:`jones1992implementing` Section 3.1 for more.
+
    Info Table : Runtime
 
       Every heap allocated object in the runtime system keeps an information
       table that stores data such as: the object type (function, data
       constructor, thunk etc.) before the payload of the object. This is called
-      the info table. See :cite:t:`pointerTaggingLaziness` and the
-      :ghcWiki:`wiki <commentary/rts/storage/heap-objects#info-tables>` for more
-      details.
+      the Info Table. See :cite:t:`pointerTaggingLaziness`, :ghcWiki:`wiki
+      <commentary/rts/storage/heap-objects#info-tables>`, and
+      :cite:t:`SpinelessTaglessGMachine` Section 7.1 for more details.
 
    Info Table Address : Runtime
 
       The memory address for heap object descriptors :term:`info table`.
 
-   Join Point :  Optimization
+   Join Point : Optimization
 
       A join point is a place where different execution paths come together or
       *join*. Consider this example slightly modified from
@@ -179,7 +236,8 @@ Glossary
       in a ``let``, then these expressions would be duplicated *and* would be
       captured in an additionally allocated closure unnecessarily. Join points
       avoid these problems and are particularly relevant for Stream
-      :term:`Fusion` performance.
+      :term:`Fusion` performance. For more see the join points paper:
+      :cite:t:`compilingWithoutCont`.
 
    Known Function
 
@@ -190,7 +248,6 @@ Glossary
      ``let``. With this information the STG machine can use a faster function
      application procedure because the function pointer does not need to be
      scrutinized. See also :term:`Unknown Function`.
-
 
    Levity Polymorphism
 
@@ -208,10 +265,10 @@ Glossary
 
    Lifted : Levity
 
-      A Lifted type is a type that contains the value :math:`\bot`;
-      which represents non-terminating computation. For example, the ``Bool``
-      type is a set with three values: ``True``, ``False``, and :math:`\bot`.
-      Therefore ``Bool`` is a Lifted type.
+      A Lifted type is a type that contains the value :math:`\bot`; which means
+      the type is lazy and capable of representing non-terminating computation.
+      For example, the ``Bool`` type is a set with three values: ``True``,
+      ``False``, and :math:`\bot`. Therefore ``Bool`` is a Lifted type.
 
    Loop Fusion
 
@@ -254,6 +311,42 @@ Glossary
       :term:`Cardinality Analysis`. See :cite:t:`hoCardinality` and
       :cite:t:`callArityVsDemandAnalysis` for more.
 
+   NF : Normal Forms
+
+      An expression that is in *normal form* is a fully evaluated expression and
+      is a value which contains no thunks. This is in contrast to weak head
+      normal form (:term:`WHNF`) and head normal form (:term:`HNF`), both of
+      which may contain thunks. See :cite:t:`jones1992implementing` Section 3.1
+      for more.
+
+   Occurrence Name : GHC
+
+     An Occurrence name is a name GHC assigns to an entity to disambiguate
+     multiple occurrences of that name. Disambiguation allows GHC to distinguish
+     *by name* a type constructor from a data constructor, which often occurs
+     due to punning, or from local variables in separate functions with the same
+     name, such as ``x`` or ``xs``. Occurrence names are a pair of the original
+     name (as a ``FastString``, a GHC internal type) and a ``NameSpace``; they
+     are ubiquitous in GHC and in the intermediate representations. For example,
+     the occurrence name for the function ``f x y = ...`` will be similar to
+     ``f_r17p``. The exact occurrence name will change, but parts are static.
+     For example, the ``f`` before the underscore always comes from the name of
+     the function. Had ``f`` been name ``fancyFunction`` then the ocurrence name
+     would have been ``fancyFunction_r17p``. Similarly, leading character in the
+     suffix; the ``r`` in ``r17p`` is static and meaningful. In this case, the
+     ``r`` indicates that the name ``f`` is an element in the ``NameCache``,
+     meaning that all references to ``f`` share a single ``Unique`` ID in every
+     GHC invocation (See the :ghcSource:`Note [The Name Cache]
+     <compiler/GHC/Types/Name/Cache.hs?ref_type=heads#L36>` for more). When
+     occurrence names are generated, the leading character is a hint for what
+     kind of name is being generated. You can find an incomplete list of tags
+     and their meanings in :ghcSource:`Note [Uniques for wired-in prelude things
+     and known tags] <compiler/GHC/Builtin/Uniques.hs?ref_type=heads#L305>`. For
+     more on names see :ghcSource:`Note [Choosing external Ids]
+     <compiler/GHC/Iface/Tidy.hs?ref_type=heads#L271>` and `this
+     <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/rdr-name-type#the-occname-type>`__
+     wiki page on GHC's Reader names.
+
    One-Shot Lambda
 
       A one-shot lambda is a lambda that is called *exactly* once. These
@@ -289,6 +382,11 @@ Glossary
      <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/gc/pinned>`_
      for more.
 
+   Reproducer : Debugging
+
+     A reproducer is the smallest known program that induces incorrect behavior
+     in the system. See :ref:`Make it fail` for more.
+
    Sharing
 
       Consider the following program:
@@ -306,6 +404,20 @@ Glossary
       Haskell because it reduces allocations, leverages call-by-need, and saves
       work.
 
+   Shotgun Debugging : Debugging
+
+      Debugging with hope instead of process and measurement. See its Wikepedia
+      `entry <https://en.wikipedia.org/wiki/Shotgun_debugging>`__.
+
+   SRT : Runtime
+
+      Static reference tables are how GHC's garbage collector determines the
+      live :term:`CAF`'s of a program. SRTs are stored in a heap object's
+      :term:`Info Table` and are simply an object in the compiled programs data
+      segment. See `The SRT Note
+      <https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/Cmm/Info/Build.hs#L51>`__
+      in ``GHC.Cmm.Info.Build`` for more details.
+
    Thunk
 
       A thunk is a special kind of :term:`Closure` that represents a suspended
@@ -313,7 +425,16 @@ Glossary
       provides Haskell's laziness. See :cite:t:`SpinelessTaglessGMachine`
       Section 3.1.2 for more details.
 
-   Top-Level
+   Thread State Object (TSO)
+
+      A thread state object is a heap object that represents a Haskell thread in
+      GHC's runtime system. For the precise contents please see its definition
+      in :ghcSource:`GHC's source code
+      <rts/include/rts/storage/TSO.h?ref_type=heads>` and `this description
+      <https://youtu.be/5vKBFnTsCcE?si=4THBS_KMYRI6U1Sm&t=4620>`__ by Ben
+      Gamari.
+
+   Top-Level : Scope
 
       The most outer-most or global scope of the program.
 
@@ -337,6 +458,16 @@ Glossary
       machine and is slower (due to needing to scrutinize the function) than a
       :term:`Known function`. See :cite:t:`fastCurry` for more details on STG
       calling conventions.
+
+   Unfolding
+
+      An Unfolding of an identifier, as defined in ``GHC.Core.Unfold``, is the
+      *approximate* form the identifier would have if the identifier's
+      definition was substituted for the identifier. That is, Unfoldings are
+      generally the right hand sides or bodies of function definitions untouched
+      by optimizations. Unfoldings appear in Core and Interface files to enable
+      cross-module inlining and optimizations. See the :ref:`Reading Core
+      <Reading Core>` chapter for more.
 
 
    WHNF : Normal Forms

@@ -2,7 +2,7 @@
 <html  lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
       <title>Haskell Optimization Handbook</title>
     
@@ -11,15 +11,17 @@
           <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
           <link rel="stylesheet" href="_static/css/s4defs-roles.css" type="text/css" />
           <link rel="stylesheet" href="_static/css/iframe.css" type="text/css" />
+          <link rel="stylesheet" href="_static/css/admonitions.css" type="text/css" />
+          <link rel="stylesheet" href="_static/css/s4defs-roles.css" type="text/css" />
+          <link rel="stylesheet" href="_static/css/iframe.css" type="text/css" />
+          <link rel="stylesheet" href="_static/css/admonitions.css" type="text/css" />
       
       <!-- sphinx script_files -->
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/clipboard.min.js"></script>
-        <script src="_static/copybutton.js"></script>
+        <script src="_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="_static/copybutton.js?v=f281be69"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
       
@@ -235,7 +237,7 @@
           <div class="content" role="main" v-pre>
             
   <section id="haskell-optimization-handbook">
-<h1>Haskell Optimization Handbook<a class="headerlink" href="#haskell-optimization-handbook" title="Permalink to this heading">¶</a></h1>
+<h1>Haskell Optimization Handbook<a class="headerlink" href="#haskell-optimization-handbook" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound" id="mastertoc">
 <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
 <ul>
@@ -243,48 +245,50 @@
 <li class="toctree-l2"><a class="reference internal" href="src/Preliminaries/how_to_use.html">1.1. How to Use This Book</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src/Preliminaries/what_makes_fast_hs.html">1.2. The Programs of Consistent Lethargy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src/Preliminaries/repeatable_measurements.html">1.3. Setting up a Reproducible Test Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/Preliminaries/how_to_debug.html">1.4. How To Debug</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="src/Measurement_Observation/index.html">2. Measurement, Profiling, and Observation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/the_recipe.html">2.1. The Recipe</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Heap_Ghc/index.html">2.2. Heap Profiling and Inspection : GHC Based Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Heap_Ghc/ghc_flags.html">2.2.1. <span class="lightgrey">GHC Flags</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Heap_Ghc/eventlog.html">2.2.2. Eventlog</a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Heap_Ghc/info_table.html">2.2.3. <span class="lightgrey">Info-Table Profiling</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Heap_Ghc/ghc_debug.html">2.2.4. <span class="lightgrey">GHC Debug</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Heap_Ghc/scopes.html">2.2.5. <span class="lightgrey">ThreadScope</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/index.html">2.1. Binary Profiling and Probing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/asm.html">2.1.1. Reading Asm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/linux_time.html">2.1.2. <span class="lightgrey">The Linux time command</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/linux_perf.html">2.1.3. The Linux perf utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/dtrace.html">2.1.4. <span class="lightgrey">Dtrace</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/valgrind.html">2.1.5. <span class="lightgrey">Valgrind</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/cachegrind.html">2.1.6. <span class="lightgrey">Using Cachegrind</span></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Heap_Third/index.html">2.3. Heap Profiling and Inspection : Third Party Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Heap_Third/cachegrind.html">2.3.1. <span class="lightgrey">Using Cachegrind</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Thread_Profiling/index.html">2.2. Thread Level Profiling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Thread_Profiling/scopes.html">2.2.1. <span class="lightgrey">ThreadScope</span></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Measurement_Ghc/index.html">2.4. CPU Measurement : GHC Based Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Ghc/ghc_flags.html">2.4.1. <span class="lightgrey">GHC Flags</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Ghc/dtimings.html">2.4.2. <span class="lightgrey">-ddump-timings</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Ghc/ticky_ticky.html">2.4.3. <span class="lightgrey">TickyTicky</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Ghc/reduced_stack.html">2.4.4. <span class="lightgrey">The Reduced Stack Method</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Cmm_Profiling/index.html">2.3. Cmm Probes and Profiling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Cmm_Profiling/cmm.html">2.3.1. <span class="lightgrey">Reading Cmm</span></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Measurement_Libs/index.html">2.5. CPU Measurement : Haskell Libraries</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Libs/criterion.html">2.5.1. <span class="lightgrey">Criterion, Gauge, and Tasty-Bench</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Libs/weigh.html">2.5.2. <span class="incremental">Weigh</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Libs/inspection-testing.html">2.5.3. <span class="lightgrey">Inspection-Testing</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Libs/nothunks.html">2.5.4. <span class="lightgrey">Nothunks</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Stg_RTS_Profiling/index.html">2.4. Stg and RTS Probes and Profiling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Stg_RTS_Profiling/stg.html">2.4.1. <span class="lightgrey">Reading Stg</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Stg_RTS_Profiling/ghc_flags.html">2.4.2. <span class="lightgrey">GHC Flags</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Stg_RTS_Profiling/ghc_debug.html">2.4.3. <span class="lightgrey">GHC Debug</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Stg_RTS_Profiling/dtimings.html">2.4.4. <span class="lightgrey">-ddump-timings</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Stg_RTS_Profiling/ticky_ticky.html">2.4.5. <span class="lightgrey">TickyTicky</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Stg_RTS_Profiling/reduced_stack.html">2.4.6. <span class="lightgrey">The Reduced Stack Method</span></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Measurement_Third/index.html">2.6. CPU Measurement : Third Party Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Third/linux_time.html">2.6.1. <span class="lightgrey">The time Utility</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Third/linux_perf.html">2.6.2. <span class="lightgrey">The perf utility</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Third/valgrind.html">2.6.3. <span class="lightgrey">Valgrind</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Third/dtrace.html">2.6.4. <span class="lightgrey">Dtrace</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Third/flamegraph.html">2.6.5. <span class="lightgrey">Flamegraphs</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Core_Profiling/index.html">2.5. Core Probes and Profiling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Core_Profiling/core.html">2.5.1. <span class="lightgrey">Reading Core</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Core_Profiling/size.html">2.5.2. <span class="lightgrey">Memory Footprints of Data Types</span></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Direct_Observation/index.html">2.7. Direct Observation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Direct_Observation/size.html">2.7.1. <span class="lightgrey">Memory Footprints of Data Types</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Direct_Observation/core.html">2.7.2. <span class="lightgrey">Reading Core</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Direct_Observation/stg.html">2.7.3. <span class="lightgrey">Reading Stg</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/index.html">2.6. Haskell Level Probing and Profiling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/ghc_flags.html">2.6.1. <span class="lightgrey">GHC Flags</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/info_table.html">2.6.2. <span class="lightgrey">Info-Table Profiling</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/eventlog.html">2.6.3. Eventlog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/criterion.html">2.6.4. <span class="lightgrey">Criterion, Gauge, and Tasty-Bench</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/flamegraph.html">2.6.5. <span class="lightgrey">Flamegraphs</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/weigh.html">2.6.6. <span class="incremental">Weigh</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/inspection_testing.html">2.6.7. <span class="lightgrey">Inspection Testing</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/nothunks.html">2.6.8. <span class="lightgrey">Nothunks</span></a></li>
 </ul>
 </li>
 </ul>
@@ -294,7 +298,7 @@
 <li class="toctree-l3"><a class="reference internal" href="src/Optimizations/GHC_tech/ghc_flags.html">3.1.1. <span class="lightgrey">GHC Flags</span></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src/Optimizations/GHC_opt/index.html">3.2. Manual GHC Optimizations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/Optimizations/GHC_opt/index.html">3.2. GHC Optimizations</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="src/Optimizations/GHC_opt/defunctionalization.html">3.2.1. <span class="lightgrey">Defunctionalization</span></a></li>
 <li class="toctree-l3"><a class="reference internal" href="src/Optimizations/GHC_opt/sat_transformation.html">3.2.2. <span class="lightgrey">The Static Arguments Transformation</span></a></li>
 <li class="toctree-l3"><a class="reference internal" href="src/Optimizations/GHC_opt/lambda_lifting.html">3.2.3. <span class="incremental">Lambda Lifting</span></a></li>
@@ -337,7 +341,7 @@
 </div>
 </section>
 <section id="haskell">
-<h1>Haskell 优化手册<a class="headerlink" href="#haskell" title="Permalink to this heading">¶</a></h1>
+<h1>Haskell 优化手册<a class="headerlink" href="#haskell" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound" id="mastertoccn">
 <p class="caption" role="heading"><span class="caption-text">目录</span></p>
 <ul>
@@ -350,7 +354,7 @@
 </div>
 </section>
 <section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h1>
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <ul class="simple">
@@ -360,63 +364,68 @@
 </ul>
 </section>
 <section id="bibliography">
-<h1>Bibliography<a class="headerlink" href="#bibliography" title="Permalink to this heading">¶</a></h1>
+<h1>Bibliography<a class="headerlink" href="#bibliography" title="Link to this heading">¶</a></h1>
 <div class="docutils container" id="id1">
-<div class="citation" id="id5" role="doc-biblioentry">
+<div role="list" class="citation-list">
+<div class="citation" id="id17" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>Chris Okasaki. <em>Purely Functional Data Structures</em>. Cambridge University Press, 1998. <a class="reference external" href="https://doi.org/10.1017/CBO9780511530104">doi:10.1017/CBO9780511530104</a>.</p>
+</div>
+<div class="citation" id="id5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
 <p>Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. <em>Science of Computer Programming</em>, October 1997. URL: <a class="reference external" href="https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/">https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/</a>.</p>
 </div>
+<div class="citation" id="id15" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p>Simon Marlow and Simon Peyton Jones. Making a fast curry: push/enter vs. eval/apply for higher-order languages. In <em>Proceedings of the Ninth ACM SIGPLAN International Conference on Functional Programming</em>, ICFP '04, 4–15. New York, NY, USA, 2004. Association for Computing Machinery. URL: <a class="reference external" href="https://doi.org/10.1145/1016850.1016856">https://doi.org/10.1145/1016850.1016856</a>, <a class="reference external" href="https://doi.org/10.1145/1016850.1016856">doi:10.1145/1016850.1016856</a>.</p>
+</div>
 <div class="citation" id="id11" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
 <p>Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. <em>SIGPLAN Not.</em>, 42(9):277–288, oct 2007. URL: <a class="reference external" href="https://doi.org/10.1145/1291220.1291194">https://doi.org/10.1145/1291220.1291194</a>, <a class="reference external" href="https://doi.org/10.1145/1291220.1291194">doi:10.1145/1291220.1291194</a>.</p>
 </div>
+<div class="citation" id="id3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
+<p>Peyton Jones, Simon L, and Simon Peyton Jones. Implementing lazy functional languages on stock hardware: the spineless tagless g-machine. <em>Journal of Functional Programming</em>, 2:127–202, July 1992. URL: <a class="reference external" href="https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/">https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/</a>.</p>
+</div>
 <div class="citation" id="id12" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></span>
 <p>Thomas Johnsson. Lambda lifting: transforming programs to recursive equations. In Jean-Pierre Jouannaud, editor, <em>Functional Programming Languages and Computer Architecture</em>, 190–203. Berlin, Heidelberg, 1985. Springer Berlin Heidelberg.</p>
 </div>
 <div class="citation" id="id13" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></span>
 <p>Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: <a class="reference external" href="https://arxiv.org/abs/1910.11717">https://arxiv.org/abs/1910.11717</a>, <a class="reference external" href="https://doi.org/10.48550/ARXIV.1910.11717">doi:10.48550/ARXIV.1910.11717</a>.</p>
 </div>
-<div class="citation" id="id17" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
-<p>Chris Okasaki. <em>Purely Functional Data Structures</em>. Cambridge University Press, 1998. <a class="reference external" href="https://doi.org/10.1017/CBO9780511530104">doi:10.1017/CBO9780511530104</a>.</p>
-</div>
 <div class="citation" id="id18" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></span>
 <p>Phil Bagwell. Ideal hash trees. Technical Report, Ecole polytechnique fédérale de Lausanne, 2001.</p>
 </div>
+<div class="citation" id="id19" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></span>
+<p>Paul Hudak, John Hughes, Simon Peyton Jones, and Philip Wadler. A history of haskell: being lazy with class. In <em>Proceedings of the Third ACM SIGPLAN Conference on History of Programming Languages</em>, HOPL III, 12–1–12–55. New York, NY, USA, 2007. Association for Computing Machinery. URL: <a class="reference external" href="https://doi.org/10.1145/1238844.1238856">https://doi.org/10.1145/1238844.1238856</a>, <a class="reference external" href="https://doi.org/10.1145/1238844.1238856">doi:10.1145/1238844.1238856</a>.</p>
+</div>
 <div class="citation" id="id14" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></span>
 <p>Sebastian Graf. Call arity vs. demand analysis. August 2017.</p>
 </div>
 <div class="citation" id="id16" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></span>
 <p>Ilya Sergey, Dimitrios Vytiniotis, and Simon Peyton Jones. Modular, higher-order cardinality analysis in theory and practice. <em>SIGPLAN Not.</em>, 49(1):335–347, jan 2014. URL: <a class="reference external" href="https://doi.org/10.1145/2578855.2535861">https://doi.org/10.1145/2578855.2535861</a>, <a class="reference external" href="https://doi.org/10.1145/2578855.2535861">doi:10.1145/2578855.2535861</a>.</p>
 </div>
-<div class="citation" id="id3" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></span>
-<p>Peyton Jones, Simon L, and Simon Peyton Jones. Implementing lazy functional languages on stock hardware: the spineless tagless g-machine. <em>Journal of Functional Programming</em>, 2:127–202, July 1992. URL: <a class="reference external" href="https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/">https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/</a>.</p>
+<div class="citation" id="id7" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></span>
+<p>Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In <em>Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture</em>, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: <a class="reference external" href="https://doi.org/10.1145/99370.99385">https://doi.org/10.1145/99370.99385</a>, <a class="reference external" href="https://doi.org/10.1145/99370.99385">doi:10.1145/99370.99385</a>.</p>
 </div>
 <div class="citation" id="id2" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></span>
 <p>Luke Maurer, Paul Downen, Zena M. Ariola, and Simon Peyton Jones. Compiling without continuations. In <em>Proceedings of the 38th ACM SIGPLAN Conference on Programming Language Design and Implementation</em>, PLDI 2017, 482–494. New York, NY, USA, 2017. Association for Computing Machinery. URL: <a class="reference external" href="https://doi.org/10.1145/3062341.3062380">https://doi.org/10.1145/3062341.3062380</a>, <a class="reference external" href="https://doi.org/10.1145/3062341.3062380">doi:10.1145/3062341.3062380</a>.</p>
 </div>
 <div class="citation" id="id9" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></span>
 <p>Richard A. Eisenberg and Simon Peyton Jones. Levity polymorphism. <em>SIGPLAN Not.</em>, 52(6):525–539, jun 2017. URL: <a class="reference external" href="https://doi.org/10.1145/3140587.3062357">https://doi.org/10.1145/3140587.3062357</a>, <a class="reference external" href="https://doi.org/10.1145/3140587.3062357">doi:10.1145/3140587.3062357</a>.</p>
 </div>
 <div class="citation" id="id8" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>15<span class="fn-bracket">]</span></span>
 <p>WD Partain, A Santos, and Simon Peyton Jones. Let-floating: moving bindings to give faster programs. May 1996. ACM SIGPLAN International Conference on Functional Programming (ICFP'96). URL: <a class="reference external" href="https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/">https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/</a>.</p>
-</div>
-<div class="citation" id="id7" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></span>
-<p>Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In <em>Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture</em>, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: <a class="reference external" href="https://doi.org/10.1145/99370.99385">https://doi.org/10.1145/99370.99385</a>, <a class="reference external" href="https://doi.org/10.1145/99370.99385">doi:10.1145/99370.99385</a>.</p>
-</div>
-<div class="citation" id="id15" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></span>
-<p>Simon Marlow and Simon Peyton Jones. Making a fast curry: push/enter vs. eval/apply for higher-order languages. In <em>Proceedings of the Ninth ACM SIGPLAN International Conference on Functional Programming</em>, ICFP '04, 4–15. New York, NY, USA, 2004. Association for Computing Machinery. URL: <a class="reference external" href="https://doi.org/10.1145/1016850.1016856">https://doi.org/10.1145/1016850.1016856</a>, <a class="reference external" href="https://doi.org/10.1145/1016850.1016856">doi:10.1145/1016850.1016856</a>.</p>
 </div>
 </div>
 </div>
@@ -431,9 +440,9 @@
        title="next chapter"><span class="section-number">1. </span>Preliminaries →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
-      &#169; Copyright 2022-2023, Jeffrey Young (doyougnu).
+      &#169; Copyright 2022-1980, Jeffrey Young (doyougnu).
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
 </div>
             </div>
           </div>

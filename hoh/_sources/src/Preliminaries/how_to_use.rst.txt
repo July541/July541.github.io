@@ -7,7 +7,7 @@ Purpose
 -------
 
 This book is written as a handbook for the intrepid Haskell developer. It
-attempts to make clear aspects of the GHC-based Haskell so that performance
+attempts to make clear aspects of GHC-based Haskell so that performance
 optimizations and recommendations are actionable, rather than mysterious
 invocations whispered around the internet.
 
@@ -17,7 +17,7 @@ Intended Audience
 The Haskell Optimization Handbook is intended for developers using Haskell in
 their day to day life for money or pleasure. It assumes the audience is
 proficient with pure functional programming concepts, such as recursion, purity,
-higher-ordered functions functors, applicative functors, monads et cetera., and
+higher-ordered functions, functors, applicative functors, monads et cetera., and
 the basics of the Haskell ecosystem, such as using cabal or stack to compile and
 run a project.
 
@@ -32,13 +32,13 @@ picking your favorite Haskell library and attempting to optimize that!
 
 The book assumes you are using GHC |ghcVersion| and a Linux distribution (kernel
 version ``5.8`` and higher). Should you be using an older compiler than some
-sections, such as :doc:`Using EventLog
-</src/Measurement_Observation/Heap_Ghc/eventlog>`; which arrived in ``GHC 8.8``
-may still be useful, while others such as :doc:`Using Cachegrind
-</src/Measurement_Observation/Heap_Third/cachegrind>`; which relies on
+sections, such as :ref:`Using EventLog
+<EventLog Chapter>`; which arrived in ``GHC 8.8``
+may still be useful, while others such as :ref:`Using Cachegrind
+<Cachegrind Chapter>`; which relies on
 :term:`DWARF` symbols (added in ``GHC 8.10.x``) may not be applicable.
-Similarly, some chapters, such as :doc:`Using perf
-</src/Measurement_Observation/Measurement_Third/linux_perf>` will only be
+Similarly, some chapters, such as :ref:`Using perf
+<Perf Chapter>` will only be
 applicable for Linux and Linux based operating systems.
 
 Notation
@@ -65,18 +65,20 @@ handbook. Thus, the book is not meant to be read in a linear order. Instead, one
 should pick and choose which chapter to read next based on their needs because
 *the book assumes you have a problem that needs solving*.
 
-There are two general sections; both are ordered from the least time consuming
-to most time consuming topics. The first section, Part 1, aids the developer in
-identifying performance issues in their own code. Part 1 is primarily concerned
-with measurement, observation, repeatability and testing, but also includes
-methods of *direct observation* such as inspecting and understanding the
-``Core`` and ``Stg`` languages.
+There are two parts: Part 1, focuses on measurement, profiling and observation
+of Haskell programs. This part is ordered from the bottom-up; it begins with
+tools and probes that are language agnostic and close to the machine, such as
+:ref:`Perf <Perf Chapter>` and :ref:`Cachegrind <Cachegrind Chapter>`, then
+proceeds through each `intermediate representation
+<https://en.wikipedia.org/wiki/Intermediate_representation#:~:text=An%20intermediate%20representation%20(IR)%20is,such%20as%20optimization%20and%20translation.>`_
+(IR) describing the tools, probes, and information available at each IR.
 
-The second section, Part 2, aids the developer in optimizing their code. It is
+Part 2, provides an ordered sequence of techniques to optimize code. It is
 ordered from the easiest methods, such as choosing the right libraries; to the
-hardest methods, such as exploiting ``backpack`` for fine-grained
-:term:`Unboxed` data types or exploiting :term:`Levity Polymorphism` to control
-the runtime representation of a data type.
+hardest and more invasive methods, such as exploiting :ref:`Backpack <Backpack
+Chapter>` for fine-grained :term:`Unboxed` data types or exploiting
+:term:`Levity Polymorphism` to control the runtime representation of a data
+type.
 
 
 Goals
@@ -111,6 +113,10 @@ HOH does not have:
    a given platform.
 #. Descriptions, analyses and explanations of functional algorithms or data
    structures. Content will instead be "Try unordered-containers if you have
-   foo, bar, baz", rather than "This is what a bankers queue or HAMT is ...".
+   this or that set of constraints", rather than "This is what a banker's queue
+   [#]_ or `HAMT <https://en.wikipedia.org/wiki/Hash_array_mapped_trie>`_ is
+   ...".
 #. A monad or monad transformer tutorial. This is assumed knowledge in the
    audience.
+
+.. [#] See :cite:t:`okasaki`, page 23.

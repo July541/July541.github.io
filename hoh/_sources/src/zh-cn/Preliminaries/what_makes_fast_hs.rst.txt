@@ -230,10 +230,122 @@
                           in ...g...n        -- 使用 n 而不是 xs
               in ...g...
 
-TBD  
+我们有一个外部函数 ``f``，它定义了一个紧密的内部循环 ``g``。请注意，``g`` 的每次递归调用都会为 ``length xs`` 分配空间，并进行计算，因为 ``let n = ...`` 是在 ``g`` 的函数体内部，而且 ``n`` 也在 ``g`` 中使用。但这显然是浪费的，因为在 ``g`` 的函数体内 ``xs`` 并没有改变，所以我们只需要计算一次 ``n`` 就足够了。幸运的是，``g`` 除了计算 ``n`` 之外不使用 ``xs``，所以 ``let n = ...`` 可以从 ``g`` 中提出来：
+
+.. code-block:: haskell
+
+   f = \xs -> let n = length xs          -- n 只计算一次
+              in let g = \y -> ...g...n  -- 使用上面定义的 n
+                 in ...g...
+
+这个版本是完全惰性版本，因为我们将 ``let n = ..`` 移出了 ``g`` 函数体内的 lambda 表达式。通过利用惰性求值并避免对 ``n`` 的重复、无效计算，这个版本效率更高。在 ``g`` 的第一次迭代中，``n`` 将是一个惰性求值的表达式（thunk），但在后续的每次迭代中，``n`` 都将被评估为一个值，从而节省了时间和空间。
+
+.. _canonical-domain-modeling:
+
+糟糕的领域建模
+------------
+
+定义
+^^^^
+
+Poor domain modeling is a catch all phrase for constructing a program that has a
+high impedance to the problem domain. The problem domain is the abstract domain
+that dictates the computation that the program must do, the logical sequence of
+steps it must take and the invariants it must uphold. The program domain is the
+implementation, it is the code that is tasked with performing the computation
+and upholding the invariants in the problem domain. This is a one-to-many
+relationship; for any given problem domain there are many possible
+implementations.
+
+For example, imagine our task is to implement a program that sorts some data. We
+can list the concepts, invariants and properties this problem domain specifies:
+the domain has the concepts of a datum; which is a single unit of information, a
+partial order on that data; there are many sequences of data, but for a given
+set of data only two sequences have the property sorted, a datum must have an
+ordinal property; or else we would not be able to sort, and the sorted
+invariant; that defines what the property sorted means: for a sort from low to
+high, a given datum that is less than another datum must precede the greater
+datum in the output sequence. Note that every possible implementation must
+somehow represent and abide by these ideas for the program to be considered
+correct and for the implementation to be considered an implementation at all.
+
+Therefore poor domain modeling occurs when the implementation makes it difficult
+to express the computation, properties and invariants required by the problem
+domain. If this is the case then we say there is a high impedance between the
+problem domain and the program domain. Obviously this is problem specific and we
+cannot provide a canonical example, instead we'll provide a set of guidelines to
+describe when you know you have high impedance and how to fix it.
+
+如何知道程序是否存在糟糕的领域建模
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+不幸的是，这更多的是一种艺术而非科学，需要主观的判断。Haskell 中典型的场景是所有 instance 的实现做了很多不必要的工作。
+
+过度使用 Data.List
+"""""""""""""""""
+
+下列 ``Data.List`` 中的函数，可以对任意无序列表进行处理，或是需要遍历整个列表。
+
+#. ``length``
+#. ``reverse``
+#. ``splitAt``
+#. ``takeWhile``
+#. ``dropWhile``
+#. ``elem``
+#. ``notElem``
+#. ``find``
+#. ``filter``
+#. ...其他的索引
+
+请记住，Haskell 中的列表是流；不将它们视为流不仅会在问题领域和你的程序之间产生阻抗，还会降低运行时性能（并且很容易创建一个平方时间复杂度的程序）。然而，包含少量元素的小型临时列表是可以的，因为它们的构建和遍历所需的时间比更复杂的数据结构要少。
+
+函数组合的不易
+""""""""""""
+
+组合性和可组合性是代码最有价值的属性之一。它是模块化的关键，也是代码重用的关键，能够创建更易于测试、更易于理解且通常更紧凑的代码。当你的程序领域中的函数不易组合时，你会经常发现自己在不断地打包、解包和重新打包领域元素，只为了完成任何事情。你将被迫深入到程序领域对象的*实现*中，以便在问题领域中表达意义，而不是通过函数表达这种意义。
+
+当程序领域缺乏可组合性时，函数会变得过于庞大，并且过于关注实现细节；这就是在实现中表现出的高阻抗。
+
+.. todo::
+   下一个例子可以参考 `#20 <https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/20>`_
+
+问题领域的不变量难以表达
+""""""""""""""""""""
+
+这通常表现为使用了多余的 guard。许多函数采取如下形式：
+
+.. code-block:: haskell
+
+   -- | 一个关于 Foo 的示例函数，通过根据多个谓词测试 Foo
+   myFunction :: Foo -> Bar
+   myFunction foo | predicate0 foo = ...do something ...
+                  | predicate1 foo = ...do another thing...
+                  | ...
+                  | predicateN foo = ...do N thing...
+
+当这种模式在代码库中变得无处不在时，就会成为一个问题。当程序中的许多函数使用守卫时，程序将遭受冗余检查和糟糕的分支预测。例如：
+
+
+.. code-block:: haskell
+
+   -- | another function on Foo, this function doesn't learn much about Foo
+   -- because it only tests Foo against one predicate.
+   myOtherFunction :: Foo -> Baz
+   myOtherFunction foo | predicate1 foo = ...do some another thing...
+                       | otherwise      = ...
+
+   main :: IO ()
+   main = do foo <- getFoo          -- we get a Foo
+             myFunction foo         -- we learn a lot about Foo
+             myOtherFunction foo    -- nothing we've learned is propagated forward
+                                    --  from myFunction to myOtherFunction, and so
+                                    --  we redundantly check predicate1 on foo.
 
 References
 ----------
 .. [#] https://wiki.haskell.org/Inlining_and_Specialisation
 .. [#] https://www.sciencedirect.com/science/article/pii/030439759090147A?via%3Dihub
 .. [#] https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/deforestation-short-cut.pdf
+.. [#] This code adapted from Johan Tibell slides on Haskell `optimization
+       <https://www.slideshare.net/tibbe/highperformance-haskell>`_.
+.. [#] This code adapted from :cite:t:`peytonjones1997a` Section 7.

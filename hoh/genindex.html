@@ -11,15 +11,17 @@
           <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
           <link rel="stylesheet" href="_static/css/s4defs-roles.css" type="text/css" />
           <link rel="stylesheet" href="_static/css/iframe.css" type="text/css" />
+          <link rel="stylesheet" href="_static/css/admonitions.css" type="text/css" />
+          <link rel="stylesheet" href="_static/css/s4defs-roles.css" type="text/css" />
+          <link rel="stylesheet" href="_static/css/iframe.css" type="text/css" />
+          <link rel="stylesheet" href="_static/css/admonitions.css" type="text/css" />
       
       <!-- sphinx script_files -->
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/clipboard.min.js"></script>
-        <script src="_static/copybutton.js"></script>
+        <script src="_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="_static/copybutton.js?v=f281be69"></script>
 
       
       <!-- bundled in js (rollup iife) -->
@@ -234,8 +236,10 @@
 <div class="genindex-jumpbox">
  <a href="#A"><strong>A</strong></a>
  | <a href="#C"><strong>C</strong></a>
+ | <a href="#Debugging"><strong>Debugging</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#Format"><strong>Format</strong></a>
+ | <a href="#GHC"><strong>GHC</strong></a>
  | <a href="#K"><strong>K</strong></a>
  | <a href="#Levity"><strong>Levity</strong></a>
  | <a href="#L"><strong>L</strong></a>
@@ -246,6 +250,7 @@
  | <a href="#Optimization"><strong>Optimization</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#Runtime"><strong>Runtime</strong></a>
+ | <a href="#Scope"><strong>Scope</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
@@ -253,6 +258,10 @@
 </div>
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src/glossary.html#term-Algebraic-Data-Type"><strong>Algebraic Data Type</strong></a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="src/glossary.html#term-Arity"><strong>Arity</strong></a>
 </li>
@@ -275,6 +284,18 @@
   </ul></td>
 </tr></table>
 
+<h2 id="Debugging">Debugging</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src/glossary.html#term-Reproducer"><strong>Reproducer</strong></a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src/glossary.html#term-Shotgun-Debugging"><strong>Shotgun Debugging</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -287,6 +308,14 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="src/glossary.html#term-DWARF"><strong>DWARF</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="GHC">GHC</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src/glossary.html#term-Occurrence-Name"><strong>Occurrence Name</strong></a>
 </li>
   </ul></td>
 </tr></table>
@@ -346,6 +375,12 @@
 <h2 id="Normal Forms">Normal Forms</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src/glossary.html#term-HNF"><strong>HNF</strong></a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src/glossary.html#term-NF"><strong>NF</strong></a>
+</li>
       <li><a href="src/glossary.html#term-WHNF"><strong>WHNF</strong></a>
 </li>
   </ul></td>
@@ -392,6 +427,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="src/glossary.html#term-Info-Table-Address"><strong>Info Table Address</strong></a>
 </li>
+      <li><a href="src/glossary.html#term-SRT"><strong>SRT</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Scope">Scope</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src/glossary.html#term-Top-Level"><strong>Top-Level</strong></a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -406,17 +451,21 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="src/glossary.html#term-Thunk"><strong>Thunk</strong></a>
+      <li><a href="src/glossary.html#term-Thread-State-Object-TSO"><strong>Thread State Object (TSO)</strong></a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="src/glossary.html#term-Top-Level"><strong>Top-Level</strong></a>
+      <li><a href="src/glossary.html#term-Thunk"><strong>Thunk</strong></a>
 </li>
   </ul></td>
 </tr></table>
 
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src/glossary.html#term-Unfolding"><strong>Unfolding</strong></a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="src/glossary.html#term-Unknown-function"><strong>Unknown function</strong></a>
 </li>
@@ -429,9 +478,9 @@
           <div class="page-nav">
             <div class="inner"><ul class="page-nav">
 </ul><div class="footer" role="contentinfo">
-      &#169; Copyright 2022-2023, Jeffrey Young (doyougnu).
+      &#169; Copyright 2022-1980, Jeffrey Young (doyougnu).
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
 </div>
             </div>
           </div>
